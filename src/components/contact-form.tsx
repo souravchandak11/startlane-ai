@@ -1,12 +1,19 @@
+
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FadeIn } from './ui/fade-in';
 import { submitLead } from '@/app/actions/leads';
+import { cn } from '@/lib/utils';
 
 export function ContactForm() {
   const [status, setStatus] = useState<{ success?: boolean; message?: string } | null>(null);
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,6 +26,28 @@ export function ContactForm() {
       (e.target as HTMLFormElement).reset();
     }
   };
+
+  if (!mounted) {
+    return (
+      <section id="contact" className="section-container">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+          <div>
+            <div className="mb-10">
+              <p className="font-mono-label text-[var(--text-m)] mb-4">CONTACT</p>
+              <h2 className="text-5xl mb-2 text-[var(--text-p)]">Tell us what's broken.</h2>
+              <h3 className="text-4xl text-[var(--text-s)] font-headline">We'll tell you how to fix it.</h3>
+            </div>
+            <p className="text-lg text-[var(--text-s)] mb-12">
+              Free 30-minute marketing audit. No pitch deck. Just diagnosis.
+            </p>
+          </div>
+          <div className="glass-card p-10 rounded-2xl opacity-50">
+             <p className="text-center font-mono-label text-[10px]">Loading form...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="contact" className="section-container">
@@ -48,25 +77,25 @@ export function ContactForm() {
             <div className="space-y-4">
               <div>
                 <label className="font-mono-label text-[10px] text-[var(--text-m)] mb-2 block">Full Name *</label>
-                <input required name="name" type="text" className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-sm text-[var(--text-p)] focus:outline-none focus:border-[var(--accent-cool)] transition-colors" placeholder="John Doe" />
+                <input required name="name" type="text" className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-sm text-[var(--text-p)] focus:outline-none focus:border-[var(--accent-cool)] transition-colors" placeholder="John Doe" suppressHydrationWarning />
               </div>
               <div>
                 <label className="font-mono-label text-[10px] text-[var(--text-m)] mb-2 block">Business Name *</label>
-                <input required name="business" type="text" className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-sm text-[var(--text-p)] focus:outline-none focus:border-[var(--accent-cool)] transition-colors" placeholder="Company Inc." />
+                <input required name="business" type="text" className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-sm text-[var(--text-p)] focus:outline-none focus:border-[var(--accent-cool)] transition-colors" placeholder="Company Inc." suppressHydrationWarning />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="font-mono-label text-[10px] text-[var(--text-m)] mb-2 block">Email *</label>
-                  <input required name="email" type="email" className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-sm text-[var(--text-p)] focus:outline-none focus:border-[var(--accent-cool)] transition-colors" placeholder="john@company.com" />
+                  <input required name="email" type="email" className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-sm text-[var(--text-p)] focus:outline-none focus:border-[var(--accent-cool)] transition-colors" placeholder="john@company.com" suppressHydrationWarning />
                 </div>
                 <div>
                   <label className="font-mono-label text-[10px] text-[var(--text-m)] mb-2 block">Phone (Optional)</label>
-                  <input name="phone" type="tel" className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-sm text-[var(--text-p)] focus:outline-none focus:border-[var(--accent-cool)] transition-colors" placeholder="+1 (555) 000-0000" />
+                  <input name="phone" type="tel" className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-sm text-[var(--text-p)] focus:outline-none focus:border-[var(--accent-cool)] transition-colors" placeholder="+1 (555) 000-0000" suppressHydrationWarning />
                 </div>
               </div>
               <div>
                 <label className="font-mono-label text-[10px] text-[var(--text-m)] mb-2 block">Biggest marketing problem right now?</label>
-                <select required name="problem" className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-sm text-[var(--text-p)] focus:outline-none focus:border-[var(--accent-cool)] transition-colors appearance-none">
+                <select required name="problem" className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-sm text-[var(--text-p)] focus:outline-none focus:border-[var(--accent-cool)] transition-colors appearance-none" suppressHydrationWarning>
                   <option value="Paid ads not converting">Paid ads not converting</option>
                   <option value="No email automation system">No email automation system</option>
                   <option value="Inconsistent across locations">Inconsistent across locations</option>
@@ -76,7 +105,7 @@ export function ContactForm() {
               </div>
               <div>
                 <label className="font-mono-label text-[10px] text-[var(--text-m)] mb-2 block">Tell us more (optional)</label>
-                <textarea name="more" rows={4} className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-sm text-[var(--text-p)] focus:outline-none focus:border-[var(--accent-cool)] transition-colors resize-none" placeholder="Describe your challenge..."></textarea>
+                <textarea name="more" rows={4} className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-sm text-[var(--text-p)] focus:outline-none focus:border-[var(--accent-cool)] transition-colors resize-none" placeholder="Describe your challenge..." suppressHydrationWarning></textarea>
               </div>
             </div>
             
@@ -84,6 +113,7 @@ export function ContactForm() {
               disabled={loading}
               type="submit" 
               className="w-full bg-[var(--accent-cool)] text-[#080810] font-headline py-4 rounded-md font-bold uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50"
+              suppressHydrationWarning
             >
               {loading ? 'Submitting...' : 'Request Free Audit →'}
             </button>

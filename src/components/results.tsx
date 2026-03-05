@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useEffect, useState, useRef } from 'react';
@@ -14,8 +15,10 @@ function Counter({ target, suffix, decimals = 0 }: { target: number, suffix: str
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const [hasAnimated, setHasAnimated] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !hasAnimated) {
         setHasAnimated(true);
@@ -37,6 +40,10 @@ function Counter({ target, suffix, decimals = 0 }: { target: number, suffix: str
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, [target, hasAnimated]);
+
+  if (!mounted) {
+    return <span suppressHydrationWarning>0{suffix}</span>;
+  }
 
   return <span ref={ref}>{count.toFixed(decimals)}{suffix}</span>;
 }

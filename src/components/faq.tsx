@@ -1,6 +1,7 @@
+
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FadeIn } from './ui/fade-in';
 import { cn } from '@/lib/utils';
 
@@ -29,6 +30,11 @@ const faqs = [
 
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <section className="section-container">
@@ -44,17 +50,18 @@ export function FAQ() {
             <button
               onClick={() => setOpenIndex(openIndex === i ? null : i)}
               className="w-full py-6 flex items-center justify-between text-left group"
+              suppressHydrationWarning
             >
               <span className="text-sm font-headline text-[var(--text-p)] group-hover:text-[var(--accent-cool)] transition-colors">
                 {faq.q}
               </span>
               <span className="text-[var(--text-m)] font-mono text-xl">
-                {openIndex === i ? '−' : '+'}
+                {mounted && openIndex === i ? '−' : '+'}
               </span>
             </button>
             <div className={cn(
               "overflow-hidden transition-all duration-300 ease-in-out",
-              openIndex === i ? "max-h-60 pb-8" : "max-h-0"
+              mounted && openIndex === i ? "max-h-60 pb-8" : "max-h-0"
             )}>
               <p className="text-sm text-[var(--text-s)] leading-relaxed">
                 {faq.a}
