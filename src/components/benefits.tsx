@@ -2,7 +2,7 @@ import React from 'react';
 import { FadeIn } from './ui/fade-in';
 
 const benefits = [
-  { title: 'Increased Efficiency', desc: 'Automate repetitive tasks. Save hours daily.' },
+  { title: 'Increased Efficiency', desc: 'Streamline repetitive tasks. Save hours daily.' },
   { title: 'Smarter Decisions', desc: 'Real-time insights. Data-backed choices.' },
   { title: 'Seamless Integration', desc: 'CRM to campaigns. Every system connected.' },
   { title: 'Consistent Communication', desc: 'Fast, accurate, always on-brand.' },

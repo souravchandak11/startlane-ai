@@ -4,6 +4,7 @@ import { Hero } from '@/components/hero';
 import { Frameworks } from '@/components/frameworks';
 import { Process } from '@/components/process';
 import { Results } from '@/components/results';
+import { CaseStudies } from '@/components/case-studies';
 import { Benefits } from '@/components/benefits';
 import { FAQ } from '@/components/faq';
 import { ContactForm } from '@/components/contact-form';
@@ -29,6 +30,10 @@ export default function Home() {
         <hr className="hairline-divider" />
         
         <Results />
+        
+        <hr className="hairline-divider" />
+        
+        <CaseStudies />
         
         <hr className="hairline-divider" />
         

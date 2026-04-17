@@ -3,39 +3,39 @@ import { FadeIn } from './ui/fade-in';
 
 const frameworks = [
   {
-    label: 'PAID MEDIA',
+    label: 'DIGITAL STRATEGY & CONSULTING',
     title: 'Framework 01',
     features: [
-      { name: 'Campaign Architecture', desc: 'Full-funnel Meta & Google with real targeting and budget control.' },
-      { name: 'A/B Testing', desc: 'Continuous creative and audience testing to lower CPL over time.' },
+      { name: 'Marketing Audit', desc: 'Comprehensive review of your current digital presence, competitive positioning, and growth opportunities.' },
+      { name: 'Strategic Roadmap', desc: 'Clear, actionable plans tailored to your goals — with milestones and success metrics.' },
       { name: 'Weekly Reporting', desc: 'Plain-English performance reports every Monday. No vanity metrics.' }
     ]
   },
   {
-    label: 'EMAIL AUTOMATION',
+    label: 'SOCIAL MEDIA & CONTENT',
     title: 'Framework 02',
     features: [
-      { name: 'Nurture Sequences', desc: 'Onboarding, retention, and re-engagement flows built to convert.' },
-      { name: 'Smart Segmentation', desc: 'Personalized by location, intent, and enrollment stage.' },
-      { name: 'Performance Tracking', desc: 'Open rates, clicks, and revenue attribution in one dashboard.' }
+      { name: 'Content Creation', desc: 'High-quality social media posts, graphics, and copy crafted for your brand.' },
+      { name: 'Channel Management', desc: 'Consistent publishing, community engagement, and audience building across platforms.' },
+      { name: 'Performance Tracking', desc: 'Engagement, reach, and growth metrics in one clear dashboard.' }
     ]
   },
   {
-    label: 'LOCAL MARKETING',
+    label: 'LOCAL PRESENCE',
     title: 'Framework 03',
     features: [
       { name: 'GBP Management', desc: 'Google Business Profiles optimized across all locations.' },
-      { name: 'Hyperlocal Targeting', desc: 'Ads served by zip code and neighborhood for precision.' },
-      { name: 'Community Outreach', desc: 'School partnerships, referral programs, local event strategy.' }
+      { name: 'Local SEO', desc: 'Content and listing optimization to help customers find you in local search.' },
+      { name: 'Community Outreach', desc: 'Partnerships, referral programs, and local event strategy.' }
     ]
   },
   {
-    label: 'AI WORKFLOWS',
+    label: 'AI-POWERED TOOLS',
     title: 'Framework 04',
     features: [
-      { name: 'Lead Qualification', desc: 'Every inquiry gets a response within 60 seconds. 24/7.' },
-      { name: 'Smart Routing', desc: 'High-intent to call. Others into nurture. Nothing leaks.' },
-      { name: 'Full Automation', desc: 'Systems that run and report themselves. No manual ops.' }
+      { name: 'Inquiry Handling', desc: 'Every customer inquiry gets a response within 60 seconds. 24/7.' },
+      { name: 'Smart Routing', desc: 'Priority inquiries get fast-tracked. Others enter appropriate follow-up flows.' },
+      { name: 'Streamlined Operations', desc: 'Systems that run and report themselves. No manual ops.' }
     ]
   }
 ];

@@ -12,19 +12,19 @@ const faqs = [
   },
   {
     q: "How long does implementation take?",
-    a: "Typically 2–4 weeks for the full system. Paid media campaigns go live in week one. Email sequences and workflow automation follow in week two."
+    a: "Typically 2–4 weeks for a complete setup. Strategy and analytics go live in week one. Content planning, social media setup, and workflow configuration follow in the weeks after."
   },
   {
     q: "What makes StartLane different?",
-    a: "We build systems, not campaigns. Most agencies hand you a report. We hand you infrastructure that runs your marketing whether or not we're in the room."
+    a: "We build systems, not one-off projects. Most agencies hand you a report. We hand you infrastructure — strategy documents, content calendars, analytics dashboards, and efficient workflows that keep running."
   },
   {
     q: "Do I need technical knowledge?",
-    a: "None required. We handle everything — strategy, build, and reporting. You get a weekly dashboard and a monthly strategy call."
+    a: "None required. We handle everything — strategy, content, and reporting. You get a weekly dashboard and a monthly strategy call."
   },
   {
     q: "What results can I expect?",
-    a: "Clients typically see measurable improvement in cost-per-lead and enrollment rates within the first 30 days. Full system performance is visible by day 60."
+    a: "Clients typically see measurable improvement in online visibility, engagement, and customer inquiries within the first 30 days. Full system performance is visible by day 60."
   }
 ];
 

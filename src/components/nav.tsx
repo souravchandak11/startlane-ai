@@ -28,12 +28,13 @@ export function Nav() {
           <a href="#frameworks" className="text-[var(--text-s)] hover:text-[var(--text-p)] transition-colors">Frameworks</a>
           <a href="#process" className="text-[var(--text-s)] hover:text-[var(--text-p)] transition-colors">Process</a>
           <a href="#results" className="text-[var(--text-s)] hover:text-[var(--text-p)] transition-colors">Results</a>
+          <a href="#case-studies" className="text-[var(--text-s)] hover:text-[var(--text-p)] transition-colors">Case Studies</a>
           <a href="#contact" className="text-[var(--text-s)] hover:text-[var(--text-p)] transition-colors">Contact</a>
         </div>
         
         <div>
           <a href="#contact" className="btn-primary py-2 px-5 text-xs font-headline">
-            Book Free Audit
+            Book Free Consultation
           </a>
         </div>
       </div>

@@ -8,24 +8,24 @@ export function Hero() {
     <section className="section-container pt-40 md:pt-48 pb-20">
       <FadeIn className="text-center max-w-4xl mx-auto staggered-fade-in" stagger>
         <p className="font-mono-label text-[var(--text-m)] mb-6">
-          AI MARKETING SYSTEMS — LOCAL BUSINESSES
+          DIGITAL STRATEGY & AI-POWERED SOLUTIONS — LOCAL BUSINESSES
         </p>
         
         <h1 className="text-5xl md:text-7xl mb-4 leading-[1.1] glow-text">
-          Built to automate.
+          Built to streamline.
         </h1>
         <h1 className="text-5xl md:text-7xl mb-8 leading-[1.1] opacity-70">
-          Designed to perform.
+          Designed to grow.
         </h1>
         
         <p className="text-lg text-[var(--text-s)] mb-10 max-w-xl mx-auto">
-          We build AI-powered marketing systems for local businesses and service brands — 
-          the kind that run without someone manually holding them together every day.
+          We provide digital marketing consulting and AI-powered workflow solutions for local businesses and service brands — 
+          clear strategy, compelling content, and data-driven insights.
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
           <a href="#contact" className="btn-primary">
-            Book Free Audit →
+            Book Free Consultation →
           </a>
           <a href="#frameworks" className="btn-ghost">
             See Frameworks ↓
@@ -49,11 +49,11 @@ export function Hero() {
           </div>
           
           {[
-            { label: 'LEADS', active: false },
-            { label: 'AI QUALIFY', active: true },
-            { label: 'CAMPAIGNS', active: false },
-            { label: 'EMAIL', active: false },
-            { label: 'REVENUE', active: false },
+            { label: 'AUDIT', active: false },
+            { label: 'STRATEGY', active: true },
+            { label: 'CONTENT', active: false },
+            { label: 'ANALYTICS', active: false },
+            { label: 'GROWTH', active: false },
           ].map((node, i) => (
             <div 
               key={node.label} 

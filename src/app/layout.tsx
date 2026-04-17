@@ -3,8 +3,8 @@ import type {Metadata} from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'StartLane AI | Performance Marketing & AI Automation',
-  description: 'AI-powered marketing systems for local businesses and service brands.',
+  title: 'StartLane AI | Digital Strategy & AI-Powered Solutions',
+  description: 'Digital marketing consulting, content strategy, and AI-powered workflow solutions for local businesses and service brands.',
 };
 
 export default function RootLayout({

@@ -5,17 +5,17 @@ const steps = [
   {
     num: '01',
     title: 'ANALYZE',
-    desc: 'We identify inefficiencies and uncover automation opportunities in your marketing operation.'
+    desc: 'We audit your digital presence, identify gaps, and uncover opportunities for strategic growth and workflow optimization.'
   },
   {
     num: '02',
     title: 'BUILD',
-    desc: 'We design and implement the full system — campaigns, sequences, workflows, and reporting infrastructure.'
+    desc: 'We design and implement your full system — digital strategy, content calendars, streamlined workflows, and analytics dashboards.'
   },
   {
     num: '03',
     title: 'OPTIMIZE',
-    desc: 'We launch, monitor, and continuously improve based on real performance data. Weekly reports. Monthly reviews.'
+    desc: 'We monitor, refine, and continuously improve based on real performance data. Weekly reports. Monthly strategy reviews.'
   }
 ];
 
