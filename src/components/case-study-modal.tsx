@@ -185,9 +185,9 @@ export function CaseStudyModal({ study, onClose }: CaseStudyModalProps) {
             </div>
           </div>
 
-          {/* Tools & Technologies */}
+          {/* Platforms & Services */}
           <div className="mb-16">
-            <h3 className="text-2xl font-headline text-[var(--text-p)] mb-6">Tools & Platforms</h3>
+            <h3 className="text-2xl font-headline text-[var(--text-p)] mb-6">Platforms & Services</h3>
             <div className="flex flex-wrap gap-3">
               {study.tags.map((tag) => (
                 <span

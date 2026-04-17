@@ -30,7 +30,7 @@ const frameworks = [
     ]
   },
   {
-    label: 'AI-POWERED TOOLS',
+    label: 'AI-POWERED SYSTEMS',
     title: 'Framework 04',
     features: [
       { name: 'Inquiry Handling', desc: 'Every customer inquiry gets a response within 60 seconds. 24/7.' },
