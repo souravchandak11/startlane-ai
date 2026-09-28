@@ -590,7 +590,7 @@ const ProofScene: React.FC = () => {
         }}
       />
       <AbsoluteFill style={{alignItems: 'center'}}>
-        <div style={{position: 'absolute', top: 330, width: 820, display: 'flex', flexDirection: 'column', gap: 70, alignItems: 'flex-start'}}>
+        <div style={{position: 'absolute', top: 380, width: 860, display: 'flex', flexDirection: 'column', gap: 80, alignItems: 'flex-start'}}>
           {rows.map((r, i) => {
             if (frame < r.at) return null;
             const p = spring({frame: frame - r.at, fps, config: ESU.spring.stat});
@@ -608,12 +608,12 @@ const ProofScene: React.FC = () => {
                   opacity: p,
                 }}
               >
-                <Img src={staticFile(`emoji/${r.icon}.svg`)} style={{width: 150, height: 150}} />
+                <Img src={staticFile(`emoji/${r.icon}.svg`)} style={{width: 140, height: 140, flexShrink: 0}} />
                 <div>
-                  <div style={{fontFamily: FONT.stat, fontWeight: 700, fontSize: 230, lineHeight: 0.95, color: i === 0 ? ESU.gold : ESU.white}}>
+                  <div style={{fontFamily: FONT.stat, fontWeight: 700, fontSize: 200, lineHeight: 0.9, color: i === 0 ? ESU.gold : ESU.white}}>
                     {big}
                   </div>
-                  <div style={{fontFamily: FONT.caption, fontWeight: 800, fontSize: 44, color: 'rgba(255,255,255,0.85)', letterSpacing: 2}}>
+                  <div style={{fontFamily: FONT.caption, fontWeight: 800, fontSize: 44, color: 'rgba(255,255,255,0.85)', letterSpacing: 2, marginTop: 14}}>
                     {r.small}
                   </div>
                 </div>
@@ -851,6 +851,29 @@ const SoundDesign: React.FC = () => (
   </>
 );
 
+// ------------------------------------------------------------------ mix
+/**
+ * Music ducks ~9 dB under the voice and swells in the gaps (the drop, the
+ * blackout, the end card tail) — the way agency reels keep VO intelligible
+ * while the beat still carries energy.
+ */
+const musicVolume = (f: number) => {
+  const t = f / FPS;
+  const DUCK = 0.07;
+  const OPEN = 0.24;
+  let dist = Infinity; // seconds to the nearest spoken line (0 inside one)
+  for (const l of timeline.lines) {
+    if (t >= l.start - 0.08 && t <= l.end + 0.08) {
+      dist = 0;
+      break;
+    }
+    dist = Math.min(dist, Math.abs(t - l.start), Math.abs(t - l.end));
+  }
+  const v = interpolate(dist, [0, 0.25], [DUCK, OPEN], clamp);
+  const fadeOut = interpolate(f, [TOTAL_FRAMES - 36, TOTAL_FRAMES - 1], [1, 0], clamp);
+  return v * fadeOut;
+};
+
 // ------------------------------------------------------------------ root
 export const ESU_FallLaunch: React.FC = () => {
   const [handle] = React.useState(() => delayRender('fonts'));
@@ -940,10 +963,7 @@ export const ESU_FallLaunch: React.FC = () => {
       <ProgressBar />
 
       <Audio src={staticFile('audio/vo.wav')} volume={1} />
-      <Audio
-        src={staticFile('audio/music.wav')}
-        volume={(f) => interpolate(f, [0, 8, TOTAL_FRAMES - 30, TOTAL_FRAMES], [0.3, 0.22, 0.22, 0], clamp)}
-      />
+      <Audio src={staticFile('audio/music.wav')} volume={musicVolume} />
       <SoundDesign />
     </AbsoluteFill>
   );

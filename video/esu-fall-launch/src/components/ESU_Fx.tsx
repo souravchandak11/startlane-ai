@@ -89,10 +89,13 @@ export const Flash: React.FC<{at: number; color?: string; length?: number; peak?
   return <AbsoluteFill style={{background: color, opacity: o, pointerEvents: 'none'}} />;
 };
 
+/** Global trim for every sound effect relative to the voiceover. */
+const SFX_GAIN = 0.5;
+
 /** One-shot sound effect at a frame (relative to the parent Sequence). */
 export const Sfx: React.FC<{at: number; name: string; volume?: number}> = ({at, name, volume = 0.5}) => (
   <Sequence from={Math.max(0, Math.round(at))} layout="none">
-    <Audio src={staticFile(`sfx/${name}.wav`)} volume={volume} />
+    <Audio src={staticFile(`sfx/${name}.wav`)} volume={volume * SFX_GAIN} />
   </Sequence>
 );
 
