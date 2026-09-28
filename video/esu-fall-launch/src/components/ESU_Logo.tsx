@@ -56,7 +56,27 @@ export const ESULogo: React.FC<{
         filter: `drop-shadow(0 26px 50px rgba(0,0,0,0.55))${glow ? ' drop-shadow(0 0 60px rgba(237,28,36,0.35))' : ''}`,
       }}
     >
-      <Img src={src} style={{width: w, height: h}} />
+      {enter === 'slam' && f < 14 &&
+        [
+          {dx: 1, tint: 'sepia(1) saturate(7) hue-rotate(-35deg)'},
+          {dx: -1, tint: 'sepia(1) saturate(7) hue-rotate(150deg)'},
+        ].map((g, i) => (
+          <Img
+            key={i}
+            src={src}
+            style={{
+              position: 'absolute',
+              left: g.dx * 14 * (1 - f / 14),
+              top: 0,
+              width: w,
+              height: h,
+              opacity: 0.6,
+              mixBlendMode: 'screen',
+              filter: g.tint,
+            }}
+          />
+        ))}
+      <Img src={src} style={{width: w, height: h, position: 'relative'}} />
       {shimmer && (
         <div
           style={{

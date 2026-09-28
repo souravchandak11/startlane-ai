@@ -54,6 +54,11 @@ Each reel tells one story, usually built on a metaphor.
 | Stacked white pop-up cards | Screen-time notifications, the coach's "That was ALL you!", and program facts (location, days, ages) |
 | Three-part lists | Pain: 9 AM screen → "I'm bored" → googling it again. Solution: "A ball. A team. A coach." Outcome: "More confidence. Real friends. Real skills." |
 | Payoff tied to the hook | The kid texts "**is it saturday yet?? ⚽⚽**", which calls back to "your kid's Saturday" in frame 1 |
+| Paper stage + bordered prints + pull-back | "Mom, I'm bored" and the search screen are tilted prints on the pale grey paper field. The chat is pulled back from full-bleed to print size. |
+| Inline sentence | "hand / over / the **[tablet print]** iPad / again." The words sit either side of the image, as in MMH's "The names [photo] from" |
+| Card cloud + glowing serif | "*kids coached* / *10,000+*" in glowing Instrument Serif, with kid, medal, trophy and ball cards popping in around it. The back row is blurred and everything drifts. |
+| Textured board | "European-trained coaches" runs on a chalk tactics board: pitch, X's and O's, and a yellow run drawn on stroke by stroke |
+| Hero word flips to red | "not" and "Day." flip from black or white to brand red on the beat |
 | Glitch every ~10 s + white flash | Glitches at 5.6 s, 16.5 s, 31.2 s and 34.8 s. Flashes on the drop (19.2 s) and the brand reveal (22.1 s). |
 | Continuous bed, −14 LUFS, bass thump on logo | A tense minor bed (heartbeat kick, 1 Hz clock tick, music box) → tape-stop → riser → **124 BPM drop**. The music ducks about 10 dB under the VO. The reel ends on a logo card on black with a boom. |
 
@@ -68,19 +73,19 @@ Voice: warm female narrator, mom-to-mom (Kokoro TTS `af_heart`, generated offlin
 |---|---|---|
 | 0.0 | If this is your kid's **Saturday**… | "Moms of kids 4–12" + Screen Time card slams in (6h 42m ▲38%) → crop on the red weekend bars |
 | 1.6 | you're **not** a bad mom. | Type card, black serif on white |
-| 2.8 | But watch this before you hand over the **iPad** again. | Tablet autoplay "Next episode in 5…" → crop on countdown → wide |
+| 2.8 | But watch this before you hand over the iPad again. | Tablet autoplay "Next episode in 5…" → crop on countdown → **paper stage: "hand over the [tablet print] iPad again."** |
 | 5.6 | It's 9 AM. They're already on a **screen**. | *glitch* → B&W lock screen 9:00 with notification pile-up ("Ignore limit?") |
-| 8.1 | "Mom, I'm bored" — for the **hundredth** time. | B&W chat: mom / mom / MOM / i'm boreddd → crop |
-| 10.4 | And you're googling how to get them off it… | B&W search "how to get my kid off the ipad" + autocomplete |
+| 8.1 | "Mom, I'm bored" — for the **hundredth** time. | Chat screenshot as a print on the paper stage, pulled back from full-bleed → crop |
+| 10.4 | And you're googling how to get them off it… | Search screenshot as a tilted print on paper: "how to get my kid off the ipad" + autocomplete |
 | 12.1 | …again. | Type card |
 | 12.6 | Kids 8–12 now average 5½ hours of screens. | News clipping + yellow highlighter → crop → "5½ hours a day." |
 | 16.5 | Every. Single. Day. | Three-card word supercut → black + tape-stop |
 | 18.0 | What they *actually* need? | Type card, white serif on black, over a riser |
-| 19.2 | A ball. A team. A coach who **believes** in them. | **Colour + beat drop.** Ball bounces on the pitch → jerseys → "That was ALL you!" |
+| 19.2 | A ball. A team. A coach who **believes** in them. | **Beat drop.** The ball's first bounce lands on the drop and colour floods out from the impact (shockwave + turf burst) → jerseys → "That was ALL you!" |
 | 22.1 | That's Euro Soccer USA's Fall Academy. | Shield + wordmark + *Fall Academy* reveal |
 | 24.6 | Weekend soccer classes in LA for ages 4–12, | Stacked white cards: classes · The Sports Park · Sat & Sun, Oct 3–Nov 22 · Ages 4–12 |
-| 27.9 | with **European-trained** coaches, grouped by age and ability. | Tactics board passing animation → "Grouped by age & ability" |
-| 31.2 | Voted #1 in LA, with 10,000+ kids coached. | Hard-cut stat cards: #1 · 10,000+ · 20+ years |
+| 27.9 | with **European-trained** coaches, grouped by age and ability. | Chalk tactics board drawing itself → "Grouped by age & ability" card |
+| 31.2 | Voted #1 in LA, with 10,000+ kids coached. | "#1 voted in Los Angeles" → **card cloud** around a glowing "10,000+" → "20+ years in LA" |
 | 34.8 | 8 weeks from now, you'll **notice** it. | Week counter 1 → 8 |
 | 36.7 | More **confidence**. Real friends. Real skills. | "YOUR KID" player card: screen time ▼, confidence/friends/skills ▲ |
 | 39.5 | And a kid who asks, "Is it **Saturday** yet?" | Chat callback: "is it saturday yet?? ⚽⚽" / "2 more sleeps 😂" |
@@ -111,8 +116,9 @@ python3 scripts/make_sfx.py                             # (only if you change th
 Every cut, caption and sound effect is keyed to VO **words** (`W('turn1', 4)`), not to fixed
 frames. A new read or a different voice therefore re-times the whole edit automatically.
 
-**Swap in real brand assets.**
-- Official logo: drop it at `public/logos/esu-logo.png` and set `OFFICIAL_LOGO` in `src/components/ESU_Logo.tsx`.
+**Brand assets.**
+- The official crest is in use: `public/logos/esu-logo.svg`, a clean vector trace of `esu-logo-source.png` in the three crest colours. Brand navy `#181145` and red `#ED1C24` are sampled from it, in `src/presets/brand.ts`.
+- The crest lands three times: a **slam** at 22.1 s (RGB-split ghosts, gold shockwave, particle burst, light rays), the CTA card, and a **wipe-in** on the final black card with a bass thump.
 - Real ESU footage is the single biggest upgrade. MMH is built on real clips. The pitch, ball,
   jersey and tactics-board shots (19–31 s) are the slots to replace with kids on the field at The Sports Park.
 - A real parent or coach voice (or a human VO) would further raise trust.

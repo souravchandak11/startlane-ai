@@ -23,6 +23,8 @@ export type CaptionStyle = {
   hideRanges?: [number, number][];
   /** per-line vertical override */
   yByLine?: Record<string, number>;
+  /** absolute frame ranges where captions sit on light paper → black text, no glow */
+  darkRanges?: [number, number][];
 };
 
 const key = (w: string) => w.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -69,11 +71,12 @@ export const ESUCaptions: React.FC<CaptionStyle> = ({
   emphasis = [],
   y = 0.66,
   maxWords = 3,
-  size = 66,
+  size = 58,
   hide = [],
   hidePages = [],
   hideRanges = [],
   yByLine = {},
+  darkRanges = [],
 }) => {
   const frame = useCurrentFrame();
   const {fps, height, width} = useVideoConfig();
@@ -92,6 +95,7 @@ export const ESUCaptions: React.FC<CaptionStyle> = ({
   const page = pages[idx];
   if (hide.includes(page.line) || hidePages.includes(`${page.line}:${page.first}`)) return null;
   const isEmph = page.words.length === 1 && emph.has(key(page.words[0].w));
+  const onPaper = darkRanges.some(([a, b]) => frame >= a && frame < b);
 
   return (
     <div
@@ -127,10 +131,14 @@ export const ESUCaptions: React.FC<CaptionStyle> = ({
               fontSize: isEmph ? emphSize : size,
               letterSpacing: isEmph ? -1 : -0.5,
               lineHeight: isEmph ? 1 : 1.18,
-              color: ESU.white,
+              color: onPaper ? '#0b0b0b' : ESU.white,
               opacity: op,
               transform: `translateY(${rise}px)`,
-              textShadow: '0 4px 24px rgba(0,0,0,0.7), 0 1px 3px rgba(0,0,0,0.55)',
+              textShadow: onPaper
+                ? 'none'
+                : isEmph
+                  ? '0 0 30px rgba(255,255,255,0.5), 0 4px 24px rgba(0,0,0,0.6)'
+                  : '0 4px 24px rgba(0,0,0,0.7), 0 1px 3px rgba(0,0,0,0.55)',
             }}
           >
             {text}

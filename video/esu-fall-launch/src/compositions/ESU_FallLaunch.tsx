@@ -18,9 +18,10 @@ import timeline from '../timeline.json';
 import {ESUCaptions} from '../components/ESU_Captions';
 import {Burst, Camera, ColorFlood, Flash, Grain, GlowBg, Sfx, Shockwave} from '../components/ESU_Fx';
 import {Chat, LockScreen, ScreenTimeCard, SearchBar} from '../components/ESU_UI';
-import {BouncingBall, Jersey, Pitch, PlayerCard, TacticBoard} from '../components/ESU_Soccer';
+import {BouncingBall, Jersey, Pitch, PlayerCard} from '../components/ESU_Soccer';
 import {ESULogo} from '../components/ESU_Logo';
 import {GlitchCut, Mono, NewsClip, Stepped, TabletAutoplay, TypeCard, WhiteCard} from '../components/ESU_Type';
+import {BlockWipe, CardCloud, ChalkBoard, InlineSentence, InvertFlash, PaperStage, Print} from '../components/ESU_Paper';
 
 const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 
@@ -43,6 +44,7 @@ const S = {
   hook: 0,
   badMom: L('hook2'),
   tablet: L('hook3'),
+  inline: W('hook3', 5),
   nineAm: L('pain1'),
   bored: L('pain2'),
   google: L('pain3'),
@@ -176,13 +178,14 @@ const NineAmShot: React.FC = () => {
 const BoredShot: React.FC = () => {
   const a = W('pain2', 0) - S.bored;
   return (
-    <AbsoluteFill>
-      <AbsoluteFill style={{background: 'linear-gradient(180deg,#24262c,#101114)'}} />
+    <PaperStage>
       <Center y={0.4}>
+        <Print rotate={-4} pullFrom={2.2} border={16}>
+        <div style={{zoom: 0.74}}>
         <Chat
           name="Leo 🦖"
           avatar="1f629"
-          tone="light"
+          tone="dark"
           msgs={[
             {text: 'mom', at: a},
             {text: 'mom', at: a + 4},
@@ -191,19 +194,56 @@ const BoredShot: React.FC = () => {
             {text: 'can i have the ipad', at: W('pain2', 6) - S.bored + 8},
           ]}
         />
+        </div>
+        </Print>
       </Center>
-    </AbsoluteFill>
+    </PaperStage>
   );
 };
 
 const GoogleShot: React.FC = () => (
-  <AbsoluteFill>
-    <AbsoluteFill style={{background: 'linear-gradient(180deg,#26282e,#0f1013)'}} />
-    <Center y={0.36}>
-      <SearchBar at={2} cps={34} query="how to get my kid off the ipad" suggestions={[' without a meltdown', ' on weekends', ' at 7 years old']} />
+  <PaperStage>
+    <Center y={0.38}>
+      <Print rotate={3} border={14} bg="#fafafa">
+        <div style={{background: '#1b1b1f', padding: '46px 30px 60px', width: 900}}>
+          <div style={{zoom: 0.93}}>
+            <SearchBar at={2} cps={34} query="how to get my kid off the ipad" suggestions={[' without a meltdown', ' on weekends', ' at 7 years old']} />
+          </div>
+        </div>
+      </Print>
     </Center>
-  </AbsoluteFill>
+  </PaperStage>
 );
+
+/** "…hand over the [tablet] iPad again." — words on one line either side of a print (MMH inline sentence). */
+const InlineShot: React.FC = () => {
+  const r = (n: number) => W('hook3', n) - S.inline;
+  return (
+    <PaperStage>
+      <InlineSentence
+        cardAt={0}
+        left={[
+          {t: 'hand', at: r(5)},
+          {t: 'over', at: r(6)},
+          {t: 'the', at: r(7)},
+        ]}
+        right={[
+          {t: 'iPad', at: r(8)},
+          {t: 'again.', at: r(9)},
+        ]}
+        card={
+          <Print rotate={-5} pullFrom={2.8} border={10}>
+            <div style={{width: 392, height: 280, overflow: 'hidden'}}>
+              <div style={{zoom: 0.4}}>
+                <TabletAutoplay />
+              </div>
+            </div>
+          </Print>
+        }
+      />
+    </PaperStage>
+  );
+};
 
 const NewsShot: React.FC = () => (
   <AbsoluteFill style={{background: '#101010'}}>
@@ -343,16 +383,23 @@ const FactsShot: React.FC = () => {
   );
 };
 
-const EuroShot: React.FC = () => (
-  <AbsoluteFill>
-    <GlowBg base={ESU.navyDeep} colors={['rgba(46,139,87,0.45)', 'rgba(43,33,112,0.9)', 'rgba(255,215,0,0.12)']} />
-    <Center y={0.36}>
-      <div style={{transform: 'scale(0.92)'}}>
-        <TacticBoard at={2} />
-      </div>
-    </Center>
-  </AbsoluteFill>
-);
+const EuroShot: React.FC = () => <ChalkBoard at={0} />;
+
+const KidsCloudShot: React.FC = () => {
+  const frame = useCurrentFrame();
+  const n = Math.round(interpolate(frame, [4, 24], [0, 10000], {...clamp, easing: (x) => 1 - (1 - x) ** 3}));
+  const bgs = ['#181145', '#ED1C24', '#2e6332', '#2a2a30', '#c9ae2d', '#0531c5'];
+  const icons = ['1f466-1f3fd', '1f467-1f3fc', '26bd', '1f9d2-1f3fd', '1f3c5', '1f466-1f3ff', '1f467-1f3fe', '1f3c6', '1f466-1f3fb', '1f467-1f3fb', '1f945', '1f466-1f3fe'];
+  return (
+    <CardCloud
+      at={0}
+      every={2}
+      lead="kids coached"
+      big={`${n.toLocaleString('en-US')}+`}
+      cards={icons.map((icon, i) => ({icon, bg: bgs[i % bgs.length]}))}
+    />
+  );
+};
 
 const ProofStat: React.FC<{big: string; small: string; count?: number; gold?: boolean}> = ({big, small, count, gold}) => {
   const frame = useCurrentFrame();
@@ -537,7 +584,9 @@ const SoundDesign: React.FC = () => (
     <Sfx at={W('hook2', 1)} name="pop" volume={0.45} />
     <Sfx at={S.tablet} name="whoosh_long" volume={0.35} />
     <Sfx at={W('hook3', 3)} name="tick" volume={0.45} />
-    <Sfx at={W('hook3', 8)} name="boom" volume={0.35} />
+    <Sfx at={S.inline} name="swipe" volume={0.4} />
+    <Sfx at={S.inline + 2} name="shutter" volume={0.35} />
+    <Sfx at={W('hook3', 9)} name="tick" volume={0.45} />
     {/* pain */}
     <Sfx at={S.nineAm} name="glitch" volume={0.45} />
     <Sfx at={W('pain1', 3)} name="ding" volume={0.3} />
@@ -581,7 +630,10 @@ const SoundDesign: React.FC = () => (
     <Sfx at={S.euroCard} name="pop" volume={0.4} />
     <Sfx at={S.proof1} name="glitch" volume={0.3} />
     <Sfx at={W('sol4', 1)} name="boom" volume={0.4} />
-    <Sfx at={S.proof2} name="tick" volume={0.45} />
+    <Sfx at={S.proof2} name="sparkle" volume={0.3} />
+    {[0, 4, 8, 12, 16, 20].map((d) => (
+      <Sfx key={d} at={S.proof2 + d} name="pop" volume={0.25} />
+    ))}
     <Sfx at={S.proof2 + 18} name="boom" volume={0.3} />
     <Sfx at={S.proof3} name="tick" volume={0.45} />
     {/* outcome */}
@@ -624,21 +676,16 @@ export const ESU_FallLaunch: React.FC = () => {
           size={150}
           words={[
             {t: 'you’re', at: 0},
-            {t: 'not', at: W('hook2', 1) - S.badMom, big: true},
+            {t: 'not', at: W('hook2', 1) - S.badMom, big: true, flip: 4},
             {t: 'a bad mom.', at: W('hook2', 2) - S.badMom},
           ]}
         />
       </Shot>
-      <Shot
-        from={S.tablet}
-        to={S.nineAm}
-        push={0.06}
-        cuts={[
-          {at: W('hook3', 3), scale: 1.7, x: 26, y: 52},
-          {at: W('hook3', 8), scale: 1.0},
-        ]}
-      >
+      <Shot from={S.tablet} to={S.inline} push={0.06} cuts={[{at: W('hook3', 3), scale: 1.7, x: 26, y: 52}]}>
         <TabletShot />
+      </Shot>
+      <Shot from={S.inline} to={S.nineAm} push={0.05}>
+        <InlineShot />
       </Shot>
 
       {/* ---------- PAIN (black & white, stepped motion) ---------- */}
@@ -655,7 +702,7 @@ export const ESU_FallLaunch: React.FC = () => {
       >
         <NineAmShot />
       </Shot>
-      <Shot from={S.bored} to={S.google} push={0.05} mono stepped cuts={[{at: W('pain2', 4), scale: 1.55, x: 30, y: 40}]}>
+      <Shot from={S.bored} to={S.google} push={0.05} mono stepped cuts={[{at: W('pain2', 4), scale: 1.3, x: 38, y: 42}]}>
         <BoredShot />
       </Shot>
       <Shot from={S.google} to={S.again} push={0.07} mono stepped cuts={[{at: W('pain3', 5), scale: 1.16, x: 50, y: 44}]}>
@@ -677,7 +724,7 @@ export const ESU_FallLaunch: React.FC = () => {
         <TypeCard tone="light" size={150} serif={false} words={[{t: 'Single.', at: 0, big: true}]} />
       </Shot>
       <Shot from={S.day} to={S.gasp} push={0.02} shakes={[S.day]}>
-        <TypeCard tone="dark" size={150} serif={false} words={[{t: 'Day.', at: 0, big: true}]} />
+        <TypeCard tone="dark" size={150} serif={false} words={[{t: 'Day.', at: 0, big: true, flip: 3}]} />
       </Shot>
       {/* S.gasp → S.question: black, tape-stop + silence */}
 
@@ -714,10 +761,10 @@ export const ESU_FallLaunch: React.FC = () => {
         from={S.euro}
         to={S.proof1}
         push={0.05}
-        cuts={[{at: S.euroCard, scale: 1.35, x: 50, y: 40}]}
+        cuts={[{at: S.euroCard, scale: 1.25, x: 50, y: 42}]}
         overlay={
           <AbsoluteFill style={{alignItems: 'center'}}>
-            <div style={{position: 'absolute', top: 1100}}>
+            <div style={{position: 'absolute', top: 110}}>
               <WhiteCard at={S.euroCard - S.euro} icon={emoji('1f91d')} title="Grouped by age & ability" width={820} />
             </div>
           </AbsoluteFill>
@@ -728,8 +775,8 @@ export const ESU_FallLaunch: React.FC = () => {
       <Shot from={S.proof1} to={S.proof2} push={0.04} shakes={[W('sol4', 1)]}>
         <ProofStat big="#1" small="voted in Los Angeles" gold />
       </Shot>
-      <Shot from={S.proof2} to={S.proof3} push={0.04}>
-        <ProofStat big="" count={10000} small="kids coached" />
+      <Shot from={S.proof2} to={S.proof3} push={0.03}>
+        <KidsCloudShot />
       </Shot>
       <Shot from={S.proof3} to={S.weeks} push={0.04}>
         <ProofStat big="20+" small="years in LA" />
@@ -766,6 +813,12 @@ export const ESU_FallLaunch: React.FC = () => {
       {[S.nineAm, S.every, S.proof1, S.weeks].map((f) => (
         <GlitchCut key={f} at={f} />
       ))}
+      <BlockWipe at={S.inline} dir={1} />
+      <BlockWipe at={S.bored} dir={-1} />
+      <BlockWipe at={S.facts} dir={1} />
+      <BlockWipe at={S.card} dir={-1} />
+      <InvertFlash at={S.google} />
+      <InvertFlash at={S.callback} />
       <Flash at={S.drop} length={4} peak={0.5} />
       <Flash at={S.reveal + 6} length={5} peak={0.6} color="#FFE9B0" />
 
@@ -775,10 +828,12 @@ export const ESU_FallLaunch: React.FC = () => {
         size={66}
         hide={['hook2', 'sol1', 'sol4', 'cta1']}
         hideRanges={[
+          [S.inline, S.nineAm],
           [S.again, S.news],
           [S.bigNum, S.drop],
         ]}
         yByLine={{hook1: 0.74, sol2: 0.73, out1: 0.66}}
+        darkRanges={[[S.bored, S.again]]}
         emphasis={['saturday', 'ipad', 'screen', 'hundredth', 'believes', 'europeantrained', 'notice', 'confidence']}
       />
 

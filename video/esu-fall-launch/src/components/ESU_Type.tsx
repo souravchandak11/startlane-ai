@@ -19,7 +19,7 @@ export const Mono: React.FC<{children: React.ReactNode; amount?: number}> = ({ch
   <AbsoluteFill style={{filter: `grayscale(${amount}) contrast(1.12) brightness(0.96)`}}>{children}</AbsoluteFill>
 );
 
-type Word = {t: string; at: number; big?: boolean};
+type Word = {t: string; at: number; big?: boolean; /** frames after `at` when the word flips to brand red */ flip?: number};
 
 /**
  * Full-screen type card: white italic serif on black, or black on white.
@@ -64,7 +64,8 @@ export const TypeCard: React.FC<{
                 lineHeight: 1.02,
                 // tracking tightens as the word lands — a subtle "settle"
                 letterSpacing: interpolate(d, [-1, 10], [serif ? 10 : 14, serif ? -1 : -2], clamp),
-                color: fg,
+                color: w.flip !== undefined && d >= w.flip ? ESU.red : fg,
+                textShadow: tone === 'dark' && serif ? '0 0 30px rgba(255,255,255,0.45)' : 'none',
                 opacity: op,
                 transform: `translateY(${interpolate(d, [-1, 6], [12, 0], clamp)}px)`,
               }}
