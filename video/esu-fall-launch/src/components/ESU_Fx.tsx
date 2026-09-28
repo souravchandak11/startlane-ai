@@ -44,8 +44,10 @@ export const Camera: React.FC<{
   shakes?: number[];
   /** hard "crop cuts": from `at`, jump to `scale`× around origin (x%, y%) — a new shot without new footage */
   cuts?: {at: number; scale: number; x?: number; y?: number}[];
+  /** tiny scale "bumps" (MMH keyframed nudges), usually one per spoken word */
+  bumps?: number[];
   durationInFrames: number;
-}> = ({children, push = 0.06, punches = [], shakes = [], cuts = [], durationInFrames}) => {
+}> = ({children, push = 0.06, punches = [], shakes = [], cuts = [], bumps = [], durationInFrames}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   let scale = interpolate(frame, [0, durationInFrames], [1, 1 + push], {
@@ -57,6 +59,10 @@ export const Camera: React.FC<{
       const s = spring({frame: frame - p.at, fps, config: {stiffness: 260, damping: 22}});
       scale += (p.amount ?? 0.1) * s;
     }
+  }
+  for (const b of bumps) {
+    const d = frame - b;
+    if (d >= 0 && d < 8) scale += 0.014 * Math.sin((d / 8) * Math.PI) * (1 - d / 10);
   }
   let x = 0;
   let y = 0;
@@ -155,7 +161,7 @@ export const ProgressBar: React.FC = () => {
 
 /** Soft animated glow blobs used as a moving background layer. */
 export const GlowBg: React.FC<{colors?: string[]; base?: string}> = ({
-  colors = ['rgba(200,16,46,0.35)', 'rgba(26,58,107,0.9)', 'rgba(255,215,0,0.12)'],
+  colors = ['rgba(237,28,36,0.35)', 'rgba(43,33,112,0.9)', 'rgba(255,215,0,0.12)'],
   base = ESU.navyDeep,
 }) => {
   const frame = useCurrentFrame();

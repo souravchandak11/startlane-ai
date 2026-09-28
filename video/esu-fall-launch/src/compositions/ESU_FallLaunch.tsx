@@ -35,6 +35,8 @@ const E = (id: LineId) => Math.round(line(id).end * FPS);
 const W = (id: LineId, n: number) => Math.round(line(id).words[Math.min(n, line(id).words.length - 1)].start * FPS);
 
 export const TOTAL_FRAMES = Math.round(timeline.total * FPS);
+/** every spoken word's start frame — drives the per-word camera bumps */
+const WORD_FRAMES = timeline.lines.flatMap((l) => l.words.map((w) => Math.round(w.start * FPS)));
 
 // Shot boundaries (absolute frames). Every cut lands on a VO word.
 const S = {
@@ -84,12 +86,14 @@ const Shot: React.FC<{
 }> = ({from, to, children, push, cuts, shakes, mono, stepped, overlay}) => {
   // cut/shake times are written as absolute frames for readability; make them shot-relative
   const rel = (f: number) => f - from;
+  const bumps = WORD_FRAMES.filter((f) => f > from + 2 && f < to).map(rel);
   let body = (
     <Camera
       durationInFrames={to - from}
       push={push}
       cuts={cuts?.map((c) => ({...c, at: rel(c.at)}))}
       shakes={shakes?.map(rel)}
+      bumps={bumps}
     >
       {children}
     </Camera>
@@ -280,15 +284,12 @@ const RevealShot: React.FC = () => {
   const f = spring({frame: frame - fallAt, fps, config: {stiffness: 300, damping: 16}});
   return (
     <AbsoluteFill style={{background: '#050505'}}>
-      <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 30%, rgba(255,190,90,0.28) 0%, rgba(10,31,63,0.35) 40%, rgba(0,0,0,0) 70%)'}} />
+      <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 30%, rgba(255,190,90,0.28) 0%, rgba(24,17,69,0.35) 40%, rgba(0,0,0,0) 70%)'}} />
       <AbsoluteFill style={{alignItems: 'center'}}>
-        <div style={{position: 'absolute', top: 300}}>
-          <ESULogo size={330} at={0} />
+        <div style={{position: 'absolute', top: 250}}>
+          <ESULogo size={600} at={0} glow />
         </div>
-        <div style={{position: 'absolute', top: 760, textAlign: 'center'}}>
-          <div style={{fontFamily: FONT.display, fontSize: 128, color: ESU.white, letterSpacing: 8, lineHeight: 1}}>
-            EURO SOCCER <span style={{color: ESU.red}}>USA</span>
-          </div>
+        <div style={{position: 'absolute', top: 870, textAlign: 'center'}}>
           {frame >= fallAt && (
             <div
               style={{
@@ -330,7 +331,7 @@ const FactsShot: React.FC = () => {
 
 const EuroShot: React.FC = () => (
   <AbsoluteFill>
-    <GlowBg base={ESU.navyDeep} colors={['rgba(46,139,87,0.45)', 'rgba(26,58,107,0.9)', 'rgba(255,215,0,0.12)']} />
+    <GlowBg base={ESU.navyDeep} colors={['rgba(46,139,87,0.45)', 'rgba(43,33,112,0.9)', 'rgba(255,215,0,0.12)']} />
     <Center y={0.36}>
       <div style={{transform: 'scale(0.92)'}}>
         <TacticBoard at={2} />
@@ -395,7 +396,7 @@ const CardShot: React.FC = () => {
   const base = S.card;
   return (
     <AbsoluteFill>
-      <GlowBg base={ESU.navyDeep} colors={['rgba(255,215,0,0.3)', 'rgba(26,58,107,0.9)', 'rgba(200,16,46,0.3)']} />
+      <GlowBg base={ESU.navyDeep} colors={['rgba(255,215,0,0.3)', 'rgba(43,33,112,0.9)', 'rgba(237,28,36,0.3)']} />
       <Center y={0.38}>
         <PlayerCard
           at={0}
@@ -415,7 +416,7 @@ const CallbackShot: React.FC = () => {
   const a = W('out3', 5) - S.callback;
   return (
     <AbsoluteFill>
-      <GlowBg base="#0f1412" colors={['rgba(46,139,87,0.45)', 'rgba(26,58,107,0.8)', 'rgba(255,190,90,0.25)']} />
+      <GlowBg base="#0f1412" colors={['rgba(46,139,87,0.45)', 'rgba(43,33,112,0.8)', 'rgba(255,190,90,0.25)']} />
       <Center y={0.38}>
         <Chat
           name="Leo 🦖"
@@ -443,8 +444,8 @@ const CtaShot: React.FC = () => {
     <AbsoluteFill>
       <Pitch at={-40} dim={0.72} />
       <AbsoluteFill style={{alignItems: 'center'}}>
-        <div style={{position: 'absolute', top: 170}}>
-          <ESULogo size={220} at={0} shimmer={false} />
+        <div style={{position: 'absolute', top: 120}}>
+          <ESULogo size={300} at={0} shimmer={false} />
         </div>
         <div style={{position: 'absolute', top: 470, textAlign: 'center', opacity: title, transform: `translateY(${(1 - title) * 30}px)`}}>
           <div style={{fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 112, color: ESU.white, lineHeight: 1}}>Fall starts this weekend.</div>
@@ -483,9 +484,8 @@ const CtaShot: React.FC = () => {
 
 const LogoShot: React.FC = () => (
   <AbsoluteFill style={{background: '#000', alignItems: 'center', justifyContent: 'center'}}>
-    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 30, marginTop: -120}}>
-      <ESULogo size={230} at={0} shimmer={false} />
-      <div style={{fontFamily: FONT.ui, fontWeight: 600, fontSize: 38, letterSpacing: 10, color: 'rgba(255,255,255,0.85)'}}>EURO SOCCER USA</div>
+    <div style={{marginTop: -120}}>
+      <ESULogo size={420} at={0} enter="wipe" />
     </div>
   </AbsoluteFill>
 );

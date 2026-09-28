@@ -296,7 +296,7 @@ export const Chip: React.FC<{icon: string; label: string; at: number; accent?: s
         gap: 20,
         padding: '20px 34px 20px 22px',
         borderRadius: 999,
-        background: 'rgba(10,31,63,0.82)',
+        background: 'rgba(24,17,69,0.82)',
         border: `3px solid ${accent}`,
         boxShadow: '0 20px 50px rgba(0,0,0,0.45)',
         transform: `translateX(${(1 - p) * -120}px) scale(${interpolate(p, [0, 1], [0.8, 1])})`,

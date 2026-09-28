@@ -1,14 +1,15 @@
 export const ESU = {
-  navy: '#0A1F3F',
-  navyDeep: '#06142B',
-  red: '#C8102E',
+  // sampled from the official crest (public/logos/esu-logo-source.png)
+  navy: '#181145',
+  navyDeep: '#0B0826',
+  red: '#ED1C24',
   gold: '#FFD700',
   white: '#FFFFFF',
   dark: '#0D0D0D',
   green: '#2E8B57',
   gradient: {
-    primary: 'linear-gradient(135deg, #0A1F3F 0%, #1A3A6B 100%)',
-    accent: 'linear-gradient(135deg, #C8102E 0%, #FF2D4B 100%)',
+    primary: 'linear-gradient(135deg, #181145 0%, #2B2170 100%)',
+    accent: 'linear-gradient(135deg, #ED1C24 0%, #FF4A50 100%)',
     gold: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
   },
   shadow: {

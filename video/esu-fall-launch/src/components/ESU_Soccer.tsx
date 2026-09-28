@@ -263,7 +263,7 @@ export const PlayerCard: React.FC<{
       <div style={{fontFamily: FONT.display, fontSize: 96, letterSpacing: 4, marginTop: 12, lineHeight: 1}}>
         YOUR KID
       </div>
-      <div style={{height: 4, background: 'rgba(10,31,63,0.3)', margin: '18px 0 26px'}} />
+      <div style={{height: 4, background: 'rgba(24,17,69,0.3)', margin: '18px 0 26px'}} />
       <div style={{display: 'flex', flexDirection: 'column', gap: 22}}>
         {stats.map((st, i) => {
           const k = interpolate(frame, [st.at, st.at + 16], [0, 1], {...clamp, easing: (x) => 1 - (1 - x) ** 3});
@@ -273,7 +273,7 @@ export const PlayerCard: React.FC<{
           return (
             <div key={i} style={{display: 'flex', alignItems: 'center', gap: 22}}>
               <div style={{fontFamily: FONT.caption, fontWeight: 800, fontSize: 40, width: 330}}>{st.label}</div>
-              <div style={{flex: 1, height: 26, borderRadius: 13, background: 'rgba(10,31,63,0.2)', overflow: 'hidden'}}>
+              <div style={{flex: 1, height: 26, borderRadius: 13, background: 'rgba(24,17,69,0.2)', overflow: 'hidden'}}>
                 <div
                   style={{
                     height: '100%',
@@ -311,7 +311,7 @@ export const Leaves: React.FC<{count?: number; seed?: number}> = ({count = 9, se
         const y = ((frame * speed + r(2) * 2200) % 2300) - 200;
         const x = r(3) * 1080 + Math.sin((frame + i * 20) / 22) * 60;
         const size = 50 + r(4) * 60;
-        const colors = ['#E9731E', '#C8102E', '#F2A541', '#B5451B'];
+        const colors = ['#E9731E', '#ED1C24', '#F2A541', '#B5451B'];
         return (
           <svg
             key={i}
