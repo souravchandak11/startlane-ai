@@ -1,0 +1,849 @@
+{
+ "voEnd": 45.35,
+ "total": 47.95,
+ "lines": [
+  {
+   "id": "hook1",
+   "text": "If this is your kid's Saturday\u2026",
+   "start": 0.08,
+   "end": 1.51,
+   "words": [
+    {
+     "w": "If",
+     "start": 0.08,
+     "end": 0.194
+    },
+    {
+     "w": "this",
+     "start": 0.194,
+     "end": 0.423
+    },
+    {
+     "w": "is",
+     "start": 0.423,
+     "end": 0.538
+    },
+    {
+     "w": "your",
+     "start": 0.538,
+     "end": 0.709
+    },
+    {
+     "w": "kid's",
+     "start": 0.709,
+     "end": 0.995
+    },
+    {
+     "w": "Saturday\u2026",
+     "start": 0.995,
+     "end": 1.51
+    }
+   ]
+  },
+  {
+   "id": "hook2",
+   "text": "you're not a bad mom.",
+   "start": 1.63,
+   "end": 2.68,
+   "words": [
+    {
+     "w": "you're",
+     "start": 1.63,
+     "end": 1.788
+    },
+    {
+     "w": "not",
+     "start": 1.788,
+     "end": 2.05
+    },
+    {
+     "w": "a",
+     "start": 2.05,
+     "end": 2.208
+    },
+    {
+     "w": "bad",
+     "start": 2.208,
+     "end": 2.418
+    },
+    {
+     "w": "mom.",
+     "start": 2.418,
+     "end": 2.68
+    }
+   ]
+  },
+  {
+   "id": "hook3",
+   "text": "But watch this before you hand over the iPad again.",
+   "start": 2.76,
+   "end": 5.44,
+   "words": [
+    {
+     "w": "But",
+     "start": 2.76,
+     "end": 2.983
+    },
+    {
+     "w": "watch",
+     "start": 2.983,
+     "end": 3.318
+    },
+    {
+     "w": "this",
+     "start": 3.318,
+     "end": 3.542
+    },
+    {
+     "w": "before",
+     "start": 3.542,
+     "end": 3.933
+    },
+    {
+     "w": "you",
+     "start": 3.933,
+     "end": 4.1
+    },
+    {
+     "w": "hand",
+     "start": 4.1,
+     "end": 4.379
+    },
+    {
+     "w": "over",
+     "start": 4.379,
+     "end": 4.658
+    },
+    {
+     "w": "the",
+     "start": 4.658,
+     "end": 4.77
+    },
+    {
+     "w": "iPad",
+     "start": 4.77,
+     "end": 5.161
+    },
+    {
+     "w": "again.",
+     "start": 5.161,
+     "end": 5.44
+    }
+   ]
+  },
+  {
+   "id": "pain1",
+   "text": "It's 9 AM. They're already on a screen.",
+   "start": 5.64,
+   "end": 8.02,
+   "words": [
+    {
+     "w": "It's",
+     "start": 5.64,
+     "end": 5.865
+    },
+    {
+     "w": "9",
+     "start": 5.865,
+     "end": 6.24
+    },
+    {
+     "w": "AM.",
+     "start": 6.24,
+     "end": 6.39
+    },
+    {
+     "w": "They're",
+     "start": 6.48,
+     "end": 6.726
+    },
+    {
+     "w": "already",
+     "start": 6.726,
+     "end": 7.219
+    },
+    {
+     "w": "on",
+     "start": 7.219,
+     "end": 7.404
+    },
+    {
+     "w": "a",
+     "start": 7.404,
+     "end": 7.589
+    },
+    {
+     "w": "screen.",
+     "start": 7.589,
+     "end": 8.02
+    }
+   ]
+  },
+  {
+   "id": "pain2",
+   "text": "\"Mom, I'm bored\" \u2014 for the hundredth time.",
+   "start": 8.14,
+   "end": 10.28,
+   "words": [
+    {
+     "w": "\"Mom,",
+     "start": 8.14,
+     "end": 8.437
+    },
+    {
+     "w": "I'm",
+     "start": 8.437,
+     "end": 8.615
+    },
+    {
+     "w": "bored\"",
+     "start": 8.615,
+     "end": 8.971
+    },
+    {
+     "w": "\u2014",
+     "start": 8.971,
+     "end": 9.09
+    },
+    {
+     "w": "for",
+     "start": 9.34,
+     "end": 9.528
+    },
+    {
+     "w": "the",
+     "start": 9.528,
+     "end": 9.622
+    },
+    {
+     "w": "hundredth",
+     "start": 9.622,
+     "end": 10.045
+    },
+    {
+     "w": "time.",
+     "start": 10.045,
+     "end": 10.28
+    }
+   ]
+  },
+  {
+   "id": "pain3",
+   "text": "And you're googling how to get them off it\u2026 again.",
+   "start": 10.4,
+   "end": 12.46,
+   "words": [
+    {
+     "w": "And",
+     "start": 10.4,
+     "end": 10.538
+    },
+    {
+     "w": "you're",
+     "start": 10.538,
+     "end": 10.675
+    },
+    {
+     "w": "googling",
+     "start": 10.675,
+     "end": 11.042
+    },
+    {
+     "w": "how",
+     "start": 11.042,
+     "end": 11.226
+    },
+    {
+     "w": "to",
+     "start": 11.226,
+     "end": 11.364
+    },
+    {
+     "w": "get",
+     "start": 11.364,
+     "end": 11.547
+    },
+    {
+     "w": "them",
+     "start": 11.547,
+     "end": 11.731
+    },
+    {
+     "w": "off",
+     "start": 11.731,
+     "end": 11.868
+    },
+    {
+     "w": "it\u2026",
+     "start": 11.868,
+     "end": 11.96
+    },
+    {
+     "w": "again.",
+     "start": 12.07,
+     "end": 12.46
+    }
+   ]
+  },
+  {
+   "id": "pain4",
+   "text": "Kids eight to twelve now average five and a half hours of screens. Every single day.",
+   "start": 12.58,
+   "end": 17.47,
+   "words": [
+    {
+     "w": "Kids",
+     "start": 12.58,
+     "end": 12.876
+    },
+    {
+     "w": "eight",
+     "start": 12.876,
+     "end": 13.112
+    },
+    {
+     "w": "to",
+     "start": 13.112,
+     "end": 13.29
+    },
+    {
+     "w": "twelve",
+     "start": 13.29,
+     "end": 13.645
+    },
+    {
+     "w": "now",
+     "start": 13.645,
+     "end": 13.881
+    },
+    {
+     "w": "average",
+     "start": 13.881,
+     "end": 14.295
+    },
+    {
+     "w": "five",
+     "start": 14.295,
+     "end": 14.591
+    },
+    {
+     "w": "and",
+     "start": 14.591,
+     "end": 14.769
+    },
+    {
+     "w": "a",
+     "start": 14.769,
+     "end": 14.946
+    },
+    {
+     "w": "half",
+     "start": 14.946,
+     "end": 15.183
+    },
+    {
+     "w": "hours",
+     "start": 15.183,
+     "end": 15.478
+    },
+    {
+     "w": "of",
+     "start": 15.478,
+     "end": 15.597
+    },
+    {
+     "w": "screens.",
+     "start": 15.597,
+     "end": 16.07
+    },
+    {
+     "w": "Every",
+     "start": 16.53,
+     "end": 16.824
+    },
+    {
+     "w": "single",
+     "start": 16.824,
+     "end": 17.235
+    },
+    {
+     "w": "day.",
+     "start": 17.235,
+     "end": 17.47
+    }
+   ]
+  },
+  {
+   "id": "turn1",
+   "text": "What they actually need? A ball. A team. A coach who believes in them.",
+   "start": 18.02,
+   "end": 22.02,
+   "words": [
+    {
+     "w": "What",
+     "start": 18.02,
+     "end": 18.191
+    },
+    {
+     "w": "they",
+     "start": 18.191,
+     "end": 18.319
+    },
+    {
+     "w": "actually",
+     "start": 18.319,
+     "end": 18.746
+    },
+    {
+     "w": "need?",
+     "start": 18.746,
+     "end": 18.96
+    },
+    {
+     "w": "A",
+     "start": 19.17,
+     "end": 19.331
+    },
+    {
+     "w": "ball.",
+     "start": 19.331,
+     "end": 19.6
+    },
+    {
+     "w": "A",
+     "start": 19.91,
+     "end": 20.094
+    },
+    {
+     "w": "team.",
+     "start": 20.094,
+     "end": 20.4
+    },
+    {
+     "w": "A",
+     "start": 20.73,
+     "end": 20.868
+    },
+    {
+     "w": "coach",
+     "start": 20.868,
+     "end": 21.145
+    },
+    {
+     "w": "who",
+     "start": 21.145,
+     "end": 21.329
+    },
+    {
+     "w": "believes",
+     "start": 21.329,
+     "end": 21.697
+    },
+    {
+     "w": "in",
+     "start": 21.697,
+     "end": 21.836
+    },
+    {
+     "w": "them.",
+     "start": 21.836,
+     "end": 22.02
+    }
+   ]
+  },
+  {
+   "id": "sol1",
+   "text": "That's Euro Soccer USA's Fall Academy.",
+   "start": 22.14,
+   "end": 24.44,
+   "words": [
+    {
+     "w": "That's",
+     "start": 22.14,
+     "end": 22.414
+    },
+    {
+     "w": "Euro",
+     "start": 22.414,
+     "end": 22.797
+    },
+    {
+     "w": "Soccer",
+     "start": 22.797,
+     "end": 23.126
+    },
+    {
+     "w": "USA's",
+     "start": 23.126,
+     "end": 23.728
+    },
+    {
+     "w": "Fall",
+     "start": 23.728,
+     "end": 24.002
+    },
+    {
+     "w": "Academy.",
+     "start": 24.002,
+     "end": 24.44
+    }
+   ]
+  },
+  {
+   "id": "sol2",
+   "text": "Weekend soccer classes in LA for ages four to twelve,",
+   "start": 24.56,
+   "end": 27.82,
+   "words": [
+    {
+     "w": "Weekend",
+     "start": 24.56,
+     "end": 25.034
+    },
+    {
+     "w": "soccer",
+     "start": 25.034,
+     "end": 25.39
+    },
+    {
+     "w": "classes",
+     "start": 25.39,
+     "end": 25.805
+    },
+    {
+     "w": "in",
+     "start": 25.805,
+     "end": 25.983
+    },
+    {
+     "w": "LA",
+     "start": 25.983,
+     "end": 26.338
+    },
+    {
+     "w": "for",
+     "start": 26.338,
+     "end": 26.575
+    },
+    {
+     "w": "ages",
+     "start": 26.575,
+     "end": 26.99
+    },
+    {
+     "w": "four",
+     "start": 26.99,
+     "end": 27.287
+    },
+    {
+     "w": "to",
+     "start": 27.287,
+     "end": 27.464
+    },
+    {
+     "w": "twelve,",
+     "start": 27.464,
+     "end": 27.82
+    }
+   ]
+  },
+  {
+   "id": "sol3",
+   "text": "with European-trained coaches, grouped by age and ability.",
+   "start": 27.88,
+   "end": 31.12,
+   "words": [
+    {
+     "w": "with",
+     "start": 27.88,
+     "end": 28.034
+    },
+    {
+     "w": "European-trained",
+     "start": 28.034,
+     "end": 28.959
+    },
+    {
+     "w": "coaches,",
+     "start": 28.959,
+     "end": 29.37
+    },
+    {
+     "w": "grouped",
+     "start": 29.67,
+     "end": 30.046
+    },
+    {
+     "w": "by",
+     "start": 30.046,
+     "end": 30.261
+    },
+    {
+     "w": "age",
+     "start": 30.261,
+     "end": 30.529
+    },
+    {
+     "w": "and",
+     "start": 30.529,
+     "end": 30.69
+    },
+    {
+     "w": "ability.",
+     "start": 30.69,
+     "end": 31.12
+    }
+   ]
+  },
+  {
+   "id": "sol4",
+   "text": "Voted #1 in LA, with 10,000+ kids coached.",
+   "start": 31.24,
+   "end": 34.72,
+   "words": [
+    {
+     "w": "Voted",
+     "start": 31.24,
+     "end": 31.713
+    },
+    {
+     "w": "#1",
+     "start": 31.713,
+     "end": 31.983
+    },
+    {
+     "w": "in",
+     "start": 31.983,
+     "end": 32.185
+    },
+    {
+     "w": "LA,",
+     "start": 32.185,
+     "end": 32.59
+    },
+    {
+     "w": "with",
+     "start": 32.9,
+     "end": 33.102
+    },
+    {
+     "w": "10,000+",
+     "start": 33.102,
+     "end": 33.911
+    },
+    {
+     "w": "kids",
+     "start": 33.911,
+     "end": 34.248
+    },
+    {
+     "w": "coached.",
+     "start": 34.248,
+     "end": 34.72
+    }
+   ]
+  },
+  {
+   "id": "out1",
+   "text": "8 weeks from now, you'll notice it.",
+   "start": 34.84,
+   "end": 36.55,
+   "words": [
+    {
+     "w": "8",
+     "start": 34.84,
+     "end": 35.04
+    },
+    {
+     "w": "weeks",
+     "start": 35.04,
+     "end": 35.34
+    },
+    {
+     "w": "from",
+     "start": 35.34,
+     "end": 35.54
+    },
+    {
+     "w": "now,",
+     "start": 35.54,
+     "end": 35.74
+    },
+    {
+     "w": "you'll",
+     "start": 35.88,
+     "end": 36.086
+    },
+    {
+     "w": "notice",
+     "start": 36.086,
+     "end": 36.447
+    },
+    {
+     "w": "it.",
+     "start": 36.447,
+     "end": 36.55
+    }
+   ]
+  },
+  {
+   "id": "out2",
+   "text": "More confidence. Real friends. Real skills.",
+   "start": 36.65,
+   "end": 39.37,
+   "words": [
+    {
+     "w": "More",
+     "start": 36.65,
+     "end": 36.916
+    },
+    {
+     "w": "confidence.",
+     "start": 36.916,
+     "end": 37.5
+    },
+    {
+     "w": "Real",
+     "start": 37.73,
+     "end": 38.053
+    },
+    {
+     "w": "friends.",
+     "start": 38.053,
+     "end": 38.43
+    },
+    {
+     "w": "Real",
+     "start": 38.58,
+     "end": 38.975
+    },
+    {
+     "w": "skills.",
+     "start": 38.975,
+     "end": 39.37
+    }
+   ]
+  },
+  {
+   "id": "out3",
+   "text": "And a kid who asks, \"Is it Saturday yet?\"",
+   "start": 39.47,
+   "end": 41.65,
+   "words": [
+    {
+     "w": "And",
+     "start": 39.47,
+     "end": 39.628
+    },
+    {
+     "w": "a",
+     "start": 39.628,
+     "end": 39.786
+    },
+    {
+     "w": "kid",
+     "start": 39.786,
+     "end": 39.996
+    },
+    {
+     "w": "who",
+     "start": 39.996,
+     "end": 40.207
+    },
+    {
+     "w": "asks,",
+     "start": 40.207,
+     "end": 40.47
+    },
+    {
+     "w": "\"Is",
+     "start": 40.7,
+     "end": 40.812
+    },
+    {
+     "w": "it",
+     "start": 40.812,
+     "end": 40.924
+    },
+    {
+     "w": "Saturday",
+     "start": 40.924,
+     "end": 41.426
+    },
+    {
+     "w": "yet?\"",
+     "start": 41.426,
+     "end": 41.65
+    }
+   ]
+  },
+  {
+   "id": "cta1",
+   "text": "Fall starts this weekend. Tap the link and find your kid's class.",
+   "start": 41.79,
+   "end": 45.25,
+   "words": [
+    {
+     "w": "Fall",
+     "start": 41.79,
+     "end": 42.032
+    },
+    {
+     "w": "starts",
+     "start": 42.032,
+     "end": 42.419
+    },
+    {
+     "w": "this",
+     "start": 42.419,
+     "end": 42.613
+    },
+    {
+     "w": "weekend.",
+     "start": 42.613,
+     "end": 43.0
+    },
+    {
+     "w": "Tap",
+     "start": 43.39,
+     "end": 43.615
+    },
+    {
+     "w": "the",
+     "start": 43.615,
+     "end": 43.728
+    },
+    {
+     "w": "link",
+     "start": 43.728,
+     "end": 44.01
+    },
+    {
+     "w": "and",
+     "start": 44.01,
+     "end": 44.179
+    },
+    {
+     "w": "find",
+     "start": 44.179,
+     "end": 44.517
+    },
+    {
+     "w": "your",
+     "start": 44.517,
+     "end": 44.686
+    },
+    {
+     "w": "kid's",
+     "start": 44.686,
+     "end": 44.968
+    },
+    {
+     "w": "class.",
+     "start": 44.968,
+     "end": 45.25
+    }
+   ]
+  }
+ ]
+}

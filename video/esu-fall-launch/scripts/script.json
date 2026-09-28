@@ -1,0 +1,100 @@
+{
+  "voice": "af_heart",
+  "speed": 1.06,
+  "leadIn": 0.08,
+  "gap": 0.1,
+  "tail": 2.6,
+  "music": {
+    "dropAt": "turn1",
+    "dropLead": 0.0,
+    "ctaAt": "cta1"
+  },
+  "lines": [
+    {
+      "id": "hook1",
+      "text": "If this is your kid's Saturday…",
+      "pauseAfter": 0.12
+    },
+    {
+      "id": "hook2",
+      "text": "you're not a bad mom.",
+      "pauseAfter": 0.08
+    },
+    {
+      "id": "hook3",
+      "text": "But watch this before you hand over the iPad again.",
+      "pauseAfter": 0.2
+    },
+    {
+      "id": "pain1",
+      "text": "It's 9 AM. They're already on a screen.",
+      "say": "It's nine A.M. They're already on a screen.",
+      "pauseAfter": 0.12
+    },
+    {
+      "id": "pain2",
+      "text": "\"Mom, I'm bored\" — for the hundredth time.",
+      "say": "Mom, I'm bored. For the hundredth time.",
+      "pauseAfter": 0.12
+    },
+    {
+      "id": "pain3",
+      "text": "And you're googling how to get them off it… again.",
+      "pauseAfter": 0.12
+    },
+    {
+      "id": "pain4",
+      "text": "Kids eight to twelve now average five and a half hours of screens. Every single day.",
+      "pauseAfter": 0.1
+    },
+    {
+      "id": "turn1",
+      "text": "What they actually need? A ball. A team. A coach who believes in them.",
+      "pauseBefore": 0.45,
+      "pauseAfter": 0.12
+    },
+    {
+      "id": "sol1",
+      "text": "That's Euro Soccer USA's Fall Academy.",
+      "pauseAfter": 0.12
+    },
+    {
+      "id": "sol2",
+      "text": "Weekend soccer classes in LA for ages four to twelve,",
+      "pauseAfter": 0.06
+    },
+    {
+      "id": "sol3",
+      "text": "with European-trained coaches, grouped by age and ability.",
+      "pauseAfter": 0.12
+    },
+    {
+      "id": "sol4",
+      "text": "Voted #1 in LA, with 10,000+ kids coached.",
+      "pauseAfter": 0.12,
+      "say": "Voted number one in LA, with over ten thousand kids coached."
+    },
+    {
+      "id": "out1",
+      "text": "8 weeks from now, you'll notice it.",
+      "pauseAfter": 0.1,
+      "say": "Eight weeks from now, you'll notice it."
+    },
+    {
+      "id": "out2",
+      "text": "More confidence. Real friends. Real skills.",
+      "pauseAfter": 0.1
+    },
+    {
+      "id": "out3",
+      "text": "And a kid who asks, \"Is it Saturday yet?\"",
+      "say": "And a kid who asks: is it Saturday yet?",
+      "pauseAfter": 0.14
+    },
+    {
+      "id": "cta1",
+      "text": "Fall starts this weekend. Tap the link and find your kid's class.",
+      "pauseAfter": 0.1
+    }
+  ]
+}
