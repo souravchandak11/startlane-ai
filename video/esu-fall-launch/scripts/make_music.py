@@ -158,7 +158,7 @@ def tape_stop(sig, dur):
 
 
 # ----------------------------------------------------------------- sections
-def compose(total, drop, cta):
+def compose(total, stop, drop, cta):
     L = int(total * SR) + SR
     drums = np.zeros(L)
     bass = np.zeros(L)
@@ -168,7 +168,7 @@ def compose(total, drop, cta):
     side = np.ones(L)  # side-chain gain curve
 
     # ---------- PAIN: A minor, tense and empty
-    pain_end = drop - 0.28
+    pain_end = stop
     # heartbeat kick: "lub-dub" every 2 beats
     t = 0.0
     while t < pain_end - 0.6:
@@ -199,8 +199,8 @@ def compose(total, drop, cta):
         t += BEAT * 2
         i += 1
 
-    # riser into the drop + tape stop of the pain bed
-    place(fx, drop - 1.9, noise_riser(1.6), 0.5)
+    # riser fills the gap between the tape-stop and the drop
+    place(fx, stop, noise_riser(max(0.6, drop - stop - 0.05)), 0.5)
 
     # ---------- DROP: C major lift, 124 BPM
     chords = [[60, 64, 67], [55, 59, 62, 67], [57, 60, 64], [53, 57, 60, 65]]  # C G Am F
@@ -270,14 +270,20 @@ def main():
     tl = json.loads((ROOT / "src" / "timeline.json").read_text())
     spec = json.loads((ROOT / "scripts" / "script.json").read_text())
     by_id = {l["id"]: l for l in tl["lines"]}
-    drop = by_id[spec["music"]["dropAt"]]["start"] - spec["music"].get("dropLead", 0.0)
-    cta = by_id[spec["music"]["ctaAt"]]["start"]
-    mix = compose(tl["total"], drop, cta)
+    m = spec["music"]
+    if "dropAtWord" in m:
+        lid, wi = m["dropAtWord"]
+        drop = by_id[lid]["words"][wi]["start"]
+    else:
+        drop = by_id[m["dropAt"]]["start"] - m.get("dropLead", 0.0)
+    stop = by_id[m["stopAfter"]]["end"] + 0.12 if "stopAfter" in m else drop - 0.28
+    cta = by_id[m["ctaAt"]]["start"]
+    mix = compose(tl["total"], stop, drop, cta)
     left = mix
     right = np.concatenate([np.zeros(int(0.008 * SR)), mix])[: len(mix)] * 0.35 + mix * 0.65
     out = ROOT / "public" / "audio" / "music.wav"
     sf.write(out, np.stack([left, right], axis=1), SR, subtype="PCM_16")
-    print(f"music.wav {len(mix)/SR:.2f}s  drop@{drop:.2f}s  cta@{cta:.2f}s")
+    print(f"music.wav {len(mix)/SR:.2f}s  stop@{stop:.2f}s  drop@{drop:.2f}s  cta@{cta:.2f}s")
 
 
 if __name__ == "__main__":

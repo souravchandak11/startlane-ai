@@ -5,8 +5,11 @@
   "gap": 0.1,
   "tail": 2.6,
   "music": {
-    "dropAt": "turn1",
-    "dropLead": 0.0,
+    "stopAfter": "pain4",
+    "dropAtWord": [
+      "turn1",
+      4
+    ],
     "ctaAt": "cta1"
   },
   "lines": [

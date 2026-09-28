@@ -1,7 +1,7 @@
 # Fall Academy launch reel: posting kit
 
 **File:** `out/esu-fall-launch-reel.mp4` (1080×1920, 30 fps, about 48 s, H.264 + AAC)
-**Cover:** `out/cover.jpg` (frame 30: "Moms of kids 4–12" over the 6h 42m screen-time card)
+**Cover:** `out/cover.jpg` (frame 26: "Moms of kids 4–12" over the 6h 42m ▲38% screen-time card)
 
 ## Instagram / Facebook caption (paste as-is)
 

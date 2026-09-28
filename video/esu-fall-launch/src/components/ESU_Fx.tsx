@@ -27,7 +27,7 @@ export const Grain: React.FC<{opacity?: number}> = ({opacity = 0.09}) => {
         <rect width="100%" height="100%" filter={`url(#g${seed})`} />
       </svg>
       <AbsoluteFill
-        style={{background: 'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%)'}}
+        style={{background: 'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.32) 100%)'}}
       />
     </AbsoluteFill>
   );
@@ -42,8 +42,10 @@ export const Camera: React.FC<{
   push?: number;
   punches?: {at: number; amount?: number}[];
   shakes?: number[];
+  /** hard "crop cuts": from `at`, jump to `scale`× around origin (x%, y%) — a new shot without new footage */
+  cuts?: {at: number; scale: number; x?: number; y?: number}[];
   durationInFrames: number;
-}> = ({children, push = 0.06, punches = [], shakes = [], durationInFrames}) => {
+}> = ({children, push = 0.06, punches = [], shakes = [], cuts = [], durationInFrames}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   let scale = interpolate(frame, [0, durationInFrames], [1, 1 + push], {
@@ -66,9 +68,12 @@ export const Camera: React.FC<{
       y += (random(`sy${s}-${d}`) - 0.5) * k;
     }
   }
+  const cut = [...cuts].reverse().find((c) => frame >= c.at);
+  const cutScale = cut ? cut.scale : 1;
+  const origin = cut ? `${cut.x ?? 50}% ${cut.y ?? 45}%` : '50% 45%';
   return (
-    <AbsoluteFill style={{transform: `translate(${x}px, ${y}px) scale(${scale})`, transformOrigin: '50% 45%'}}>
-      {children}
+    <AbsoluteFill style={{transform: `translate(${x}px, ${y}px)`}}>
+      <AbsoluteFill style={{transform: `scale(${scale * cutScale})`, transformOrigin: origin}}>{children}</AbsoluteFill>
     </AbsoluteFill>
   );
 };

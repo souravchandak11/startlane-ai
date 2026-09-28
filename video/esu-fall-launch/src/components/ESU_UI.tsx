@@ -130,14 +130,14 @@ export const LockScreen: React.FC<{at?: number; notes: {icon: string; app: strin
                 textAlign: 'left',
                 padding: '24px 28px',
                 borderRadius: 36,
-                background: 'rgba(40,40,48,0.72)',
-                backdropFilter: 'blur(20px)',
+                background: '#ffffff',
+                color: '#111',
                 boxShadow: '0 20px 50px rgba(0,0,0,0.4)',
                 transform: `translateY(${(1 - p) * -80}px) scale(${interpolate(p, [0, 1], [0.85, 1])})`,
                 opacity: p,
               }}
             >
-              <div style={{width: 76, height: 76, borderRadius: 18, background: 'rgba(255,255,255,0.12)', display: 'grid', placeItems: 'center', flexShrink: 0}}>
+              <div style={{width: 76, height: 76, borderRadius: 18, background: '#f1f1f3', display: 'grid', placeItems: 'center', flexShrink: 0}}>
                 <Img src={staticFile(`emoji/${n.icon}.svg`)} style={{width: 50, height: 50}} />
               </div>
               <div style={{flex: 1}}>

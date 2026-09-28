@@ -5,13 +5,15 @@
   "description": "Euro Soccer USA Fall Academy launch reel (Remotion)",
   "scripts": {
     "studio": "remotion studio",
-    "render": "remotion render src/index.ts ESU-FallLaunch out/esu-fall-launch-reel.mp4",
-    "still": "remotion still src/index.ts ESU-FallLaunch out/cover.png --frame=45",
+    "render": "bash scripts/render.sh",
+    "still": "remotion still src/index.ts ESU-FallLaunch out/cover.jpg --frame=26",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@remotion/bundler": "^4.0.529",
     "@remotion/cli": "^4.0.529",
     "@remotion/fonts": "^4.0.529",
+    "@remotion/renderer": "^4.0.529",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "remotion": "^4.0.529"

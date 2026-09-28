@@ -2,9 +2,9 @@ import React from 'react';
 import {
   AbsoluteFill,
   Audio,
-  Img,
   continueRender,
   delayRender,
+  Img,
   interpolate,
   Sequence,
   spring,
@@ -16,10 +16,11 @@ import {ESU, FPS} from '../presets/brand';
 import {FONT, loadAllFonts} from '../presets/fonts';
 import timeline from '../timeline.json';
 import {ESUCaptions} from '../components/ESU_Captions';
-import {Camera, Emoji, Flash, Grain, GlowBg, ProgressBar, Sfx} from '../components/ESU_Fx';
-import {Chat, Chip, LockScreen, ScreenTimeCard, SearchBar} from '../components/ESU_UI';
-import {BouncingBall, Jersey, Leaves, Pitch, PlayerCard, TacticBoard} from '../components/ESU_Soccer';
+import {Camera, Flash, Grain, GlowBg, Sfx} from '../components/ESU_Fx';
+import {Chat, LockScreen, ScreenTimeCard, SearchBar} from '../components/ESU_UI';
+import {BouncingBall, Jersey, Pitch, PlayerCard, TacticBoard} from '../components/ESU_Soccer';
 import {ESULogo} from '../components/ESU_Logo';
+import {GlitchCut, Mono, NewsClip, Stepped, TabletAutoplay, TypeCard, WhiteCard} from '../components/ESU_Type';
 
 const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 
@@ -35,43 +36,73 @@ const W = (id: LineId, n: number) => Math.round(line(id).words[Math.min(n, line(
 
 export const TOTAL_FRAMES = Math.round(timeline.total * FPS);
 
-// Scene boundaries (absolute frames). Every cut lands on a VO line start.
+// Shot boundaries (absolute frames). Every cut lands on a VO word.
 const S = {
   hook: 0,
   badMom: L('hook2'),
-  ipad: L('hook3'),
+  tablet: L('hook3'),
   nineAm: L('pain1'),
   bored: L('pain2'),
   google: L('pain3'),
-  stat: L('pain4'),
-  blackout: E('pain4') + 2,
-  turn: L('turn1'),
+  again: W('pain3', 9),
+  news: L('pain4'),
+  bigNum: W('pain4', 12) + 4,
+  every: W('pain4', 13),
+  single: W('pain4', 14),
+  day: W('pain4', 15),
+  gasp: E('pain4') + 4,
+  question: L('turn1'),
+  drop: W('turn1', 4),
+  team: W('turn1', 6),
+  coach: W('turn1', 8),
   reveal: L('sol1'),
   facts: L('sol2'),
   euro: L('sol3'),
-  proof: L('sol4'),
+  euroCard: W('sol3', 3),
+  proof1: L('sol4'),
+  proof2: W('sol4', 4),
+  proof3: W('sol4', 7),
   weeks: L('out1'),
   card: L('out2'),
   callback: L('out3'),
   cta: L('cta1'),
+  logo: TOTAL_FRAMES - 40,
   end: TOTAL_FRAMES,
 };
 
-/** Wrap a scene: its own Sequence + camera push-in. Frames inside are relative. */
-const Scene: React.FC<{
+/** A shot: its own Sequence + camera (push-in, crop cuts, shake), optional B&W and stepped motion. */
+const Shot: React.FC<{
   from: number;
   to: number;
   children: React.ReactNode;
   push?: number;
-  punches?: {at: number; amount?: number}[];
+  cuts?: {at: number; scale: number; x?: number; y?: number}[];
   shakes?: number[];
-}> = ({from, to, children, push, punches, shakes}) => (
-  <Sequence from={from} durationInFrames={to - from} name={`scene@${from}`}>
-    <Camera durationInFrames={to - from} push={push} punches={punches} shakes={shakes}>
+  mono?: boolean;
+  stepped?: boolean;
+  overlay?: React.ReactNode;
+}> = ({from, to, children, push, cuts, shakes, mono, stepped, overlay}) => {
+  // cut/shake times are written as absolute frames for readability; make them shot-relative
+  const rel = (f: number) => f - from;
+  let body = (
+    <Camera
+      durationInFrames={to - from}
+      push={push}
+      cuts={cuts?.map((c) => ({...c, at: rel(c.at)}))}
+      shakes={shakes?.map(rel)}
+    >
       {children}
     </Camera>
-  </Sequence>
-);
+  );
+  if (stepped) body = <Stepped>{body}</Stepped>;
+  if (mono) body = <Mono>{body}</Mono>;
+  return (
+    <Sequence from={from} durationInFrames={to - from} name={`shot@${from}`}>
+      {body}
+      {overlay}
+    </Sequence>
+  );
+};
 
 const Center: React.FC<{children: React.ReactNode; y?: number}> = ({children, y = 0.4}) => (
   <AbsoluteFill style={{alignItems: 'center'}}>
@@ -79,212 +110,58 @@ const Center: React.FC<{children: React.ReactNode; y?: number}> = ({children, y 
   </AbsoluteFill>
 );
 
-/** Big kinetic headline, words slam in one by one. */
-const Slam: React.FC<{
-  words: {t: string; at: number; color?: string; serif?: boolean}[];
-  size?: number;
-  y?: number;
-}> = ({words, size = 190, y = 0.42}) => {
-  const frame = useCurrentFrame();
-  const {fps} = useVideoConfig();
-  return (
-    <AbsoluteFill style={{alignItems: 'center'}}>
-      <div
-        style={{
-          position: 'absolute',
-          top: `${y * 100}%`,
-          transform: 'translateY(-50%)',
-          width: 980,
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          gap: '0 28px',
-          textAlign: 'center',
-        }}
-      >
-        {words.map((w, i) => {
-          if (frame < w.at) return null;
-          const s = spring({frame: frame - w.at, fps, config: {stiffness: 380, damping: 17}});
-          return (
-            <span
-              key={i}
-              style={{
-                display: 'inline-block',
-                fontFamily: w.serif ? FONT.serif : FONT.heavy,
-                fontStyle: w.serif ? 'italic' : 'normal',
-                fontSize: w.serif ? size * 1.05 : size,
-                lineHeight: 1,
-                color: w.color ?? ESU.white,
-                textTransform: w.serif ? 'none' : 'uppercase',
-                transform: `scale(${interpolate(s, [0, 1], [2.2, 1])})`,
-                opacity: interpolate(s, [0, 0.3], [0, 1], clamp),
-                textShadow: '0 12px 40px rgba(0,0,0,0.6)',
-              }}
-            >
-              {w.t}
-            </span>
-          );
-        })}
-      </div>
-    </AbsoluteFill>
-  );
-};
+const emoji = (code: string, size = 56) => <Img src={staticFile(`emoji/${code}.svg`)} style={{width: size, height: size}} />;
 
-// ------------------------------------------------------------------ scenes
-/** 1 · HOOK — screen-time report slams in (visual hook on frame 0). */
-const HookScene: React.FC = () => {
+// ------------------------------------------------------------------ HOOK (color)
+const HookShot: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <AbsoluteFill>
       <GlowBg base="#0b0b10" colors={['rgba(229,50,45,0.55)', 'rgba(20,24,40,0.9)', 'rgba(229,50,45,0.2)']} />
       <AbsoluteFill style={{alignItems: 'center'}}>
-        <div
-          style={{
-            position: 'absolute',
-            top: 150,
-            display: 'flex',
-            alignItems: 'baseline',
-            gap: 18,
-            color: ESU.white,
-            textShadow: '0 8px 30px rgba(0,0,0,0.6)',
-          }}
-        >
-          <span style={{fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 104}}>Moms of kids</span>
-          <span style={{fontFamily: FONT.heavy, fontSize: 104, color: ESU.gold}}>4–12</span>
+        <div style={{position: 'absolute', top: 150, display: 'flex', alignItems: 'baseline', gap: 20, color: ESU.white, textShadow: '0 8px 30px rgba(0,0,0,0.6)'}}>
+          <span style={{fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 108}}>Moms of kids</span>
+          <span style={{fontFamily: FONT.ui, fontWeight: 700, fontSize: 96, letterSpacing: -3}}>4–12</span>
         </div>
       </AbsoluteFill>
-      <Center y={0.4}>
+      <Center y={0.42}>
         <ScreenTimeCard at={0} />
       </Center>
-      <Emoji code="1f4f1" size={170} x={950} y={1170} at={10} rotate={14} />
-      <Emoji code="23f0" size={150} x={130} y={1150} at={16} rotate={-12} />
-      {/* alarm pulse ring */}
       <AbsoluteFill
-        style={{
-          boxShadow: `inset 0 0 ${120 + Math.sin(frame / 3) * 40}px rgba(229,50,45,${0.35 + Math.sin(frame / 3) * 0.15})`,
-        }}
+        style={{boxShadow: `inset 0 0 ${120 + Math.sin(frame / 3) * 40}px rgba(229,50,45,${0.35 + Math.sin(frame / 3) * 0.15})`}}
       />
     </AbsoluteFill>
   );
 };
 
-/** 2 · "you're not a bad mom." — light-background pattern interrupt. */
-const BadMomScene: React.FC = () => {
-  const frame = useCurrentFrame();
+const TabletShot: React.FC = () => {
   const {fps} = useVideoConfig();
-  const base = S.badMom;
-  const not = W('hook2', 1) - base;
-  const s = spring({frame: frame - not, fps, config: {stiffness: 400, damping: 14}});
-  return (
-    <AbsoluteFill style={{background: '#F6F1EA', alignItems: 'center', justifyContent: 'center'}}>
-      <div style={{textAlign: 'center', marginTop: -180}}>
-        <div style={{fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 170, color: ESU.navy, lineHeight: 1}}>
-          you’re
-        </div>
-        <div
-          style={{
-            display: 'inline-block',
-            fontFamily: FONT.heavy,
-            fontSize: 250,
-            color: ESU.white,
-            background: ESU.red,
-            padding: '0 34px',
-            borderRadius: 24,
-            margin: '10px 0',
-            transform: `scale(${frame >= not ? interpolate(s, [0, 1], [1.8, 1]) : 0}) rotate(-3deg)`,
-            lineHeight: 1.05,
-          }}
-        >
-          NOT
-        </div>
-        <div style={{fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 170, color: ESU.navy, lineHeight: 1}}>
-          a bad mom.
-        </div>
-      </div>
-      <Emoji code="2764" size={150} x={860} y={540} at={W('hook2', 3) - base} rotate={12} />
-    </AbsoluteFill>
-  );
-};
-
-/** 3 · "watch this before you hand over the iPad again" — tablet with a STOP stamp. */
-const IpadScene: React.FC = () => {
   const frame = useCurrentFrame();
-  const {fps} = useVideoConfig();
-  const base = S.ipad;
-  const tab = spring({frame, fps, config: ESU.spring.photo});
-  const stampAt = W('hook3', 6) - base; // "iPad"
-  const stamp = spring({frame: frame - stampAt, fps, config: {stiffness: 500, damping: 15}});
+  const s = spring({frame, fps, config: ESU.spring.photo});
   return (
     <AbsoluteFill>
-      <GlowBg base="#0b0b10" colors={['rgba(80,120,255,0.45)', 'rgba(20,24,40,0.9)', 'rgba(229,50,45,0.25)']} />
-      <Center y={0.38}>
-        <div
-          style={{
-            width: 720,
-            height: 940,
-            borderRadius: 70,
-            background: '#111',
-            padding: 30,
-            boxShadow: '0 60px 140px rgba(0,0,0,0.7), 0 0 120px rgba(90,140,255,0.35)',
-            transform: `translateY(${(1 - tab) * 900}px) rotate(${interpolate(tab, [0, 1], [18, -4])}deg)`,
-          }}
-        >
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              borderRadius: 44,
-              background: `linear-gradient(${frame * 3}deg, #3b82f6, #a855f7, #f43f5e, #f59e0b)`,
-              display: 'grid',
-              placeItems: 'center',
-            }}
-          >
-            <div style={{fontSize: 150, filter: 'blur(1px)', opacity: 0.9}}>
-              <svg width="220" height="220" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="46" fill="rgba(255,255,255,0.25)" />
-                <path d="M40 30 L72 50 L40 70 Z" fill="white" />
-              </svg>
-            </div>
-          </div>
+      <GlowBg base="#07080d" colors={['rgba(80,120,255,0.45)', 'rgba(20,24,40,0.9)', 'rgba(229,50,45,0.2)']} />
+      <Center y={0.4}>
+        <div style={{transform: `translateY(${(1 - s) * 500}px) rotate(${interpolate(s, [0, 1], [8, -3])}deg)`}}>
+          <TabletAutoplay />
         </div>
       </Center>
-      {frame >= stampAt && (
-        <Center y={0.36}>
-          <div
-            style={{
-              fontFamily: FONT.heavy,
-              fontSize: 230,
-              color: ESU.white,
-              padding: '10px 60px',
-              border: `16px solid ${ESU.white}`,
-              background: 'rgba(200,16,46,0.92)',
-              borderRadius: 30,
-              transform: `scale(${interpolate(stamp, [0, 1], [3, 1])}) rotate(-12deg)`,
-              opacity: interpolate(stamp, [0, 0.2], [0, 1], clamp),
-              boxShadow: '0 30px 80px rgba(0,0,0,0.6)',
-            }}
-          >
-            WAIT
-          </div>
-        </Center>
-      )}
-      <Emoji code="1f440" size={150} x={170} y={330} at={6} rotate={-10} />
     </AbsoluteFill>
   );
 };
 
-/** 4 · 9 AM lock screen + notification pile-up. */
-const NineAmScene: React.FC = () => {
+// ------------------------------------------------------------------ PAIN (B&W, stepped)
+const NineAmShot: React.FC = () => {
   const base = S.nineAm;
   return (
     <AbsoluteFill>
-      <AbsoluteFill style={{background: 'linear-gradient(180deg,#1d2a4a 0%,#3a2b55 55%,#6b3b4f 100%)'}} />
-      <Center y={0.38}>
+      <AbsoluteFill style={{background: 'linear-gradient(180deg,#2a2f3a 0%,#1a1c22 60%,#0e0f12 100%)'}} />
+      <Center y={0.4}>
         <LockScreen
           notes={[
             {icon: '1f3ae', app: 'Games', text: 'Your friends are playing. Jump back in!', at: W('pain1', 3) - base},
-            {icon: '1f4fa', app: 'Videos', text: 'Up next: 47 more episodes', at: W('pain1', 5) - base},
-            {icon: '23f0', app: 'Screen Time', text: 'Time limit reached. Ignore limit?', at: W('pain1', 7) - base},
+            {icon: '1f4fa', app: 'Videos', text: 'Up next: 47 more episodes', at: W('pain1', 4) + 6 - base},
+            {icon: '23f0', app: 'Screen Time', text: 'Time limit reached. Ignore limit?', at: W('pain1', 6) - base},
           ]}
         />
       </Center>
@@ -292,18 +169,12 @@ const NineAmScene: React.FC = () => {
   );
 };
 
-/** 5 · "Mom, I'm bored" chat spam. */
-const BoredScene: React.FC = () => {
-  const base = S.bored;
-  const a = W('pain2', 0) - base;
-  const frame = useCurrentFrame();
-  const {fps} = useVideoConfig();
-  const badgeAt = W('pain2', 4) - base; // "hundredth"
-  const b = spring({frame: frame - badgeAt, fps, config: {stiffness: 400, damping: 12}});
+const BoredShot: React.FC = () => {
+  const a = W('pain2', 0) - S.bored;
   return (
     <AbsoluteFill>
-      <GlowBg base="#101014" colors={['rgba(47,124,246,0.35)', 'rgba(20,24,40,0.9)', 'rgba(229,50,45,0.2)']} />
-      <Center y={0.37}>
+      <AbsoluteFill style={{background: 'linear-gradient(180deg,#24262c,#101114)'}} />
+      <Center y={0.4}>
         <Chat
           name="Leo 🦖"
           avatar="1f629"
@@ -313,310 +184,74 @@ const BoredScene: React.FC = () => {
             {text: 'mom', at: a + 4},
             {text: 'MOM', at: a + 8, big: true},
             {text: "i'm boreddd 😩", at: a + 14},
-            {text: 'can i have the ipad', at: badgeAt - 2},
+            {text: 'can i have the ipad', at: W('pain2', 6) - S.bored + 8},
           ]}
         />
       </Center>
-      {frame >= badgeAt && (
-        <div
-          style={{
-            position: 'absolute',
-            right: 70,
-            top: 250,
-            fontFamily: FONT.heavy,
-            fontSize: 120,
-            color: ESU.white,
-            background: '#E5322D',
-            borderRadius: 999,
-            padding: '6px 44px',
-            transform: `scale(${b}) rotate(10deg)`,
-            boxShadow: '0 20px 60px rgba(229,50,45,0.6)',
-          }}
-        >
-          ×100
-        </div>
-      )}
     </AbsoluteFill>
   );
 };
 
-/** 6 · Googling it... again. */
-const GoogleScene: React.FC = () => {
-  const base = S.google;
-  const againAt = W('pain3', 9) - base;
-  return (
-    <AbsoluteFill>
-      <GlowBg base="#0d0d12" colors={['rgba(66,133,244,0.3)', 'rgba(20,24,40,0.9)', 'rgba(251,188,5,0.12)']} />
-      <Center y={0.34}>
-        <SearchBar
-          at={4}
-          cps={30}
-          query="how to get my kid off the ipad"
-          suggestions={[' without a meltdown', ' on weekends', ' at 7 years old']}
-        />
-      </Center>
-      <Emoji code="1f644" size={160} x={880} y={1080} at={againAt} rotate={10} />
-    </AbsoluteFill>
-  );
-};
+const GoogleShot: React.FC = () => (
+  <AbsoluteFill>
+    <AbsoluteFill style={{background: 'linear-gradient(180deg,#26282e,#0f1013)'}} />
+    <Center y={0.36}>
+      <SearchBar at={2} cps={34} query="how to get my kid off the ipad" suggestions={[' without a meltdown', ' on weekends', ' at 7 years old']} />
+    </Center>
+  </AbsoluteFill>
+);
 
-/** 7 · The stat: 5.5 hours. Every. Single. Day. */
-const StatScene: React.FC = () => {
-  const frame = useCurrentFrame();
-  const {fps} = useVideoConfig();
-  const base = S.stat;
-  const numAt = W('pain4', 6) - base; // "five"
-  const val = interpolate(frame, [numAt, numAt + 18], [0, 5.5], {...clamp, easing: (x) => 1 - (1 - x) ** 3});
-  const pop = spring({frame: frame - numAt, fps, config: ESU.spring.stat});
-  const every = W('pain4', 13) - base;
-  const single = W('pain4', 14) - base;
-  const day = W('pain4', 15) - base;
-  const desat = interpolate(frame, [day + 8, S.blackout - base], [0, 1], clamp);
-  return (
-    <AbsoluteFill style={{filter: `grayscale(${desat}) brightness(${1 - desat * 0.5})`}}>
-      <GlowBg base="#0b0b10" colors={['rgba(229,50,45,0.45)', 'rgba(20,24,40,0.9)', 'rgba(255,215,0,0.12)']} />
-      <AbsoluteFill style={{alignItems: 'center'}}>
-        <div style={{position: 'absolute', top: 230, fontFamily: FONT.caption, fontWeight: 800, fontSize: 54, color: 'rgba(255,255,255,0.85)', letterSpacing: 2}}>
-          KIDS AGES 8–12
-        </div>
-        <div
-          style={{
-            position: 'absolute',
-            top: 330,
-            display: 'flex',
-            alignItems: 'baseline',
-            gap: 20,
-            transform: `scale(${frame >= numAt ? interpolate(pop, [0, 1], [0.4, 1]) : 0})`,
-          }}
-        >
-          <span style={{fontFamily: FONT.stat, fontWeight: 700, fontSize: 420, lineHeight: 1, color: ESU.gold, textShadow: '0 20px 80px rgba(255,215,0,0.35)'}}>
-            {val.toFixed(1)}
-          </span>
-          <span style={{fontFamily: FONT.heavy, fontSize: 130, color: ESU.white}}>HRS</span>
-        </div>
-        <div
-          style={{
-            position: 'absolute',
-            top: 820,
-            width: 900,
-            textAlign: 'center',
-            fontFamily: FONT.caption,
-            fontWeight: 600,
-            fontSize: 38,
-            lineHeight: 1.3,
-            color: 'rgba(255,255,255,0.65)',
-            opacity: frame >= numAt ? 1 : 0,
-          }}
-        >
-          of screen time a day, on average
-          <br />
-          <span style={{fontSize: 30, opacity: 0.8}}>Source: Common Sense Media Census, 2021</span>
-        </div>
-      </AbsoluteFill>
-      <Slam
-        y={0.6}
-        size={160}
-        words={[
-          {t: 'EVERY.', at: every},
-          {t: 'SINGLE.', at: single},
-          {t: 'DAY.', at: day, color: '#FF4D4D'},
-        ]}
+const NewsShot: React.FC = () => (
+  <AbsoluteFill style={{background: '#101010'}}>
+    <AbsoluteFill style={{background: 'radial-gradient(circle at 50% 40%, #3a3a3a 0%, #0c0c0c 70%)'}} />
+    <Center y={0.42}>
+      <NewsClip
+        kicker="Common Sense Media"
+        before="Kids 8–12 now average"
+        highlight="5½ hours"
+        after="of screen time a day"
+        source="The Common Sense Census: Media Use by Tweens and Teens (2021)"
+        highlightAt={W('pain4', 6) - S.news}
       />
-    </AbsoluteFill>
-  );
-};
+    </Center>
+  </AbsoluteFill>
+);
 
-/** 8 · The turn: "A ball. A team. A coach who believes in them." */
-const TurnScene: React.FC = () => {
+const BigNumberShot: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const base = S.turn;
-  const ballAt = W('turn1', 5) - base;
-  const teamAt = W('turn1', 7) - base;
-  const coachAt = W('turn1', 9) - base;
-  const title = spring({frame, fps, config: ESU.spring.headline});
+  const p = spring({frame, fps, config: ESU.spring.stat});
   return (
-    <AbsoluteFill>
-      <Pitch at={0} dim={0.45} />
-      <AbsoluteFill style={{alignItems: 'center'}}>
-        <div
-          style={{
-            position: 'absolute',
-            top: 150,
-            fontFamily: FONT.serif,
-            fontStyle: 'italic',
-            width: 960,
-            textAlign: 'center',
-            fontSize: 132,
-            lineHeight: 1,
-            color: ESU.white,
-            textShadow: '0 10px 40px rgba(0,0,0,0.6)',
-            transform: `translateY(${(1 - title) * 60}px)`,
-            opacity: title,
-          }}
-        >
-          What they
-          <br />
-          <span style={{color: ESU.gold}}>actually</span> need?
-        </div>
-      </AbsoluteFill>
-      <BouncingBall at={ballAt - 6} x={540} floorY={930} size={300} />
-      {frame >= teamAt && (
-        <AbsoluteFill style={{alignItems: 'center'}}>
-          <div style={{position: 'absolute', top: 960, display: 'flex', gap: 6}}>
-            {[7, 9, 10, 11, 4].map((n, i) => {
-              const s = spring({frame: frame - teamAt - i * 2, fps, config: {stiffness: 320, damping: 13}});
-              return (
-                <div key={n} style={{transform: `translateY(${(1 - s) * 200}px) scale(${s})`}}>
-                  <Jersey num={n} size={190} color={i % 2 ? ESU.red : ESU.navy} trim={i % 2 ? ESU.white : ESU.red} />
-                </div>
-              );
-            })}
-          </div>
-        </AbsoluteFill>
-      )}
-      <Emoji code="1f64c" size={170} x={170} y={720} at={coachAt} rotate={-12} />
-      <Emoji code="1f4aa" size={150} x={910} y={720} at={coachAt + 5} rotate={12} />
+    <AbsoluteFill style={{background: '#050505', alignItems: 'center', justifyContent: 'center'}}>
+      <div style={{textAlign: 'center', transform: `scale(${interpolate(p, [0, 1], [1.25, 1])})`}}>
+        <div style={{fontFamily: FONT.stat, fontWeight: 700, fontSize: 470, lineHeight: 0.9, color: ESU.white}}>5½</div>
+        <div style={{fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 120, color: ESU.white, marginTop: 10}}>hours a day.</div>
+      </div>
     </AbsoluteFill>
   );
 };
 
-/** 9 · Brand reveal. */
-const RevealScene: React.FC = () => {
+// ------------------------------------------------------------------ TURN (color returns on "A ball.")
+const BallShot: React.FC = () => (
+  <AbsoluteFill>
+    <Pitch at={-10} dim={0.25} />
+    <BouncingBall at={W('turn1', 5) - S.drop - 12} x={540} floorY={1000} size={360} />
+  </AbsoluteFill>
+);
+
+const TeamShot: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const base = S.reveal;
-  const fallAt = W('sol1', 4) - base; // "Fall"
-  const f = spring({frame: frame - fallAt, fps, config: {stiffness: 300, damping: 13}});
-  const rays = frame * 0.6;
   return (
     <AbsoluteFill>
-      <GlowBg />
-      <AbsoluteFill
-        style={{
-          background: `repeating-conic-gradient(from ${rays}deg at 50% 36%, rgba(255,215,0,0.08) 0deg 8deg, rgba(0,0,0,0) 8deg 20deg)`,
-        }}
-      />
-      <Leaves count={10} />
-      <AbsoluteFill style={{alignItems: 'center'}}>
-        <div style={{position: 'absolute', top: 260}}>
-          <ESULogo size={330} at={0} />
-        </div>
-        <div style={{position: 'absolute', top: 700, textAlign: 'center'}}>
-          <div style={{fontFamily: FONT.display, fontSize: 132, color: ESU.white, letterSpacing: 6, lineHeight: 1}}>
-            EURO SOCCER <span style={{color: ESU.red}}>USA</span>
-          </div>
-          {frame >= fallAt && (
-            <div
-              style={{
-                display: 'inline-block',
-                marginTop: 18,
-                padding: '8px 40px 0',
-                background: ESU.gradient.gold,
-                borderRadius: 18,
-                fontFamily: FONT.display,
-                fontSize: 150,
-                letterSpacing: 5,
-                color: ESU.navyDeep,
-                transform: `scale(${interpolate(f, [0, 1], [2, 1])}) rotate(-2deg)`,
-                boxShadow: '0 20px 60px rgba(255,215,0,0.35)',
-              }}
-            >
-              FALL ACADEMY
-            </div>
-          )}
-        </div>
-      </AbsoluteFill>
-    </AbsoluteFill>
-  );
-};
-
-/** 10 · What it is — facts as chips. */
-const FactsScene: React.FC = () => {
-  const base = S.facts;
-  return (
-    <AbsoluteFill>
-      <Pitch at={-30} dim={0.62} tilt />
-      <Leaves count={6} seed={9} />
-      <AbsoluteFill style={{alignItems: 'center'}}>
-        <div style={{position: 'absolute', top: 230, display: 'flex', flexDirection: 'column', gap: 38, alignItems: 'center', transform: 'scale(1.12)', transformOrigin: '50% 0'}}>
-          <Chip icon="26bd" label="Weekend soccer classes" at={W('sol2', 0) - base} />
-          <Chip icon="1f4cd" label="The Sports Park · Playa Vista" at={W('sol2', 3) - base} accent={ESU.red} />
-          <Chip icon="1f5d3" label="Sat & Sun mornings" at={W('sol2', 5) - base} />
-          <Chip icon="1f60a" label="Ages 4 – 12" at={W('sol2', 7) - base} accent={ESU.red} />
-        </div>
-      </AbsoluteFill>
-    </AbsoluteFill>
-  );
-};
-
-/** 11 · "with European-trained coaches, grouped by age and ability." */
-const EuroScene: React.FC = () => {
-  const base = S.euro;
-  return (
-    <AbsoluteFill>
-      <GlowBg base={ESU.navyDeep} colors={['rgba(46,139,87,0.45)', 'rgba(26,58,107,0.9)', 'rgba(255,215,0,0.12)']} />
-      <Center y={0.32}>
-        <div style={{transform: 'scale(0.92)'}}>
-          <TacticBoard at={2} />
-        </div>
-      </Center>
-      <AbsoluteFill style={{alignItems: 'center'}}>
-        <div style={{position: 'absolute', top: 1150, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 30, transform: 'scale(1.1)'}}>
-          <Chip icon="1f3af" label="European-trained coaches" at={W('sol3', 1) - base} />
-          <Chip icon="1f91d" label="Grouped by age & ability" at={W('sol3', 3) - base} accent={ESU.red} />
-        </div>
-      </AbsoluteFill>
-    </AbsoluteFill>
-  );
-};
-
-/** 11b · Social proof: #1 in LA, 10,000+ kids, 20+ years. */
-const ProofScene: React.FC = () => {
-  const frame = useCurrentFrame();
-  const {fps} = useVideoConfig();
-  const base = S.proof;
-  const rows = [
-    {big: '#1', small: 'VOTED IN LOS ANGELES', at: W('sol4', 1) - base, icon: '1f3c6'},
-    {big: 'count', small: 'KIDS COACHED', at: W('sol4', 5) - base, icon: '26bd'},
-    {big: '20+', small: 'YEARS IN LA', at: W('sol4', 7) - base, icon: '2b50'},
-  ];
-  return (
-    <AbsoluteFill>
-      <GlowBg base={ESU.navyDeep} colors={['rgba(255,215,0,0.3)', 'rgba(26,58,107,0.9)', 'rgba(200,16,46,0.35)']} />
-      <AbsoluteFill
-        style={{
-          background: `repeating-conic-gradient(from ${frame * 0.5}deg at 50% 40%, rgba(255,215,0,0.06) 0deg 8deg, rgba(0,0,0,0) 8deg 20deg)`,
-        }}
-      />
-      <AbsoluteFill style={{alignItems: 'center'}}>
-        <div style={{position: 'absolute', top: 380, width: 860, display: 'flex', flexDirection: 'column', gap: 80, alignItems: 'flex-start'}}>
-          {rows.map((r, i) => {
-            if (frame < r.at) return null;
-            const p = spring({frame: frame - r.at, fps, config: ESU.spring.stat});
-            const n = Math.round(interpolate(frame - r.at, [0, 18], [0, 10000], {...clamp, easing: (x) => 1 - (1 - x) ** 3}));
-            const big = r.big === 'count' ? `${n.toLocaleString('en-US')}+` : r.big;
+      <Pitch at={-40} dim={0.3} tilt={false} />
+      <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
+        <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', width: 900, gap: '10px 18px', marginTop: -200}}>
+          {[7, 9, 10, 11, 4, 8].map((n, i) => {
+            const s = spring({frame: frame - i * 2, fps, config: {stiffness: 320, damping: 14}});
             return (
-              <div
-                key={i}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 34,
-                  transform: `translateX(${(1 - p) * -160}px) scale(${interpolate(p, [0, 1], [0.6, 1])})`,
-                  transformOrigin: 'left center',
-                  opacity: p,
-                }}
-              >
-                <Img src={staticFile(`emoji/${r.icon}.svg`)} style={{width: 140, height: 140, flexShrink: 0}} />
-                <div>
-                  <div style={{fontFamily: FONT.stat, fontWeight: 700, fontSize: 200, lineHeight: 0.9, color: i === 0 ? ESU.gold : ESU.white}}>
-                    {big}
-                  </div>
-                  <div style={{fontFamily: FONT.caption, fontWeight: 800, fontSize: 44, color: 'rgba(255,255,255,0.85)', letterSpacing: 2, marginTop: 14}}>
-                    {r.small}
-                  </div>
-                </div>
+              <div key={n} style={{transform: `translateY(${(1 - s) * 160}px) scale(${s})`}}>
+                <Jersey num={n} size={250} color={i % 2 ? ESU.red : ESU.navy} trim={i % 2 ? ESU.white : ESU.red} />
               </div>
             );
           })}
@@ -626,8 +261,103 @@ const ProofScene: React.FC = () => {
   );
 };
 
-/** 12 · "8 weeks from now, you'll notice it." — week counter. */
-const WeeksScene: React.FC = () => {
+const CoachShot: React.FC = () => (
+  <AbsoluteFill>
+    <Pitch at={-60} dim={0.5} />
+    <Center y={0.4}>
+      <div style={{transform: 'scale(1.12)'}}>
+        <WhiteCard at={4} icon={emoji('1f64c', 60)} title="“That was ALL you!”" body="Coach, after your kid’s first goal" width={860} />
+      </div>
+    </Center>
+  </AbsoluteFill>
+);
+
+// ------------------------------------------------------------------ SOLUTION
+const RevealShot: React.FC = () => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const fallAt = W('sol1', 4) - S.reveal;
+  const f = spring({frame: frame - fallAt, fps, config: {stiffness: 300, damping: 16}});
+  return (
+    <AbsoluteFill style={{background: '#050505'}}>
+      <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 30%, rgba(255,190,90,0.28) 0%, rgba(10,31,63,0.35) 40%, rgba(0,0,0,0) 70%)'}} />
+      <AbsoluteFill style={{alignItems: 'center'}}>
+        <div style={{position: 'absolute', top: 300}}>
+          <ESULogo size={330} at={0} />
+        </div>
+        <div style={{position: 'absolute', top: 760, textAlign: 'center'}}>
+          <div style={{fontFamily: FONT.display, fontSize: 128, color: ESU.white, letterSpacing: 8, lineHeight: 1}}>
+            EURO SOCCER <span style={{color: ESU.red}}>USA</span>
+          </div>
+          {frame >= fallAt && (
+            <div
+              style={{
+                marginTop: 18,
+                fontFamily: FONT.serif,
+                fontStyle: 'italic',
+                fontSize: 170,
+                color: ESU.gold,
+                lineHeight: 1,
+                opacity: f,
+                transform: `translateY(${(1 - f) * 20}px)`,
+              }}
+            >
+              Fall Academy
+            </div>
+          )}
+        </div>
+      </AbsoluteFill>
+    </AbsoluteFill>
+  );
+};
+
+const FactsShot: React.FC = () => {
+  const base = S.facts;
+  return (
+    <AbsoluteFill>
+      <Pitch at={-30} dim={0.55} />
+      <AbsoluteFill style={{alignItems: 'center'}}>
+        <div style={{position: 'absolute', top: 380, display: 'flex', flexDirection: 'column', gap: 26}}>
+          <WhiteCard at={W('sol2', 0) - base} icon={emoji('26bd')} title="Weekend soccer classes" body="Real coaching, real games" />
+          <WhiteCard at={W('sol2', 4) - base} icon={emoji('1f4cd')} title="The Sports Park" body="13196 Bluff Creek Dr · Playa Vista" />
+          <WhiteCard at={W('sol2', 5) - base} icon={emoji('1f5d3')} title="Sat & Sun mornings" body="8 weeks · Oct 3 – Nov 22" />
+          <WhiteCard at={W('sol2', 7) - base} icon={emoji('1f60a')} title="Ages 4–12" body="Toddler classes (1–3) too" />
+        </div>
+      </AbsoluteFill>
+    </AbsoluteFill>
+  );
+};
+
+const EuroShot: React.FC = () => (
+  <AbsoluteFill>
+    <GlowBg base={ESU.navyDeep} colors={['rgba(46,139,87,0.45)', 'rgba(26,58,107,0.9)', 'rgba(255,215,0,0.12)']} />
+    <Center y={0.36}>
+      <div style={{transform: 'scale(0.92)'}}>
+        <TacticBoard at={2} />
+      </div>
+    </Center>
+  </AbsoluteFill>
+);
+
+const ProofStat: React.FC<{big: string; small: string; count?: number; gold?: boolean}> = ({big, small, count, gold}) => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const p = spring({frame, fps, config: ESU.spring.stat});
+  const n = count ? Math.round(interpolate(frame, [0, 18], [0, count], {...clamp, easing: (x) => 1 - (1 - x) ** 3})) : 0;
+  return (
+    <AbsoluteFill style={{background: '#050505', alignItems: 'center', justifyContent: 'center'}}>
+      <AbsoluteFill style={{background: 'radial-gradient(circle at 50% 42%, rgba(255,190,90,0.22) 0%, rgba(0,0,0,0) 60%)'}} />
+      <div style={{textAlign: 'center', transform: `scale(${interpolate(p, [0, 1], [1.2, 1])})`, marginTop: -160}}>
+        <div style={{fontFamily: FONT.stat, fontWeight: 700, fontSize: count ? 300 : 420, lineHeight: 0.9, color: gold ? ESU.gold : ESU.white}}>
+          {count ? `${n.toLocaleString('en-US')}+` : big}
+        </div>
+        <div style={{fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 104, color: ESU.white, marginTop: 20}}>{small}</div>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+const WeeksShot: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const wk = Math.round(interpolate(frame, [0, 24], [1, 8], {...clamp, easing: (x) => x ** 1.6}));
@@ -635,38 +365,25 @@ const WeeksScene: React.FC = () => {
   return (
     <AbsoluteFill>
       <GlowBg base={ESU.navyDeep} />
-      <Leaves count={8} seed={5} />
       <AbsoluteFill style={{alignItems: 'center'}}>
-        <div style={{position: 'absolute', top: 280, fontFamily: FONT.display, fontSize: 110, color: 'rgba(255,255,255,0.8)', letterSpacing: 8}}>
-          WEEK
-        </div>
+        <div style={{position: 'absolute', top: 190, fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 130, color: 'rgba(255,255,255,0.9)'}}>week</div>
         <div
           style={{
             position: 'absolute',
-            top: 380,
+            top: 400,
             fontFamily: FONT.stat,
             fontWeight: 700,
             fontSize: 520,
             lineHeight: 1,
             color: wk === 8 ? ESU.gold : ESU.white,
             transform: `scale(${1 + (frame >= 24 ? (1 - pop) * 0.25 : 0)})`,
-            textShadow: '0 20px 80px rgba(0,0,0,0.5)',
           }}
         >
           {wk}
         </div>
         <div style={{position: 'absolute', top: 960, display: 'flex', gap: 14}}>
           {new Array(8).fill(0).map((_, i) => (
-            <div
-              key={i}
-              style={{
-                width: 84,
-                height: 18,
-                borderRadius: 9,
-                background: i < wk ? ESU.gold : 'rgba(255,255,255,0.18)',
-                boxShadow: i < wk ? '0 0 20px rgba(255,215,0,0.5)' : undefined,
-              }}
-            />
+            <div key={i} style={{width: 84, height: 16, borderRadius: 8, background: i < wk ? ESU.gold : 'rgba(255,255,255,0.18)'}} />
           ))}
         </div>
       </AbsoluteFill>
@@ -674,12 +391,11 @@ const WeeksScene: React.FC = () => {
   );
 };
 
-/** 13 · Outcomes as a player-card "stat upgrade". */
-const CardScene: React.FC = () => {
+const CardShot: React.FC = () => {
   const base = S.card;
   return (
     <AbsoluteFill>
-      <GlowBg base={ESU.navyDeep} colors={['rgba(255,215,0,0.35)', 'rgba(26,58,107,0.9)', 'rgba(200,16,46,0.3)']} />
+      <GlowBg base={ESU.navyDeep} colors={['rgba(255,215,0,0.3)', 'rgba(26,58,107,0.9)', 'rgba(200,16,46,0.3)']} />
       <Center y={0.38}>
         <PlayerCard
           at={0}
@@ -695,15 +411,12 @@ const CardScene: React.FC = () => {
   );
 };
 
-/** 14 · Callback to the chat: now the kid is asking for soccer. */
-const CallbackScene: React.FC = () => {
-  const base = S.callback;
-  const a = W('out3', 5) - base; // "is it Saturday yet?"
+const CallbackShot: React.FC = () => {
+  const a = W('out3', 5) - S.callback;
   return (
     <AbsoluteFill>
-      <GlowBg base="#101418" colors={['rgba(46,139,87,0.45)', 'rgba(26,58,107,0.8)', 'rgba(255,215,0,0.2)']} />
-      <Leaves count={7} seed={2} />
-      <Center y={0.36}>
+      <GlowBg base="#0f1412" colors={['rgba(46,139,87,0.45)', 'rgba(26,58,107,0.8)', 'rgba(255,190,90,0.25)']} />
+      <Center y={0.38}>
         <Chat
           name="Leo 🦖"
           avatar="1f929"
@@ -711,157 +424,79 @@ const CallbackScene: React.FC = () => {
           msgs={[
             {text: 'mom', at: 3},
             {text: 'is it saturday yet?? ⚽⚽', at: a, big: true},
-            {text: '2 more sleeps 😂', at: a + 22, me: true},
+            {text: '2 more sleeps 😂', at: a + 18, me: true},
           ]}
         />
       </Center>
-      <Emoji code="1f979" size={150} x={900} y={1060} at={a + 24} rotate={8} />
     </AbsoluteFill>
   );
 };
 
-/** 15 · Soft CTA end card. */
-const CtaScene: React.FC = () => {
+const CtaShot: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const base = S.cta;
-  const tapAt = W('cta1', 4) - base; // "Tap"
+  const tapAt = W('cta1', 4) - S.cta;
   const btn = spring({frame: frame - tapAt, fps, config: ESU.spring.headline});
-  const pulse = 1 + Math.max(0, Math.sin((frame - tapAt) / 5)) * 0.04;
-  const title = spring({frame: frame - 4, fps, config: ESU.spring.headline});
+  const pulse = 1 + Math.max(0, Math.sin((frame - tapAt) / 5)) * 0.035;
+  const title = spring({frame: frame - 2, fps, config: ESU.spring.headline});
   return (
     <AbsoluteFill>
       <Pitch at={-40} dim={0.72} />
-      <Leaves count={9} seed={7} />
       <AbsoluteFill style={{alignItems: 'center'}}>
         <div style={{position: 'absolute', top: 170}}>
-          <ESULogo size={230} at={0} />
+          <ESULogo size={220} at={0} shimmer={false} />
         </div>
-        <div style={{position: 'absolute', top: 470, textAlign: 'center', transform: `translateY(${(1 - title) * 60}px)`, opacity: title}}>
-          <div style={{fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 104, color: ESU.white, lineHeight: 1}}>
-            Fall starts this weekend.
-          </div>
-          <div style={{fontFamily: FONT.display, fontSize: 150, color: ESU.gold, letterSpacing: 5, marginTop: 20, lineHeight: 1}}>
-            FALL ACADEMY
-          </div>
-          <div style={{fontFamily: FONT.caption, fontWeight: 700, fontSize: 44, color: 'rgba(255,255,255,0.92)', marginTop: 16, lineHeight: 1.35}}>
+        <div style={{position: 'absolute', top: 470, textAlign: 'center', opacity: title, transform: `translateY(${(1 - title) * 30}px)`}}>
+          <div style={{fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 112, color: ESU.white, lineHeight: 1}}>Fall starts this weekend.</div>
+          <div style={{fontFamily: FONT.display, fontSize: 140, color: ESU.gold, letterSpacing: 6, marginTop: 22, lineHeight: 1}}>FALL ACADEMY</div>
+          <div style={{fontFamily: FONT.ui, fontWeight: 600, fontSize: 42, color: 'rgba(255,255,255,0.92)', marginTop: 18, lineHeight: 1.4}}>
             Oct 3 – Nov 22 · Sat &amp; Sun · Ages 4–12
             <br />
             The Sports Park · Playa Vista
           </div>
         </div>
         {frame >= tapAt && (
-          <div style={{position: 'absolute', top: 1010, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 26}}>
+          <div style={{position: 'absolute', top: 1020, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 26}}>
             <div
               style={{
-                fontFamily: FONT.caption,
-                fontWeight: 800,
-                fontSize: 64,
-                color: ESU.white,
-                background: ESU.gradient.accent,
-                padding: '30px 64px',
+                fontFamily: FONT.ui,
+                fontWeight: 700,
+                fontSize: 58,
+                letterSpacing: -1,
+                color: '#111',
+                background: ESU.white,
+                padding: '30px 60px',
                 borderRadius: 999,
                 transform: `scale(${btn * pulse})`,
-                boxShadow: '0 24px 70px rgba(200,16,46,0.55), inset 0 -6px 0 rgba(0,0,0,0.2)',
+                boxShadow: '0 24px 70px rgba(0,0,0,0.5)',
               }}
             >
-              FIND YOUR KID’S CLASS →
+              Find your kid’s class →
             </div>
-            <div style={{fontFamily: FONT.caption, fontWeight: 700, fontSize: 46, color: ESU.white, opacity: btn}}>
-              eurosoccerusa.com · link in bio
-            </div>
+            <div style={{fontFamily: FONT.ui, fontWeight: 600, fontSize: 44, color: ESU.white, opacity: btn}}>link in bio · eurosoccerusa.com</div>
           </div>
         )}
       </AbsoluteFill>
-      <Emoji code="1f447" size={120} x={540} y={1370} at={tapAt + 12} />
     </AbsoluteFill>
   );
 };
 
-// ------------------------------------------------------------------ sound design
-const SoundDesign: React.FC = () => (
-  <>
-    {/* hook */}
-    <Sfx at={0} name="boom" volume={0.55} />
-    <Sfx at={2} name="whoosh" volume={0.35} />
-    <Sfx at={22} name="ding" volume={0.35} />
-    <Sfx at={S.badMom} name="glitch" volume={0.3} />
-    <Sfx at={W('hook2', 1)} name="pop" volume={0.5} />
-    <Sfx at={S.ipad} name="whoosh_long" volume={0.35} />
-    <Sfx at={W('hook3', 6)} name="boom" volume={0.45} />
-    {/* pain */}
-    <Sfx at={S.nineAm} name="swipe" volume={0.4} />
-    <Sfx at={W('pain1', 3)} name="ding" volume={0.3} />
-    <Sfx at={W('pain1', 5)} name="ding" volume={0.3} />
-    <Sfx at={W('pain1', 7)} name="ding" volume={0.35} />
-    <Sfx at={S.bored} name="whoosh" volume={0.3} />
-    {[0, 4, 8, 14].map((d) => (
-      <Sfx key={d} at={W('pain2', 0) + d} name="pop" volume={0.45} />
-    ))}
-    <Sfx at={W('pain2', 4) - 2} name="pop" volume={0.45} />
-    <Sfx at={W('pain2', 4)} name="boom" volume={0.3} />
-    <Sfx at={S.google} name="swipe" volume={0.35} />
-    <Sfx at={S.google + 4} name="typing" volume={0.4} />
-    <Sfx at={S.stat} name="whoosh" volume={0.35} />
-    <Sfx at={W('pain4', 6)} name="boom" volume={0.5} />
-    <Sfx at={W('pain4', 13)} name="kick" volume={0.45} />
-    <Sfx at={W('pain4', 14)} name="kick" volume={0.45} />
-    <Sfx at={W('pain4', 15)} name="boom" volume={0.45} />
-    <Sfx at={S.blackout - 6} name="tape_stop" volume={0.35} />
-    {/* turn / solution */}
-    <Sfx at={S.turn} name="boom" volume={0.6} />
-    <Sfx at={S.turn} name="whistle" volume={0.3} />
-    <Sfx at={W('turn1', 5) - 2} name="kick" volume={0.6} />
-    <Sfx at={W('turn1', 7)} name="whoosh" volume={0.35} />
-    <Sfx at={W('turn1', 9)} name="sparkle" volume={0.35} />
-    <Sfx at={S.reveal} name="whoosh_long" volume={0.4} />
-    <Sfx at={S.reveal + 6} name="crowd" volume={0.35} />
-    <Sfx at={W('sol1', 4)} name="boom" volume={0.45} />
-    {[0, 3, 5, 7].map((n) => (
-      <Sfx key={n} at={W('sol2', n)} name="pop" volume={0.4} />
-    ))}
-    <Sfx at={S.euro} name="swipe" volume={0.35} />
-    {[0, 1, 2, 3].map((i) => (
-      <Sfx key={i} at={S.euro + 10 + i * 11} name="kick" volume={0.3} />
-    ))}
-    <Sfx at={W('sol3', 1)} name="pop" volume={0.4} />
-    <Sfx at={W('sol3', 3)} name="pop" volume={0.4} />
-    <Sfx at={S.proof} name="whoosh_long" volume={0.35} />
-    <Sfx at={W('sol4', 1)} name="boom" volume={0.45} />
-    <Sfx at={W('sol4', 1)} name="sparkle" volume={0.3} />
-    <Sfx at={W('sol4', 5)} name="riser" volume={0.18} />
-    <Sfx at={W('sol4', 5) + 18} name="boom" volume={0.35} />
-    <Sfx at={W('sol4', 7)} name="pop" volume={0.45} />
-    <Sfx at={S.weeks} name="whoosh" volume={0.35} />
-    {new Array(7).fill(0).map((_, i) => (
-      <Sfx key={i} at={S.weeks + Math.round(24 * ((i + 1) / 7) ** (1 / 1.6))} name="tick" volume={0.4} />
-    ))}
-    <Sfx at={S.weeks + 24} name="boom" volume={0.4} />
-    <Sfx at={S.card} name="whoosh_long" volume={0.4} />
-    <Sfx at={W('out2', 1)} name="sparkle" volume={0.3} />
-    <Sfx at={W('out2', 3)} name="pop" volume={0.4} />
-    <Sfx at={W('out2', 5)} name="pop" volume={0.4} />
-    <Sfx at={S.callback} name="swipe" volume={0.35} />
-    <Sfx at={S.callback + 3} name="pop" volume={0.4} />
-    <Sfx at={W('out3', 5)} name="pop" volume={0.5} />
-    <Sfx at={W('out3', 5) + 22} name="ding" volume={0.35} />
-    <Sfx at={S.cta} name="whoosh_long" volume={0.4} />
-    <Sfx at={W('cta1', 4)} name="boom" volume={0.35} />
-    <Sfx at={W('cta1', 4) + 2} name="click" volume={0.5} />
-  </>
+const LogoShot: React.FC = () => (
+  <AbsoluteFill style={{background: '#000', alignItems: 'center', justifyContent: 'center'}}>
+    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 30, marginTop: -120}}>
+      <ESULogo size={230} at={0} shimmer={false} />
+      <div style={{fontFamily: FONT.ui, fontWeight: 600, fontSize: 38, letterSpacing: 10, color: 'rgba(255,255,255,0.85)'}}>EURO SOCCER USA</div>
+    </div>
+  </AbsoluteFill>
 );
 
 // ------------------------------------------------------------------ mix
-/**
- * Music ducks ~9 dB under the voice and swells in the gaps (the drop, the
- * blackout, the end card tail) — the way agency reels keep VO intelligible
- * while the beat still carries energy.
- */
+/** Music ducks ~10 dB under the voice and swells in the gaps (drop, blackout, end card). */
 const musicVolume = (f: number) => {
   const t = f / FPS;
   const DUCK = 0.07;
   const OPEN = 0.24;
-  let dist = Infinity; // seconds to the nearest spoken line (0 inside one)
+  let dist = Infinity;
   for (const l of timeline.lines) {
     if (t >= l.start - 0.08 && t <= l.end + 0.08) {
       dist = 0;
@@ -870,9 +505,88 @@ const musicVolume = (f: number) => {
     dist = Math.min(dist, Math.abs(t - l.start), Math.abs(t - l.end));
   }
   const v = interpolate(dist, [0, 0.25], [DUCK, OPEN], clamp);
-  const fadeOut = interpolate(f, [TOTAL_FRAMES - 36, TOTAL_FRAMES - 1], [1, 0], clamp);
+  const fadeOut = interpolate(f, [S.logo - 4, S.logo + 20], [1, 0], clamp);
   return v * fadeOut;
 };
+
+const SoundDesign: React.FC = () => (
+  <>
+    {/* hook */}
+    <Sfx at={0} name="boom" volume={0.5} />
+    <Sfx at={1} name="whoosh" volume={0.35} />
+    <Sfx at={20} name="ding" volume={0.3} />
+    <Sfx at={W('hook1', 5)} name="tick" volume={0.5} />
+    <Sfx at={S.badMom} name="swipe" volume={0.4} />
+    <Sfx at={W('hook2', 1)} name="pop" volume={0.45} />
+    <Sfx at={S.tablet} name="whoosh_long" volume={0.35} />
+    <Sfx at={W('hook3', 3)} name="tick" volume={0.45} />
+    <Sfx at={W('hook3', 8)} name="boom" volume={0.35} />
+    {/* pain */}
+    <Sfx at={S.nineAm} name="glitch" volume={0.45} />
+    <Sfx at={W('pain1', 3)} name="ding" volume={0.3} />
+    <Sfx at={W('pain1', 4) + 6} name="ding" volume={0.3} />
+    <Sfx at={W('pain1', 6)} name="ding" volume={0.35} />
+    <Sfx at={S.bored} name="tick" volume={0.45} />
+    {[0, 4, 8, 14].map((d) => (
+      <Sfx key={d} at={W('pain2', 0) + d} name="pop" volume={0.45} />
+    ))}
+    <Sfx at={W('pain2', 4)} name="whoosh" volume={0.3} />
+    <Sfx at={S.google} name="swipe" volume={0.35} />
+    <Sfx at={S.google + 2} name="typing" volume={0.45} />
+    <Sfx at={S.again} name="tick" volume={0.5} />
+    <Sfx at={S.news} name="shutter" volume={0.45} />
+    <Sfx at={W('pain4', 6)} name="swipe" volume={0.35} />
+    <Sfx at={S.bigNum} name="boom" volume={0.45} />
+    <Sfx at={S.every} name="glitch" volume={0.35} />
+    <Sfx at={S.every} name="kick" volume={0.4} />
+    <Sfx at={S.single} name="kick" volume={0.4} />
+    <Sfx at={S.day} name="boom" volume={0.45} />
+    <Sfx at={S.gasp - 8} name="tape_stop" volume={0.35} />
+    {/* turn */}
+    <Sfx at={S.question} name="tick" volume={0.35} />
+    <Sfx at={S.drop} name="boom" volume={0.6} />
+    <Sfx at={S.drop} name="whistle" volume={0.3} />
+    <Sfx at={W('turn1', 5) - 1} name="kick" volume={0.55} />
+    <Sfx at={S.team} name="whoosh" volume={0.35} />
+    <Sfx at={S.coach} name="pop" volume={0.4} />
+    <Sfx at={W('turn1', 11)} name="sparkle" volume={0.3} />
+    {/* solution */}
+    <Sfx at={S.reveal} name="boom" volume={0.45} />
+    <Sfx at={S.reveal + 4} name="crowd" volume={0.35} />
+    <Sfx at={W('sol1', 4)} name="sparkle" volume={0.3} />
+    {[0, 4, 5, 7].map((n) => (
+      <Sfx key={n} at={W('sol2', n)} name="pop" volume={0.4} />
+    ))}
+    <Sfx at={S.euro} name="swipe" volume={0.35} />
+    {[0, 1, 2, 3].map((i) => (
+      <Sfx key={i} at={S.euro + 10 + i * 11} name="kick" volume={0.25} />
+    ))}
+    <Sfx at={S.euroCard} name="pop" volume={0.4} />
+    <Sfx at={S.proof1} name="glitch" volume={0.3} />
+    <Sfx at={W('sol4', 1)} name="boom" volume={0.4} />
+    <Sfx at={S.proof2} name="tick" volume={0.45} />
+    <Sfx at={S.proof2 + 18} name="boom" volume={0.3} />
+    <Sfx at={S.proof3} name="tick" volume={0.45} />
+    {/* outcome */}
+    <Sfx at={S.weeks} name="glitch" volume={0.35} />
+    {new Array(7).fill(0).map((_, i) => (
+      <Sfx key={i} at={S.weeks + Math.round(24 * ((i + 1) / 7) ** (1 / 1.6))} name="tick" volume={0.4} />
+    ))}
+    <Sfx at={S.weeks + 24} name="boom" volume={0.35} />
+    <Sfx at={S.card} name="whoosh_long" volume={0.35} />
+    <Sfx at={W('out2', 1)} name="sparkle" volume={0.25} />
+    <Sfx at={W('out2', 3)} name="tick" volume={0.45} />
+    <Sfx at={W('out2', 5)} name="tick" volume={0.45} />
+    <Sfx at={S.callback} name="swipe" volume={0.35} />
+    <Sfx at={S.callback + 3} name="pop" volume={0.4} />
+    <Sfx at={W('out3', 5)} name="pop" volume={0.5} />
+    <Sfx at={W('out3', 5) + 18} name="ding" volume={0.3} />
+    {/* CTA + logo */}
+    <Sfx at={S.cta} name="whoosh_long" volume={0.4} />
+    <Sfx at={W('cta1', 4)} name="click" volume={0.5} />
+    <Sfx at={S.logo} name="boom" volume={0.6} />
+  </>
+);
 
 // ------------------------------------------------------------------ root
 export const ESU_FallLaunch: React.FC = () => {
@@ -882,85 +596,177 @@ export const ESU_FallLaunch: React.FC = () => {
   }, [handle]);
 
   return (
-    <AbsoluteFill style={{background: ESU.dark}}>
-      <Scene from={S.hook} to={S.badMom} push={0.05} shakes={[0, 22]}>
-        <HookScene />
-      </Scene>
-      <Scene from={S.badMom} to={S.ipad} push={0.04} punches={[{at: W('hook2', 1) - S.badMom, amount: 0.06}]}>
-        <BadMomScene />
-      </Scene>
-      <Scene from={S.ipad} to={S.nineAm} push={0.07} shakes={[W('hook3', 6) - S.ipad]}>
-        <IpadScene />
-      </Scene>
-      <Scene from={S.nineAm} to={S.bored} push={0.06}>
-        <NineAmScene />
-      </Scene>
-      <Scene from={S.bored} to={S.google} push={0.05} punches={[{at: W('pain2', 4) - S.bored, amount: 0.08}]} shakes={[W('pain2', 4) - S.bored]}>
-        <BoredScene />
-      </Scene>
-      <Scene from={S.google} to={S.stat} push={0.08} punches={[{at: W('pain3', 9) - S.google, amount: 0.07}]}>
-        <GoogleScene />
-      </Scene>
-      <Scene
-        from={S.stat}
-        to={S.blackout}
+    <AbsoluteFill style={{background: '#000'}}>
+      {/* ---------- HOOK (color) ---------- */}
+      <Shot from={S.hook} to={S.badMom} push={0.05} shakes={[0]} cuts={[{at: W('hook1', 5), scale: 1.85, x: 72, y: 56}]}>
+        <HookShot />
+      </Shot>
+      <Shot from={S.badMom} to={S.tablet} push={0.03}>
+        <TypeCard
+          tone="light"
+          size={150}
+          words={[
+            {t: 'you’re', at: 0},
+            {t: 'not', at: W('hook2', 1) - S.badMom, big: true},
+            {t: 'a bad mom.', at: W('hook2', 2) - S.badMom},
+          ]}
+        />
+      </Shot>
+      <Shot
+        from={S.tablet}
+        to={S.nineAm}
         push={0.06}
-        shakes={[W('pain4', 6) - S.stat, W('pain4', 13) - S.stat, W('pain4', 14) - S.stat, W('pain4', 15) - S.stat]}
-        punches={[{at: W('pain4', 15) - S.stat, amount: 0.06}]}
+        cuts={[
+          {at: W('hook3', 3), scale: 1.7, x: 26, y: 52},
+          {at: W('hook3', 8), scale: 1.0},
+        ]}
       >
-        <StatScene />
-      </Scene>
-      {/* S.blackout → S.turn: pure black "gasp" before the drop */}
-      <Scene from={S.turn} to={S.reveal} push={0.06} shakes={[0, W('turn1', 5) - S.turn]}>
-        <TurnScene />
-      </Scene>
-      <Scene from={S.reveal} to={S.facts} push={0.05} shakes={[W('sol1', 4) - S.reveal]}>
-        <RevealScene />
-      </Scene>
-      <Scene from={S.facts} to={S.euro} push={0.05}>
-        <FactsScene />
-      </Scene>
-      <Scene from={S.euro} to={S.proof} push={0.05}>
-        <EuroScene />
-      </Scene>
-      <Scene
-        from={S.proof}
-        to={S.weeks}
-        push={0.05}
-        shakes={[W('sol4', 1) - S.proof, W('sol4', 5) - S.proof + 18]}
-      >
-        <ProofScene />
-      </Scene>
-      <Scene from={S.weeks} to={S.card} push={0.04} shakes={[24]}>
-        <WeeksScene />
-      </Scene>
-      <Scene from={S.card} to={S.callback} push={0.05}>
-        <CardScene />
-      </Scene>
-      <Scene from={S.callback} to={S.cta} push={0.05}>
-        <CallbackScene />
-      </Scene>
-      <Scene from={S.cta} to={S.end} push={0.05}>
-        <CtaScene />
-      </Scene>
+        <TabletShot />
+      </Shot>
 
-      {/* cut flashes */}
-      {[S.badMom, S.nineAm, S.stat, S.reveal, S.proof, S.weeks, S.cta].map((f) => (
-        <Flash key={f} at={f} length={5} peak={0.55} />
+      {/* ---------- PAIN (black & white, stepped motion) ---------- */}
+      <Shot
+        from={S.nineAm}
+        to={S.bored}
+        push={0.05}
+        mono
+        stepped
+        cuts={[
+          {at: W('pain1', 3), scale: 1.18, x: 50, y: 52},
+          {at: W('pain1', 6), scale: 1.2, x: 50, y: 64},
+        ]}
+      >
+        <NineAmShot />
+      </Shot>
+      <Shot from={S.bored} to={S.google} push={0.05} mono stepped cuts={[{at: W('pain2', 4), scale: 1.55, x: 30, y: 40}]}>
+        <BoredShot />
+      </Shot>
+      <Shot from={S.google} to={S.again} push={0.07} mono stepped cuts={[{at: W('pain3', 5), scale: 1.16, x: 50, y: 44}]}>
+        <GoogleShot />
+      </Shot>
+      <Shot from={S.again} to={S.news} push={0.03}>
+        <TypeCard tone="light" size={150} words={[{t: '…again.', at: 0, big: true}]} />
+      </Shot>
+      <Shot from={S.news} to={S.bigNum} push={0.06} cuts={[{at: W('pain4', 9), scale: 1.45, x: 22, y: 45}]}>
+        <NewsShot />
+      </Shot>
+      <Shot from={S.bigNum} to={S.every} push={0.04} shakes={[S.bigNum]}>
+        <BigNumberShot />
+      </Shot>
+      <Shot from={S.every} to={S.single} push={0.02}>
+        <TypeCard tone="dark" size={150} serif={false} words={[{t: 'Every.', at: 0, big: true}]} />
+      </Shot>
+      <Shot from={S.single} to={S.day} push={0.02}>
+        <TypeCard tone="light" size={150} serif={false} words={[{t: 'Single.', at: 0, big: true}]} />
+      </Shot>
+      <Shot from={S.day} to={S.gasp} push={0.02} shakes={[S.day]}>
+        <TypeCard tone="dark" size={150} serif={false} words={[{t: 'Day.', at: 0, big: true}]} />
+      </Shot>
+      {/* S.gasp → S.question: black, tape-stop + silence */}
+
+      {/* ---------- TURN: "What they actually need?" → color returns on the drop ---------- */}
+      <Shot from={S.question} to={S.drop} push={0.04}>
+        <TypeCard
+          tone="dark"
+          size={130}
+          words={[
+            {t: 'What they', at: 0},
+            {t: 'actually', at: W('turn1', 2) - S.question, big: true},
+            {t: 'need?', at: W('turn1', 3) - S.question},
+          ]}
+        />
+      </Shot>
+      <Shot from={S.drop} to={S.team} push={0.06} shakes={[S.drop, W('turn1', 5)]}>
+        <BallShot />
+      </Shot>
+      <Shot from={S.team} to={S.coach} push={0.06}>
+        <TeamShot />
+      </Shot>
+      <Shot from={S.coach} to={S.reveal} push={0.06}>
+        <CoachShot />
+      </Shot>
+
+      {/* ---------- SOLUTION ---------- */}
+      <Shot from={S.reveal} to={S.facts} push={0.05} shakes={[W('sol1', 4)]}>
+        <RevealShot />
+      </Shot>
+      <Shot from={S.facts} to={S.euro} push={0.05}>
+        <FactsShot />
+      </Shot>
+      <Shot
+        from={S.euro}
+        to={S.proof1}
+        push={0.05}
+        cuts={[{at: S.euroCard, scale: 1.35, x: 50, y: 40}]}
+        overlay={
+          <AbsoluteFill style={{alignItems: 'center'}}>
+            <div style={{position: 'absolute', top: 1100}}>
+              <WhiteCard at={S.euroCard - S.euro} icon={emoji('1f91d')} title="Grouped by age & ability" width={820} />
+            </div>
+          </AbsoluteFill>
+        }
+      >
+        <EuroShot />
+      </Shot>
+      <Shot from={S.proof1} to={S.proof2} push={0.04} shakes={[W('sol4', 1)]}>
+        <ProofStat big="#1" small="voted in Los Angeles" gold />
+      </Shot>
+      <Shot from={S.proof2} to={S.proof3} push={0.04}>
+        <ProofStat big="" count={10000} small="kids coached" />
+      </Shot>
+      <Shot from={S.proof3} to={S.weeks} push={0.04}>
+        <ProofStat big="20+" small="years in LA" />
+      </Shot>
+
+      {/* ---------- OUTCOME ---------- */}
+      <Shot from={S.weeks} to={S.card} push={0.04} shakes={[S.weeks + 24]}>
+        <WeeksShot />
+      </Shot>
+      <Shot
+        from={S.card}
+        to={S.callback}
+        push={0.05}
+        cuts={[
+          {at: W('out2', 2), scale: 1.3, x: 50, y: 52},
+          {at: W('out2', 4), scale: 1.0},
+        ]}
+      >
+        <CardShot />
+      </Shot>
+      <Shot from={S.callback} to={S.cta} push={0.05} cuts={[{at: W('out3', 5), scale: 1.22, x: 40, y: 38}]}>
+        <CallbackShot />
+      </Shot>
+
+      {/* ---------- SOFT CTA + logo card ---------- */}
+      <Shot from={S.cta} to={S.logo} push={0.05}>
+        <CtaShot />
+      </Shot>
+      <Shot from={S.logo} to={S.end} push={0.04}>
+        <LogoShot />
+      </Shot>
+
+      {/* transitions: mostly hard cuts; an occasional glitch + white flash */}
+      {[S.nineAm, S.every, S.proof1, S.weeks].map((f) => (
+        <GlitchCut key={f} at={f} />
       ))}
-      <Flash at={S.turn} length={9} peak={1} />
+      {[S.drop, S.reveal].map((f) => (
+        <Flash key={f} at={f} length={6} peak={0.9} />
+      ))}
 
       <ESUCaptions
-        y={0.71}
-        yByLine={{hook1: 0.73, hook3: 0.75, pain4: 0.74, turn1: 0.74, out3: 0.74}}
-        hide={['hook2', 'sol1', 'sol3', 'sol4', 'cta1']}
-        hidePages={['pain4:13']}
-        highlight={['saturday', 'ipad', 'screen', 'bored', 'again', 'ball', 'team', 'coach', 'europeantrained', 'ability', 'confidence', 'friends', 'skills', '8']}
-        serif={['hundredth', 'actually', 'believes', 'notice', 'yet']}
+        y={0.72}
+        maxWords={3}
+        size={66}
+        hide={['hook2', 'sol1', 'sol4', 'cta1']}
+        hideRanges={[
+          [S.again, S.news],
+          [S.bigNum, S.drop],
+        ]}
+        yByLine={{hook1: 0.74, sol2: 0.73, out1: 0.66}}
+        emphasis={['saturday', 'ipad', 'screen', 'hundredth', 'believes', 'europeantrained', 'notice', 'confidence']}
       />
 
       <Grain opacity={0.08} />
-      <ProgressBar />
 
       <Audio src={staticFile('audio/vo.wav')} volume={1} />
       <Audio src={staticFile('audio/music.wav')} volume={musicVolume} />
