@@ -15,7 +15,7 @@ export const ESULogo: React.FC<{
   at?: number;
   shimmer?: boolean;
   /** 'pop' = scale/rotate spring (default), 'wipe' = vertical mask reveal + settle */
-  enter?: 'pop' | 'wipe' | 'none';
+  enter?: 'pop' | 'wipe' | 'slam' | 'none';
   glow?: boolean;
 }> = ({size = 260, at = 0, shimmer = true, enter = 'pop', glow = false}) => {
   const frame = useCurrentFrame();
@@ -32,6 +32,11 @@ export const ESULogo: React.FC<{
   if (enter === 'pop') {
     transform = `scale(${interpolate(s, [0, 1], [0.35, 1])}) rotate(${interpolate(s, [0, 1], [-18, 0])}deg)`;
     opacity = interpolate(s, [0, 0.25], [0, 1], {extrapolateRight: 'clamp'});
+  } else if (enter === 'slam') {
+    // drops in oversized and lands hard on ~frame 6 (pair with Shockwave/Burst + shake)
+    const k = spring({frame: f, fps, config: {stiffness: 260, damping: 20, mass: 0.8}});
+    transform = `scale(${interpolate(k, [0, 1], [2.6, 1])})`;
+    opacity = interpolate(f, [0, 3], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   } else if (enter === 'wipe') {
     const k = interpolate(f, [0, 14], [0, 100], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: (x) => 1 - (1 - x) ** 3});
     clip = `inset(${100 - k}% 0 0 0)`;

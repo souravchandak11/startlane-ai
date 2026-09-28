@@ -62,7 +62,8 @@ export const TypeCard: React.FC<{
                 fontWeight: serif ? 400 : 600,
                 fontSize: w.big ? size * 1.9 : size,
                 lineHeight: 1.02,
-                letterSpacing: serif ? -1 : -2,
+                // tracking tightens as the word lands — a subtle "settle"
+                letterSpacing: interpolate(d, [-1, 10], [serif ? 10 : 14, serif ? -1 : -2], clamp),
                 color: fg,
                 opacity: op,
                 transform: `translateY(${interpolate(d, [-1, 6], [12, 0], clamp)}px)`,

@@ -16,7 +16,7 @@ import {ESU, FPS} from '../presets/brand';
 import {FONT, loadAllFonts} from '../presets/fonts';
 import timeline from '../timeline.json';
 import {ESUCaptions} from '../components/ESU_Captions';
-import {Camera, Flash, Grain, GlowBg, Sfx} from '../components/ESU_Fx';
+import {Burst, Camera, ColorFlood, Flash, Grain, GlowBg, Sfx, Shockwave} from '../components/ESU_Fx';
 import {Chat, LockScreen, ScreenTimeCard, SearchBar} from '../components/ESU_UI';
 import {BouncingBall, Jersey, Pitch, PlayerCard, TacticBoard} from '../components/ESU_Soccer';
 import {ESULogo} from '../components/ESU_Logo';
@@ -238,8 +238,14 @@ const BigNumberShot: React.FC = () => {
 // ------------------------------------------------------------------ TURN (color returns on "A ball.")
 const BallShot: React.FC = () => (
   <AbsoluteFill>
-    <Pitch at={-10} dim={0.25} />
-    <BouncingBall at={W('turn1', 5) - S.drop - 12} x={540} floorY={1000} size={360} />
+    {/* the B&W world floods back to colour from the ball's first bounce */}
+    {/* ball is released 14 frames early so its first bounce lands exactly on the beat drop */}
+    <ColorFlood at={1} x={540} y={990} frames={16}>
+      <Pitch at={-10} dim={0.25} />
+      <BouncingBall at={-14} x={540} floorY={1000} size={360} />
+    </ColorFlood>
+    <Shockwave at={1} x={540} y={995} color="rgba(255,255,255,0.85)" maxR={1100} />
+    <Burst at={1} x={540} y={995} count={22} spread={480} colors={['#9be89b', ESU.white, '#3fbf6a']} />
   </AbsoluteFill>
 );
 
@@ -285,9 +291,17 @@ const RevealShot: React.FC = () => {
   return (
     <AbsoluteFill style={{background: '#050505'}}>
       <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 30%, rgba(255,190,90,0.28) 0%, rgba(24,17,69,0.35) 40%, rgba(0,0,0,0) 70%)'}} />
+      <AbsoluteFill
+        style={{
+          background: `repeating-conic-gradient(from ${frame * 0.4}deg at 50% 28%, rgba(255,220,160,0.07) 0deg 6deg, rgba(0,0,0,0) 6deg 18deg)`,
+          opacity: interpolate(frame, [4, 14], [0, 1], clamp),
+        }}
+      />
+      <Shockwave at={6} x={540} y={530} color="rgba(255,215,0,0.8)" maxR={1000} />
+      <Burst at={6} x={540} y={530} count={34} spread={700} />
       <AbsoluteFill style={{alignItems: 'center'}}>
         <div style={{position: 'absolute', top: 250}}>
-          <ESULogo size={600} at={0} glow />
+          <ESULogo size={600} at={0} glow enter="slam" />
         </div>
         <div style={{position: 'absolute', top: 870, textAlign: 'center'}}>
           {frame >= fallAt && (
@@ -474,6 +488,9 @@ const CtaShot: React.FC = () => {
             >
               Find your kid’s class →
             </div>
+            <div style={{position: 'absolute', left: '50%', top: 64, width: 0, height: 0}}>
+              <Shockwave at={tapAt + 4} x={0} y={0} color="rgba(255,255,255,0.8)" maxR={300} />
+            </div>
             <div style={{fontFamily: FONT.ui, fontWeight: 600, fontSize: 44, color: ESU.white, opacity: btn}}>link in bio · eurosoccerusa.com</div>
           </div>
         )}
@@ -546,12 +563,12 @@ const SoundDesign: React.FC = () => (
     <Sfx at={S.question} name="tick" volume={0.35} />
     <Sfx at={S.drop} name="boom" volume={0.6} />
     <Sfx at={S.drop} name="whistle" volume={0.3} />
-    <Sfx at={W('turn1', 5) - 1} name="kick" volume={0.55} />
+    <Sfx at={S.drop + 1} name="kick" volume={0.55} />
     <Sfx at={S.team} name="whoosh" volume={0.35} />
     <Sfx at={S.coach} name="pop" volume={0.4} />
     <Sfx at={W('turn1', 11)} name="sparkle" volume={0.3} />
     {/* solution */}
-    <Sfx at={S.reveal} name="boom" volume={0.45} />
+    <Sfx at={S.reveal + 6} name="boom" volume={0.55} />
     <Sfx at={S.reveal + 4} name="crowd" volume={0.35} />
     <Sfx at={W('sol1', 4)} name="sparkle" volume={0.3} />
     {[0, 4, 5, 7].map((n) => (
@@ -687,7 +704,7 @@ export const ESU_FallLaunch: React.FC = () => {
       </Shot>
 
       {/* ---------- SOLUTION ---------- */}
-      <Shot from={S.reveal} to={S.facts} push={0.05} shakes={[W('sol1', 4)]}>
+      <Shot from={S.reveal} to={S.facts} push={0.05} shakes={[S.reveal + 6, W('sol1', 4)]}>
         <RevealShot />
       </Shot>
       <Shot from={S.facts} to={S.euro} push={0.05}>
@@ -749,9 +766,8 @@ export const ESU_FallLaunch: React.FC = () => {
       {[S.nineAm, S.every, S.proof1, S.weeks].map((f) => (
         <GlitchCut key={f} at={f} />
       ))}
-      {[S.drop, S.reveal].map((f) => (
-        <Flash key={f} at={f} length={6} peak={0.9} />
-      ))}
+      <Flash at={S.drop} length={4} peak={0.5} />
+      <Flash at={S.reveal + 6} length={5} peak={0.6} color="#FFE9B0" />
 
       <ESUCaptions
         y={0.72}

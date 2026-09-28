@@ -187,3 +187,106 @@ export const GlowBg: React.FC<{colors?: string[]; base?: string}> = ({
     </AbsoluteFill>
   );
 };
+
+/** Expanding ring on an impact (logo slam, ball strike). Frames relative to parent Sequence. */
+export const Shockwave: React.FC<{at: number; x: number; y: number; color?: string; maxR?: number}> = ({
+  at,
+  x,
+  y,
+  color = 'rgba(255,255,255,0.9)',
+  maxR = 900,
+}) => {
+  const frame = useCurrentFrame();
+  const d = frame - at;
+  if (d < 0 || d > 22) return null;
+  const k = 1 - (1 - d / 22) ** 3;
+  const r = 40 + maxR * k;
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: x - r,
+        top: y - r,
+        width: r * 2,
+        height: r * 2,
+        borderRadius: '50%',
+        border: `${Math.max(1, 18 * (1 - k))}px solid ${color}`,
+        opacity: 1 - k,
+        pointerEvents: 'none',
+      }}
+    />
+  );
+};
+
+/** Radial burst of brand-colored shards on an impact. */
+export const Burst: React.FC<{at: number; x: number; y: number; count?: number; spread?: number; colors?: string[]}> = ({
+  at,
+  x,
+  y,
+  count = 30,
+  spread = 620,
+  colors = [ESU.red, ESU.white, ESU.gold],
+}) => {
+  const frame = useCurrentFrame();
+  const d = frame - at;
+  if (d < 0 || d > 30) return null;
+  const k = 1 - (1 - d / 30) ** 2.4;
+  return (
+    <AbsoluteFill style={{pointerEvents: 'none'}}>
+      {new Array(count).fill(0).map((_, i) => {
+        const ang = random(`ba${at}-${i}`) * Math.PI * 2;
+        const dist = spread * (0.35 + random(`bd${at}-${i}`) * 0.65) * k;
+        const size = 8 + random(`bs${at}-${i}`) * 18;
+        const px = x + Math.cos(ang) * dist;
+        const py = y + Math.sin(ang) * dist + d * d * 0.35;
+        return (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              left: px - size / 2,
+              top: py - size / 2,
+              width: size,
+              height: size * (i % 3 === 0 ? 0.4 : 1),
+              borderRadius: i % 3 === 0 ? 2 : '50%',
+              background: colors[i % colors.length],
+              opacity: 1 - d / 30,
+              transform: `rotate(${ang * 57 + d * 12}deg)`,
+            }}
+          />
+        );
+      })}
+    </AbsoluteFill>
+  );
+};
+
+/**
+ * Colour flood: children render in colour, a B&W copy sits on top and a growing
+ * circular hole (from x,y) reveals the colour — used on the music drop.
+ */
+export const ColorFlood: React.FC<{at: number; x: number; y: number; frames?: number; children: React.ReactNode}> = ({
+  at,
+  x,
+  y,
+  frames = 14,
+  children,
+}) => {
+  const frame = useCurrentFrame();
+  const k = interpolate(frame - at, [0, frames], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+    easing: (t) => 1 - (1 - t) ** 3,
+  });
+  const r = k * 2300;
+  const mask = `radial-gradient(circle at ${x}px ${y}px, transparent ${r}px, black ${r + 60}px)`;
+  return (
+    <AbsoluteFill>
+      <AbsoluteFill>{children}</AbsoluteFill>
+      {k < 1 && (
+        <AbsoluteFill style={{filter: 'grayscale(1) contrast(1.15) brightness(0.8)', WebkitMaskImage: mask, maskImage: mask}}>
+          {children}
+        </AbsoluteFill>
+      )}
+    </AbsoluteFill>
+  );
+};
