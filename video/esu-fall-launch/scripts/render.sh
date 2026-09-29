@@ -12,6 +12,7 @@ BROWSER=()
 FFMPEG=node_modules/@remotion/compositor-linux-x64-gnu/ffmpeg
 [[ -x "$FFMPEG" ]] || FFMPEG=ffmpeg
 
+node scripts/scan_media.mjs   # detect real clips in public/footage + photos in public/photos
 npx remotion render src/index.ts ESU-FallLaunch out/raw.mp4 "${BROWSER[@]}" --crf 18 --audio-bitrate 320k
 npx remotion still src/index.ts ESU-FallLaunch out/cover.jpg --frame 26 --image-format jpeg "${BROWSER[@]}"
 

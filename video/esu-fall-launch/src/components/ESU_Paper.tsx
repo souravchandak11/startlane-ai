@@ -95,7 +95,7 @@ export const InlineSentence: React.FC<{
  * cards pop in every few frames, back-row cards are smaller and blurred, all drift slowly.
  */
 export const CardCloud: React.FC<{
-  cards: {icon: string; bg: string}[];
+  cards: {icon?: string; photo?: string; bg: string}[];
   lead: string;
   big: React.ReactNode;
   at?: number;
@@ -140,7 +140,14 @@ export const CardCloud: React.FC<{
               opacity: p,
             }}
           >
-            <Img src={staticFile(`emoji/${c.icon}.svg`)} style={{width: size * 0.62, height: size * 0.62}} />
+            {c.photo ? (
+              <Img
+                src={staticFile(c.photo)}
+                style={{position: 'absolute', inset: 7, width: size - 14, height: size * 1.15 - 14, objectFit: 'cover', borderRadius: 4}}
+              />
+            ) : (
+              <Img src={staticFile(`emoji/${c.icon}.svg`)} style={{width: size * 0.62, height: size * 0.62}} />
+            )}
           </div>
         );
       })}

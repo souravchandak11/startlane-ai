@@ -22,6 +22,18 @@ import {BouncingBall, Jersey, Pitch, PlayerCard} from '../components/ESU_Soccer'
 import {ESULogo} from '../components/ESU_Logo';
 import {GlitchCut, Mono, NewsClip, Stepped, TabletAutoplay, TypeCard, WhiteCard} from '../components/ESU_Type';
 import {BlockWipe, CardCloud, ChalkBoard, InlineSentence, InvertFlash, PaperStage, Print} from '../components/ESU_Paper';
+import {Clip, CornerLogos, hasClip, photo, PhotoBg, PHOTOS, SponsorLockup} from '../components/ESU_Footage';
+
+/**
+ * In-points (seconds into each source clip) for the real footage, following the
+ * OmniFlash shot lists. Tune these once the clips are in public/footage.
+ */
+const CUES = {
+  sofa: {hook: 0.0, tablet: 2.8, nineAm: 5.6},
+  kick: {strike: 9.0},
+  match: {team: 0.0, coach: 0.8, facts: 4.5},
+  winning: {weeks: 4.8, card: 6.6},
+};
 
 const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 
@@ -123,15 +135,21 @@ const HookShot: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <AbsoluteFill>
-      <GlowBg base="#0b0b10" colors={['rgba(229,50,45,0.55)', 'rgba(20,24,40,0.9)', 'rgba(229,50,45,0.2)']} />
+      {hasClip('sofa') ? (
+        <Clip slot="sofa" inSec={CUES.sofa.hook} />
+      ) : (
+        <GlowBg base="#0b0b10" colors={['rgba(229,50,45,0.55)', 'rgba(20,24,40,0.9)', 'rgba(229,50,45,0.2)']} />
+      )}
       <AbsoluteFill style={{alignItems: 'center'}}>
-        <div style={{position: 'absolute', top: 150, display: 'flex', alignItems: 'baseline', gap: 20, color: ESU.white, textShadow: '0 8px 30px rgba(0,0,0,0.6)'}}>
+        <div style={{position: 'absolute', top: 300, display: 'flex', alignItems: 'baseline', gap: 20, color: ESU.white, textShadow: '0 8px 30px rgba(0,0,0,0.6)'}}>
           <span style={{fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 108}}>Moms of kids</span>
           <span style={{fontFamily: FONT.ui, fontWeight: 700, fontSize: 96, letterSpacing: -3}}>4–12</span>
         </div>
       </AbsoluteFill>
-      <Center y={0.42}>
-        <ScreenTimeCard at={0} />
+      <Center y={hasClip('sofa') ? 0.52 : 0.46}>
+        <div style={{transform: `scale(${hasClip('sofa') ? 0.82 : 1})`}}>
+          <ScreenTimeCard at={0} />
+        </div>
       </Center>
       <AbsoluteFill
         style={{boxShadow: `inset 0 0 ${120 + Math.sin(frame / 3) * 40}px rgba(229,50,45,${0.35 + Math.sin(frame / 3) * 0.15})`}}
@@ -146,12 +164,18 @@ const TabletShot: React.FC = () => {
   const s = spring({frame, fps, config: ESU.spring.photo});
   return (
     <AbsoluteFill>
-      <GlowBg base="#07080d" colors={['rgba(80,120,255,0.45)', 'rgba(20,24,40,0.9)', 'rgba(229,50,45,0.2)']} />
-      <Center y={0.4}>
-        <div style={{transform: `translateY(${(1 - s) * 500}px) rotate(${interpolate(s, [0, 1], [8, -3])}deg)`}}>
-          <TabletAutoplay />
-        </div>
-      </Center>
+      {hasClip('sofa') ? (
+        <Clip slot="sofa" inSec={CUES.sofa.tablet} />
+      ) : (
+        <>
+          <GlowBg base="#07080d" colors={['rgba(80,120,255,0.45)', 'rgba(20,24,40,0.9)', 'rgba(229,50,45,0.2)']} />
+          <Center y={0.4}>
+            <div style={{transform: `translateY(${(1 - s) * 500}px) rotate(${interpolate(s, [0, 1], [8, -3])}deg)`}}>
+              <TabletAutoplay />
+            </div>
+          </Center>
+        </>
+      )}
     </AbsoluteFill>
   );
 };
@@ -161,8 +185,15 @@ const NineAmShot: React.FC = () => {
   const base = S.nineAm;
   return (
     <AbsoluteFill>
-      <AbsoluteFill style={{background: 'linear-gradient(180deg,#2a2f3a 0%,#1a1c22 60%,#0e0f12 100%)'}} />
-      <Center y={0.4}>
+      {hasClip('sofa') ? (
+        <>
+          <Clip slot="sofa" inSec={CUES.sofa.nineAm} grade="mono" />
+          <AbsoluteFill style={{background: 'rgba(0,0,0,0.35)'}} />
+        </>
+      ) : (
+        <AbsoluteFill style={{background: 'linear-gradient(180deg,#2a2f3a 0%,#1a1c22 60%,#0e0f12 100%)'}} />
+      )}
+      <Center y={0.42}>
         <LockScreen
           notes={[
             {icon: '1f3ae', app: 'Games', text: 'Your friends are playing. Jump back in!', at: W('pain1', 3) - base},
@@ -281,8 +312,14 @@ const BallShot: React.FC = () => (
     {/* the B&W world floods back to colour from the ball's first bounce */}
     {/* ball is released 14 frames early so its first bounce lands exactly on the beat drop */}
     <ColorFlood at={1} x={540} y={990} frames={16}>
-      <Pitch at={-10} dim={0.25} />
-      <BouncingBall at={-14} x={540} floorY={1000} size={360} />
+      {hasClip('kick') ? (
+        <Clip slot="kick" inSec={CUES.kick.strike} scrim="none" />
+      ) : (
+        <>
+          <Pitch at={-10} dim={0.25} />
+          <BouncingBall at={-14} x={540} floorY={1000} size={360} />
+        </>
+      )}
     </ColorFlood>
     <Shockwave at={1} x={540} y={995} color="rgba(255,255,255,0.85)" maxR={1100} />
     <Burst at={1} x={540} y={995} count={22} spread={480} colors={['#9be89b', ESU.white, '#3fbf6a']} />
@@ -294,8 +331,14 @@ const TeamShot: React.FC = () => {
   const {fps} = useVideoConfig();
   return (
     <AbsoluteFill>
-      <Pitch at={-40} dim={0.3} tilt={false} />
-      <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
+      {hasClip('match') ? (
+        <Clip slot="match" inSec={CUES.match.team} />
+      ) : photo(2) ? (
+        <PhotoBg i={2} dim={0.25} />
+      ) : (
+        <Pitch at={-40} dim={0.3} tilt={false} />
+      )}
+      <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', opacity: hasClip('match') || photo(2) ? 0 : 1}}>
         <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', width: 900, gap: '10px 18px', marginTop: -200}}>
           {[7, 9, 10, 11, 4, 8].map((n, i) => {
             const s = spring({frame: frame - i * 2, fps, config: {stiffness: 320, damping: 14}});
@@ -313,7 +356,13 @@ const TeamShot: React.FC = () => {
 
 const CoachShot: React.FC = () => (
   <AbsoluteFill>
-    <Pitch at={-60} dim={0.5} />
+    {hasClip('match') ? (
+      <Clip slot="match" inSec={CUES.match.coach} />
+    ) : photo(3) ? (
+      <PhotoBg i={3} dim={0.3} />
+    ) : (
+      <Pitch at={-60} dim={0.5} />
+    )}
     <Center y={0.4}>
       <div style={{transform: 'scale(1.12)'}}>
         <WhiteCard at={4} icon={emoji('1f64c', 60)} title="“That was ALL you!”" body="Coach, after your kid’s first goal" width={860} />
@@ -330,6 +379,7 @@ const RevealShot: React.FC = () => {
   const f = spring({frame: frame - fallAt, fps, config: {stiffness: 300, damping: 16}});
   return (
     <AbsoluteFill style={{background: '#050505'}}>
+      {photo(0) && <PhotoBg i={0} dim={0.72} blur={5} />}
       <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 30%, rgba(255,190,90,0.28) 0%, rgba(24,17,69,0.35) 40%, rgba(0,0,0,0) 70%)'}} />
       <AbsoluteFill
         style={{
@@ -370,7 +420,13 @@ const FactsShot: React.FC = () => {
   const base = S.facts;
   return (
     <AbsoluteFill>
-      <Pitch at={-30} dim={0.55} />
+      {hasClip('match') ? (
+        <Clip slot="match" inSec={CUES.match.facts} />
+      ) : photo(1) ? (
+        <PhotoBg i={1} dim={0.35} />
+      ) : (
+        <Pitch at={-30} dim={0.55} />
+      )}
       <AbsoluteFill style={{alignItems: 'center'}}>
         <div style={{position: 'absolute', top: 380, display: 'flex', flexDirection: 'column', gap: 26}}>
           <WhiteCard at={W('sol2', 0) - base} icon={emoji('26bd')} title="Weekend soccer classes" body="Real coaching, real games" />
@@ -396,18 +452,19 @@ const KidsCloudShot: React.FC = () => {
       every={2}
       lead="kids coached"
       big={`${n.toLocaleString('en-US')}+`}
-      cards={icons.map((icon, i) => ({icon, bg: bgs[i % bgs.length]}))}
+      cards={icons.map((icon, i) => ({icon, bg: bgs[i % bgs.length], photo: PHOTOS.length && i % 3 !== 2 ? photo(i)!.file : undefined}))}
     />
   );
 };
 
-const ProofStat: React.FC<{big: string; small: string; count?: number; gold?: boolean}> = ({big, small, count, gold}) => {
+const ProofStat: React.FC<{big: string; small: string; count?: number; gold?: boolean; bg?: number}> = ({big, small, count, gold, bg}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const p = spring({frame, fps, config: ESU.spring.stat});
   const n = count ? Math.round(interpolate(frame, [0, 18], [0, count], {...clamp, easing: (x) => 1 - (1 - x) ** 3})) : 0;
   return (
     <AbsoluteFill style={{background: '#050505', alignItems: 'center', justifyContent: 'center'}}>
+      {bg !== undefined && photo(bg) && <PhotoBg i={bg} dim={0.62} mono />}
       <AbsoluteFill style={{background: 'radial-gradient(circle at 50% 42%, rgba(255,190,90,0.22) 0%, rgba(0,0,0,0) 60%)'}} />
       <div style={{textAlign: 'center', transform: `scale(${interpolate(p, [0, 1], [1.2, 1])})`, marginTop: -160}}>
         <div style={{fontFamily: FONT.stat, fontWeight: 700, fontSize: count ? 300 : 420, lineHeight: 0.9, color: gold ? ESU.gold : ESU.white}}>
@@ -426,24 +483,38 @@ const WeeksShot: React.FC = () => {
   const pop = spring({frame: frame - 24, fps, config: ESU.spring.stat});
   return (
     <AbsoluteFill>
-      <GlowBg base={ESU.navyDeep} />
+      {hasClip('winning') ? (
+        <>
+          <Clip slot="winning" inSec={CUES.winning.weeks} />
+          <AbsoluteFill style={{background: 'rgba(11,8,38,0.45)'}} />
+        </>
+      ) : PHOTOS.length ? (
+        // one real photo per week tick — an MMH-style 0.1–0.3 s flash montage
+        <>
+          <PhotoBg i={wk - 1} dim={0.5} drift={2} />
+          <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(11,8,38,0.55), rgba(11,8,38,0.2) 50%, rgba(11,8,38,0.65))'}} />
+        </>
+      ) : (
+        <GlowBg base={ESU.navyDeep} />
+      )}
       <AbsoluteFill style={{alignItems: 'center'}}>
-        <div style={{position: 'absolute', top: 190, fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 130, color: 'rgba(255,255,255,0.9)'}}>week</div>
+        <div style={{position: 'absolute', top: 280, fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 130, color: 'rgba(255,255,255,0.9)', textShadow: '0 4px 30px rgba(0,0,0,0.6)'}}>week</div>
         <div
           style={{
             position: 'absolute',
-            top: 400,
+            top: 440,
             fontFamily: FONT.stat,
             fontWeight: 700,
             fontSize: 520,
             lineHeight: 1,
+            textShadow: '0 20px 60px rgba(0,0,0,0.55)',
             color: wk === 8 ? ESU.gold : ESU.white,
             transform: `scale(${1 + (frame >= 24 ? (1 - pop) * 0.25 : 0)})`,
           }}
         >
           {wk}
         </div>
-        <div style={{position: 'absolute', top: 960, display: 'flex', gap: 14}}>
+        <div style={{position: 'absolute', top: 1000, display: 'flex', gap: 14}}>
           {new Array(8).fill(0).map((_, i) => (
             <div key={i} style={{width: 84, height: 16, borderRadius: 8, background: i < wk ? ESU.gold : 'rgba(255,255,255,0.18)'}} />
           ))}
@@ -457,7 +528,16 @@ const CardShot: React.FC = () => {
   const base = S.card;
   return (
     <AbsoluteFill>
-      <GlowBg base={ESU.navyDeep} colors={['rgba(255,215,0,0.3)', 'rgba(43,33,112,0.9)', 'rgba(237,28,36,0.3)']} />
+      {hasClip('winning') ? (
+        <>
+          <Clip slot="winning" inSec={CUES.winning.card} />
+          <AbsoluteFill style={{background: 'rgba(11,8,38,0.35)'}} />
+        </>
+      ) : photo(6) ? (
+        <PhotoBg i={6} dim={0.55} blur={3} />
+      ) : (
+        <GlowBg base={ESU.navyDeep} colors={['rgba(255,215,0,0.3)', 'rgba(43,33,112,0.9)', 'rgba(237,28,36,0.3)']} />
+      )}
       <Center y={0.38}>
         <PlayerCard
           at={0}
@@ -473,8 +553,56 @@ const CardShot: React.FC = () => {
   );
 };
 
+/** Floating chat bubbles over live footage (the "is it saturday yet??" payoff). */
+const FloatingChat: React.FC<{a: number}> = ({a}) => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const bubble = (text: string, at: number, me = false, big = false) => {
+    if (frame < at) return null;
+    const p = spring({frame: frame - at, fps, config: {stiffness: 420, damping: 18}});
+    return (
+      <div
+        style={{
+          alignSelf: me ? 'flex-end' : 'flex-start',
+          padding: big ? '22px 34px' : '16px 28px',
+          borderRadius: 40,
+          fontFamily: FONT.ui,
+          fontSize: big ? 56 : 42,
+          fontWeight: big ? 800 : 600,
+          color: me ? '#fff' : '#111',
+          background: me ? '#2F7CF6' : 'rgba(255,255,255,0.97)',
+          boxShadow: '0 18px 44px rgba(0,0,0,0.45)',
+          transformOrigin: me ? 'right bottom' : 'left bottom',
+          transform: `scale(${p})`,
+        }}
+      >
+        {text}
+      </div>
+    );
+  };
+  return (
+    <AbsoluteFill style={{alignItems: 'center'}}>
+      <div style={{position: 'absolute', top: 380, width: 860, display: 'flex', flexDirection: 'column', gap: 16}}>
+        {bubble('mom', 4)}
+        {bubble('is it saturday yet?? ⚽⚽', a, false, true)}
+        {bubble('2 more sleeps 😂', a + 18, true)}
+      </div>
+    </AbsoluteFill>
+  );
+};
+
 const CallbackShot: React.FC = () => {
   const a = W('out3', 5) - S.callback;
+  if (hasClip('prep')) {
+    // real footage: the boy, already in kit, bouncing a ball at mom's bed at sunrise
+    return (
+      <AbsoluteFill>
+        {/* source bed scene is 0–1.79 s; slowed slightly to fill the line */}
+        <Clip slot="prep" inSec={0} rate={0.76} />
+        <FloatingChat a={a} />
+      </AbsoluteFill>
+    );
+  }
   return (
     <AbsoluteFill>
       <GlowBg base="#0f1412" colors={['rgba(46,139,87,0.45)', 'rgba(43,33,112,0.8)', 'rgba(255,190,90,0.25)']} />
@@ -490,6 +618,124 @@ const CallbackShot: React.FC = () => {
           ]}
         />
       </Center>
+    </AbsoluteFill>
+  );
+};
+
+/** Soft CTA over the real "walk to the field" footage: car mirror → photo in a book → walking in. */
+const CtaFootageShot: React.FC = () => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const tapAt = W('cta1', 4) - S.cta;
+  // source cuts (scene-detected): car 1.79–3.17 s, book 3.17–4.17 s, walk 4.17 s →
+  const bookAt = Math.round(1.38 * fps);
+  const walkAt = W('cta1', 8) - S.cta; // "find your kid's class"
+  const line = spring({frame: frame - 2, fps, config: ESU.spring.headline});
+  const btn = spring({frame: frame - tapAt, fps, config: ESU.spring.headline});
+  const panel = spring({frame: frame - walkAt, fps, config: {stiffness: 140, damping: 18}});
+  const pulse = 1 + Math.max(0, Math.sin((frame - tapAt) / 5)) * 0.035;
+  const shot = frame < bookAt ? 'car' : frame < walkAt ? 'book' : 'walk';
+  const button = (
+    <div style={{position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18}}>
+      <div
+        style={{
+          fontFamily: FONT.ui,
+          fontWeight: 700,
+          fontSize: 54,
+          letterSpacing: -1,
+          color: '#111',
+          background: ESU.white,
+          padding: '26px 56px',
+          borderRadius: 999,
+          transform: `scale(${btn * pulse})`,
+          boxShadow: '0 24px 70px rgba(0,0,0,0.55)',
+        }}
+      >
+        Find your kid’s class →
+      </div>
+      <div style={{position: 'absolute', left: '50%', top: 56, width: 0, height: 0}}>
+        <Shockwave at={tapAt + 4} x={0} y={0} color="rgba(255,255,255,0.85)" maxR={300} />
+      </div>
+      <div style={{fontFamily: FONT.ui, fontWeight: 600, fontSize: 38, color: ESU.white, opacity: btn, textShadow: '0 3px 14px rgba(0,0,0,0.8)'}}>
+        link in bio · eurosoccerusa.com
+      </div>
+    </div>
+  );
+  return (
+    <AbsoluteFill>
+      {shot === 'car' && <Clip slot="prep" inSec={1.8} />}
+      {shot === 'book' && (
+        <Sequence from={bookAt} layout="none">
+          <Clip slot="prep" inSec={3.17} rate={Math.min(1, 1.0 / ((walkAt - bookAt) / fps))} />
+        </Sequence>
+      )}
+      {shot === 'walk' && (
+        <Sequence from={walkAt} layout="none">
+          <Clip slot="prep" inSec={4.2} scrim="top" />
+        </Sequence>
+      )}
+      {shot !== 'walk' && (
+        <AbsoluteFill style={{alignItems: 'center'}}>
+          <div style={{position: 'absolute', top: 1360, textAlign: 'center', opacity: line, transform: `translateY(${(1 - line) * 24}px)`}}>
+            <div style={{fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 104, color: ESU.white, lineHeight: 1, textShadow: '0 0 30px rgba(255,255,255,0.45), 0 6px 30px rgba(0,0,0,0.8)'}}>
+              Fall starts this weekend.
+            </div>
+            <div style={{fontFamily: FONT.ui, fontWeight: 600, fontSize: 40, color: ESU.white, marginTop: 14, textShadow: '0 3px 14px rgba(0,0,0,0.8)'}}>
+              Oct 3 – Nov 22 · Sat &amp; Sun mornings
+            </div>
+          </div>
+          {frame >= tapAt && <div style={{position: 'absolute', top: 1560}}>{button}</div>}
+        </AbsoluteFill>
+      )}
+      {shot === 'walk' && (
+        <AbsoluteFill style={{alignItems: 'center'}}>
+          <div
+            style={{
+              position: 'absolute',
+              top: 300,
+              width: 900,
+              padding: '38px 40px 42px',
+              borderRadius: 36,
+              background: 'rgba(11,8,38,0.72)',
+              backdropFilter: 'blur(14px)',
+              border: '1px solid rgba(255,255,255,0.18)',
+              boxShadow: '0 30px 80px rgba(0,0,0,0.45)',
+              textAlign: 'center',
+              opacity: panel,
+              transform: `translateY(${(1 - panel) * -40}px) scale(${interpolate(panel, [0, 1], [0.96, 1])})`,
+            }}
+          >
+            <div style={{fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 64, color: ESU.white, lineHeight: 1}}>Euro Soccer USA</div>
+            <div style={{fontFamily: FONT.display, fontSize: 132, color: ESU.gold, letterSpacing: 6, lineHeight: 1, marginTop: 10}}>FALL ACADEMY</div>
+            <div style={{height: 2, background: 'rgba(255,255,255,0.25)', margin: '20px 60px 22px'}} />
+            {[
+              ['🗓', '8 weekends · Oct 3 – Nov 22'],
+              ['⏰', 'Sat & Sun mornings · 9 AM – 12 PM'],
+              ['⚽', 'Ages 4–12 · toddler classes too'],
+              ['📍', 'The Sports Park · Playa Vista, LA'],
+            ].map(([icon, text], i) => {
+              const r = spring({frame: frame - walkAt - 4 - i * 3, fps, config: {stiffness: 260, damping: 20}});
+              return (
+                <div
+                  key={i}
+                  style={{
+                    fontFamily: FONT.ui,
+                    fontWeight: 600,
+                    fontSize: 38,
+                    color: 'rgba(255,255,255,0.95)',
+                    lineHeight: 1.55,
+                    opacity: r,
+                    transform: `translateX(${(1 - r) * 40}px)`,
+                  }}
+                >
+                  {icon} {text}
+                </div>
+              );
+            })}
+          </div>
+          <div style={{position: 'absolute', top: 1180}}>{button}</div>
+        </AbsoluteFill>
+      )}
     </AbsoluteFill>
   );
 };
@@ -548,8 +794,9 @@ const CtaShot: React.FC = () => {
 
 const LogoShot: React.FC = () => (
   <AbsoluteFill style={{background: '#000', alignItems: 'center', justifyContent: 'center'}}>
-    <div style={{marginTop: -120}}>
+    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 70, marginTop: -60}}>
       <ESULogo size={420} at={0} enter="wipe" />
+      <SponsorLockup at={10} />
     </div>
   </AbsoluteFill>
 );
@@ -764,7 +1011,7 @@ export const ESU_FallLaunch: React.FC = () => {
         cuts={[{at: S.euroCard, scale: 1.25, x: 50, y: 42}]}
         overlay={
           <AbsoluteFill style={{alignItems: 'center'}}>
-            <div style={{position: 'absolute', top: 110}}>
+            <div style={{position: 'absolute', top: 270}}>
               <WhiteCard at={S.euroCard - S.euro} icon={emoji('1f91d')} title="Grouped by age & ability" width={820} />
             </div>
           </AbsoluteFill>
@@ -773,13 +1020,13 @@ export const ESU_FallLaunch: React.FC = () => {
         <EuroShot />
       </Shot>
       <Shot from={S.proof1} to={S.proof2} push={0.04} shakes={[W('sol4', 1)]}>
-        <ProofStat big="#1" small="voted in Los Angeles" gold />
+        <ProofStat big="#1" small="voted in Los Angeles" gold bg={4} />
       </Shot>
       <Shot from={S.proof2} to={S.proof3} push={0.03}>
         <KidsCloudShot />
       </Shot>
       <Shot from={S.proof3} to={S.weeks} push={0.04}>
-        <ProofStat big="20+" small="years in LA" />
+        <ProofStat big="20+" small="years in LA" bg={5} />
       </Shot>
 
       {/* ---------- OUTCOME ---------- */}
@@ -803,7 +1050,7 @@ export const ESU_FallLaunch: React.FC = () => {
 
       {/* ---------- SOFT CTA + logo card ---------- */}
       <Shot from={S.cta} to={S.logo} push={0.05}>
-        <CtaShot />
+        {hasClip('prep') ? <CtaFootageShot /> : <CtaShot />}
       </Shot>
       <Shot from={S.logo} to={S.end} push={0.04}>
         <LogoShot />
@@ -836,6 +1083,8 @@ export const ESU_FallLaunch: React.FC = () => {
         darkRanges={[[S.bored, S.again]]}
         emphasis={['saturday', 'ipad', 'screen', 'hundredth', 'believes', 'europeantrained', 'notice', 'confidence']}
       />
+
+      <CornerLogos hideCrest={[[S.reveal, S.facts]]} hideAll={[[S.logo, S.end + 10]]} />
 
       <Grain opacity={0.08} />
 
