@@ -8,6 +8,8 @@ The reel has three parts. It opens on the pain (weekends lost to screens). It th
 sells the outcome (confidence, friends, skills, a kid who can't wait for Saturday).
 It ends on a soft call to action ("Fall starts this weekend. Tap the link and find your kid's class").
 
+**Two cuts:** `ESU-FallLaunch` is the final **footage cut**: five OmniFlash clips in `public/footage`, cut on the voiceover, with every MMH graphic layered on top. `ESU-FallLaunch-Graphics` is the motion-graphics-only cut.
+
 | Output | Path |
 |---|---|
 | Final reel: 48.1 s, H.264 High yuv420p + AAC 320k, −14.1 LUFS / −1.5 dBTP | `out/esu-fall-launch-reel.mp4` |
@@ -93,6 +95,8 @@ Voice: warm female narrator, mom-to-mom (Kokoro TTS `af_heart`, generated offlin
 | 46.6 | — | Logo card on black + bass thump |
 
 ## 4. Editing and re-rendering
+
+**Footage (not in git, since the clips are large):** put the five OmniFlash clips in `public/footage/`. Each file name must contain its slot keyword: `sofa`, `kick`, `match`, `winning`, `prep`. `scripts/scan_media.mjs` maps them automatically. The in/out points per shot are listed at the top of `src/compositions/ESU_FallLaunchFootage.tsx`. Photos dropped in `public/photos/` feed the week-counter flash montage.
 
 ```bash
 npm install

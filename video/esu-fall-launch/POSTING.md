@@ -1,7 +1,8 @@
 # Fall Academy launch reel: posting kit
 
 **File:** `out/esu-fall-launch-reel.mp4` (1080×1920, 30 fps, about 48 s, H.264 + AAC)
-**Cover:** `out/cover.jpg` (frame 26: "Moms of kids 4–12" over the 6h 42m ▲38% screen-time card)
+**Cover:** `out/cover.jpg` (frame 26: "Moms of kids 4–12" + the 6h 42m ▲38% screen-time card over the boy's screen-lit face)
+**Branding:** ESU crest top-left and **Wateria · Official Sponsor** top-right for the whole reel. The end card reads "Proudly sponsored by Wateria".
 
 ## Instagram / Facebook caption (paste as-is)
 
@@ -17,12 +18,18 @@
 >
 > Fall starts THIS weekend. Tap the link in bio to find your kid's class 👆
 >
+> Proudly sponsored by Wateria 💧
+>
 > #LAmoms #PlayaVista #WestLA #kidssoccer #youthsoccer #screentime #momlife #LAparents #soccerkids #EuroSoccerUSA
 
 **First comment (pin it):** "Which age group is your little one? Drop it below and we'll tell you the best class time 👇"
 It works as a soft call to action, and every reply is a lead you can DM.
 
 **On-screen text safe zones:** all text stays between y ≈ 150 and 1500 px, so the Reels UI never covers it.
+
+## Before you post
+- **AI label:** the live-action shots were generated with an AI video model. Their visible sparkle mark in the bottom-right corner is left in on purpose. When you upload, turn on **"Add AI info" / "AI info" label** on Instagram and Facebook; Meta asks for this on realistic AI-generated video.
+- **Sponsor tag:** tag Wateria's account and turn on the **Paid partnership** label if the sponsorship includes this post.
 
 ## Paid-social setup (if you boost it)
 - **Audience:** women 28–48 within about 8 miles of Playa Vista (Culver City, Mar Vista, Westchester, Venice, Santa Monica, Del Rey, Ladera Heights). Interests: parenting, kids' activities.

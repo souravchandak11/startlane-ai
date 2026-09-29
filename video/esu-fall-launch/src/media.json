@@ -1,7 +1,35 @@
 {
  "footage": {
+  "kick": {
+   "file": "footage/kick_ball.mp4",
+   "w": 720,
+   "h": 1280,
+   "fps": 24,
+   "duration": 10.005
+  },
   "prep": {
    "file": "footage/mom_boy_prep.mp4",
+   "w": 720,
+   "h": 1280,
+   "fps": 24,
+   "duration": 10.005
+  },
+  "sofa": {
+   "file": "footage/sofa_tablet.mp4",
+   "w": 720,
+   "h": 1280,
+   "fps": 24,
+   "duration": 10.005
+  },
+  "winning": {
+   "file": "footage/winning.mp4",
+   "w": 720,
+   "h": 1280,
+   "fps": 24,
+   "duration": 8
+  },
+  "match": {
+   "file": "footage/youth_match.mp4",
    "w": 720,
    "h": 1280,
    "fps": 24,
