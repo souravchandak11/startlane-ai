@@ -1,11 +1,11 @@
 """Light track for the "Glued to your leg" reel (32 s, royalty-free, procedural).
 
 Sits on top of the field audio, so it stays light: plucked strings, shaker, soft kick.
-  0–6 s    hesitant: sparse plucks on Am–F, soft pad, a little held breath before the turn
-  6 s      THE TURN (kid runs ahead): groove lifts to C–G–Am–F, 100 BPM
-  19–27 s  price + coupon cards: groove thins so the numbers get the attention
-  27–30 s  CTA: claps + glockenspiel hook come in
-  30–32 s  end card: final strum and glock, fade out
+  0–5.5 s    hesitant: sparse plucks on Am–F under the stopwatch hook, held breath before the turn
+  5.5 s      THE TURN (kid runs ahead): groove lifts to C–G–Am–F, 100 BPM
+  18–22 s    price card: groove thins so the numbers get the attention
+  22–30.5 s  CTA + EARLYBIRD25: claps + glockenspiel hook
+  30.5–32 s  end lockup: final strum and glock, fade out
 
     python3 scripts/make_music_glued.py
 """
@@ -21,10 +21,11 @@ from make_music_mdm import ROOT_NOTE, bass, glock, ks, shaker, strum  # noqa: E4
 
 ROOT = Path(__file__).resolve().parent.parent
 TOTAL = 32.0
-TURN = 6.0
-CARDS = 19.0
-CTA = 27.0
-END = 30.0
+TURN = 5.5
+CARDS = 18.0
+CTA = 22.0
+EARLY = 26.0
+END = 30.5
 BEAT = 60 / 100
 
 
@@ -33,13 +34,13 @@ def compose():
     keys, drums, low, pads, fx = (np.zeros(L) for _ in range(5))
 
     # ---- hesitant intro: one pluck at a time, like a kid testing the water
-    intro = [(0.0, 69), (0.9, 72), (1.5, 76), (2.4, 74), (3.0, 72), (3.9, 69), (4.5, 72), (5.1, 77)]
+    intro = [(0.0, 69), (0.8, 72), (1.4, 76), (2.2, 74), (2.8, 72), (3.6, 69), (4.2, 72), (4.7, 77)]
     for t, m in intro:
         place(keys, t, ks(midi(m), 1.2, 0.35, 0.997), 0.32)
     place(pads, 0.0, pad([midi(m) for m in (57, 60, 64)], 3.0, 0.6), 0.05)
-    place(pads, 3.0, pad([midi(m) for m in (53, 57, 60)], 2.9, 0.4), 0.05)
+    place(pads, 3.0, pad([midi(m) for m in (53, 57, 60)], 2.4, 0.4), 0.05)
     place(low, 0.0, bass(midi(45), 2.8), 0.25)
-    place(low, 3.0, bass(midi(41), 2.8), 0.25)
+    place(low, 3.0, bass(midi(41), 2.4), 0.25)
     place(fx, TURN - 1.2, noise_riser(1.15), 0.18)
 
     # ---- groove from the turn

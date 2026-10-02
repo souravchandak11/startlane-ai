@@ -1,47 +1,45 @@
-# "Glued to your leg": fall season reel
+# "Glued to your leg": fall season reel (final)
 
-**Goal:** book the full fall season this weekend, not a drop-in.
-**Composition:** `ESU-GluedToYourLeg` (`src/compositions/ESU_GluedToYourLeg.tsx`), 32 s, 1080×1920, 30 fps.
-**Status:** text, cards, timing, music and end card are final. The seven picture slots show labelled
-placeholders until the real Weekend Academy clips are added. Preview: `out/esu-glued-to-your-leg-PREVIEW.mp4`.
+**Goal:** book the full fall season tonight (first class is tomorrow morning), not a drop-in.
+**File:** `out/esu-glued-to-your-leg.mp4` (1080×1920, 30 fps, 32 s, H.264 + AAC, −14 LUFS)
+**Composition:** `ESU-GluedToYourLeg` (`src/compositions/ESU_GluedToYourLeg.tsx`)
+**Changes from the brief:** FALL15 removed (so parents who already paid for the season don't ask for refunds). EARLYBIRD25 now runs 4.5 s instead of 2 s.
 
-## Timeline (built exactly to the brief)
+## Timeline
 | Time | Picture | On screen |
 |---|---|---|
-| 0–3 s | Clip 1, muted colour | EVERY NEW THING, / THE FIRST **20 MINUTES** / LOOK LIKE THIS. (up from frame 0) |
-| 3–6 s | Clip 2, muted colour | New coach. New kids. / Start over. **Again.** |
-| 6–10 s | Clip 3, white flash, full colour, music lifts | A FEW WEEKS LATER: / THEY RUN / **AHEAD** OF YOU. |
-| 10–14 s | Clip 4 | What changed? / THE SAME COACH. / **EVERY WEEK.** |
-| 14–19 s | Split: clip 5 left, clip 6 right | DROP-IN (red) vs SEASON (yellow). "Drop-in: a new start each time." / "Season: same coach, same group, 8 weeks." The SEASON side lights up and DROP-IN greys out at 17.5 s |
-| 19–23 s | Navy price card | SEASON: $32 A CLASS. / DROP-IN: $37.50 (counts up from $32), / AND $39 FROM MONDAY. |
-| 23–27 s | Navy card, yellow dashed coupon | **FALL15** typed into the coupon / = 15% OFF THE FULL SEASON. / ~~$32~~ **$27.20** a class. / Expires Sunday, October 4, 2026 at 11:59 PM PT. |
-| 27–30 s | Clip 7 + red CTA bar | FIRST CLASS IS TOMORROW MORNING. / **BOOK TONIGHT.** / LINK IN BIO. ↑ |
-| 30–32 s | Small navy end card over the blurred last frame | ESU crest · Also ending Sunday: · **EARLYBIRD25** · 25% off Thanksgiving and Winter Camps. · Expires Sunday, October 4, 2026 at 11:59 PM PT. |
+| 0–3 s | **Animated hook:** a kid glued to a parent's leg (glue bottle, glue drips). The parent tries to step twice, and the kid comes along. A stopwatch races 00:00 → 20:00 | EVERY NEW THING, / THE FIRST **20 MINUTES** / LOOK LIKE THIS. (on screen from frame 0) |
+| 3–5.5 s | Real footage, muted grade: coach + new kids, then a kid alone on the ladder that **rewinds** | New coach. New kids. / Start over. **Again.** |
+| 5.5–9.5 s | White flash, full colour, music lifts. A girl hops onto the field **ahead of the parents**, then a run with the ball | A FEW WEEKS LATER: / THEY RUN / **AHEAD** OF YOU. |
+| 9.5–13.5 s | Coach sitting with the group (card) + 8 identical "WEEK 1–8" tiles ticking on | What changed? / THE SAME COACH. / **EVERY WEEK.** |
+| 13.5–18 s | Split: kid alone (DROP-IN, greys out) vs the group (SEASON, yellow frame) | Drop-in: a new start each time. / Season: same coach, same group, 8 weeks. |
+| 18–22 s | Navy price card | SEASON: $32 A CLASS. / DROP-IN: $37.50, AND $39 FROM MONDAY. / **SAVE $56** (8 weeks: $256 season vs. $312 in drop-ins) |
+| 22–26 s | Boy hugging the ball, smiling + red CTA bar | 8 WEEKS · SAME COACH · SAME GROUP / FIRST CLASS IS TOMORROW MORNING. / **BOOK TONIGHT.** / LINK IN BIO. |
+| 26–30.5 s | Navy card with floating photo prints of the real footage | ALSO ENDING SUNDAY: / **25% OFF** / Thanksgiving and Winter Camps. / **EARLYBIRD25** (typed into a coupon) / ENDS SUNDAY / Expires Sunday, October 4, 2026 at 11:59 PM PT. |
+| 30.5–32 s | Logo lockup | ESU crest · BOOK TONIGHT · LINK IN BIO · Proudly sponsored by Wateria |
 
-Type: Oswald uppercase for headlines, Montserrat for the sentence-case lines. Colours: ESU navy, red and yellow.
-The ESU crest and Wateria "Official Sponsor" badge sit in the top corners, matching the other reels.
-Sound: a light, procedural track (`scripts/make_music_glued.py`) that starts hesitant and lifts on the 6 s cut.
-The clips' own field audio plays underneath, and the master is −14 LUFS.
+ESU crest and Wateria "Official Sponsor" in the top corners throughout.
+**Sound:** a light procedural track (`scripts/make_music_glued.py`) that's hesitant under the stopwatch and lifts on the 5.5 s turn, with the clips' field audio underneath. The audio hook is the racing stopwatch ticks plus a squeak/boing each time the parent tries to step.
 
-## Footage needed (real Weekend Academy only: no League games, no AI kids)
-Name each file with its slot word and drop it in `public/footage/glued/`. Any format works (mp4, mov).
+## Footage (all real Weekend Academy, from the ESU Google Drive)
+Clips are kept out of git (`public/footage/glued/`). To re-render on another machine, download these from Drive and run the transcode step below.
 
-| # | File name contains | Shot | Length to send |
-|---|---|---|---|
-| 1 | `leg` | Kid holding a parent's leg or hand at the edge of the field | 4 s+ |
-| 2 | `watch` | **Same kid** watching the others, not joining | 4 s+ |
-| 3 | `run` | Kid running onto the field ahead of the parent. **The payoff: send the clearest one you have** | 5 s+ |
-| 4 | `coach` | Coach crouched at the kid's level: high five or fist bump | 5 s+ |
-| 5 | `alone` | One kid on their own (DROP-IN side) | 6 s+ |
-| 6 | `group` | The group together with the coach (SEASON side) | 6 s+ |
-| 7 | `ball` | Kid smiling with the ball, ideally with the face in the top half of the frame (the CTA bar covers the bottom) | 4 s+ |
+| Used as | Drive file | Notes |
+|---|---|---|
+| `kids_meet.mp4` (new coach / new kids) | IMG_3620.MOV | coach (Wateria shirt) + two kids meeting |
+| `alone_ladder.mp4` (start over / DROP-IN) | IMG_3588.MOV | one kid on the agility ladder |
+| `run_ahead.mp4` (the payoff) | IMG_3609.MOV | girl hops onto the field ahead of the parents |
+| `run_ball.mp4` | IMG_3635.MOV | run with the ball |
+| `coach_circle.mp4` (same coach) | 1000034229.MP4 | coach sitting with the group |
+| `group_play.mp4` (SEASON) | IMG_2321.MOV | group play, vertical |
+| `ball_smile.mp4` (CTA) | IMG_3633.MOV | boy hugging the ball; only 0.5–2.3 s is used (the camera pans to a coach after that) |
 
-- Vertical is best. Horizontal also works: the edit crops to the centre, and `src/glued/cuts.json` sets the trim (`in`, in seconds) and framing (`focus`) for each slot.
-- Leave the camera's own audio on. Field sound is part of the mix.
-- A clip that's a little short is slowed (down to 0.5×) or held on its last frame, so the timing never breaks.
-- Only use kids whose parents have signed a photo/video release. This runs as a paid ad.
+Transcode: `ffmpeg -i SRC -map 0:v:0 -map 0:a:0? -vf "fps=30,format=yuv420p" -c:v libx264 -crf 16 -c:a aac OUT.mp4`. Stills for the photo prints come from the same clips (`public/footage/glued/stills/`).
 
-Then: `COMP=ESU-GluedToYourLeg NAME=esu-glued-to-your-leg COVER=45 bash scripts/render.sh`
+**Opt-out screening.** Every clip was checked against the DO-NOT-USE note in `ESU_Footage_Content_Planner_Sep23.md` ("pink pinnie over black tee, chain-link fence"). Three were left out because they came close: IMG_3655, IMG_3660, and the end of aaa48657. Also not used: the captioned school-program photos and the non-Academy venue clips (brief: Weekend Academy only), plus the League clips (IMG_029x/032x).
+**Before boosting:** confirm a release is on file for the identifiable kids in IMG_3609, IMG_3620, IMG_3633 and IMG_3588.
+
+Render: `COMP=ESU-GluedToYourLeg NAME=esu-glued-to-your-leg COVER=45 bash scripts/render.sh`
 
 ## Caption (paste as-is)
 > Every new thing, the first 20 minutes look like this. 🫶
@@ -51,26 +49,22 @@ Then: `COMP=ESU-GluedToYourLeg NAME=esu-glued-to-your-leg COVER=45 bash scripts/
 >
 > 🗓️ Fall season: 8 weeks, ages 4–12, first class TOMORROW morning
 > 📍 The Sports Park, Playa Vista
-> 💲 Season $32 a class vs. $37.50 per drop-in ($39 from Monday)
-> 🎟️ Code **FALL15** = 15% off the full season → $27.20 a class, $94.40 less than 8 drop-ins at Monday's price
-> ⏰ Expires Sunday, Oct 4, 2026 at 11:59 PM PT
+> 💲 Season $32 a class vs. $37.50 per drop-in ($39 from Monday). That's $56 less than 8 drop-ins at Monday's price.
 >
 > Book tonight. Link in bio 👆
 >
-> Also ending Sunday: **EARLYBIRD25** = 25% off Thanksgiving & Winter Camps.
+> 🦃❄️ Also ending Sunday: code **EARLYBIRD25** = 25% off Thanksgiving & Winter Camps. Expires Sunday, Oct 4, 2026 at 11:59 PM PT.
 >
-> #EuroSoccerUSA #WeekendAcademy #KidsSoccer #YouthSoccer #LAmoms #PlayaVista #WestLA #LAParents #FallSeason
+> #EuroSoccerUSA #WeekendAcademy #KidsSoccer #YouthSoccer #ShyKids #LAmoms #PlayaVista #WestLA #LAParents #FallSeason
 
-**Pinned comment (for toddler parents):** "Little one aged 12–24 months? The toddler season is $29 a class, or $24.65 with FALL15, vs. a $36 drop-in from Monday. 👶⚽"
+**Pinned comment (for toddler parents):** "Little one aged 12–24 months? The toddler season is $29 a class vs. a $36 drop-in from Monday. 👶⚽"
 
-## Numbers check (from the brief, all verified)
+## Numbers check
 | | Total | Per class |
 |---|---|---|
 | Season, full price | $256 | $32.00 |
-| Season with FALL15 (15% off) | $217.60 | $27.20 |
 | 8 drop-ins today | $300 | $37.50 |
 | 8 drop-ins from Monday | $312 | $39.00 |
 
-Season with FALL15 vs. 8 Monday drop-ins: $312 − $217.60 = **$94.40 saved**.
-Toddlers: $232 season = $29 a class, × 0.85 = **$24.65** with FALL15, against a $36 drop-in from Monday.
-October 4, 2026 is a Sunday. "First class is tomorrow morning" is true only if the reel goes out on **Friday, Oct 2**.
+Season vs. 8 Monday drop-ins: $312 − $256 = **$56**. Toddlers: $232 ÷ 8 = $29 a class, vs. $36 from Monday.
+"First class is tomorrow morning" is true for a post that goes out **Friday, Oct 2**. October 4, 2026 is a Sunday.
