@@ -2,7 +2,7 @@
  * Euro Soccer USA — "Glued to your leg" (Fall season, 32 s, text-carried, no voiceover).
  *
  * Goal: book the full fall season tonight (class is tomorrow morning), not a drop-in.
- *  0–3     HOOK (animated): a kid literally glued to a parent's leg, stopwatch races to 20:00
+ *  0–3     HOOK: OmniFlash Pixar-style clip of a kid wrapped around a parent's leg + 20:00 timer
  *  3–5.5   New coach. New kids. Start over. Again. (real footage, muted, rewinds on "Again.")
  *  5.5–9.5 TURN: colour + music lift, "A few weeks later: they run ahead of you."
  *  9.5–13.5 What changed? The same coach. Every week. (coach circle + 8 identical weeks)
@@ -22,6 +22,7 @@ import {
   continueRender,
   delayRender,
   Freeze,
+  getStaticFiles,
   Img,
   interpolate,
   OffthreadVideo,
@@ -37,7 +38,6 @@ import {loadAllFonts} from '../presets/fonts';
 import {CornerLogos} from '../components/ESU_Footage';
 import {Grain} from '../components/ESU_Fx';
 import {LOGO_ASPECT, LOGO_SRC} from '../components/ESU_Logo';
-import {Parent, Toddler} from '../mdm/Characters';
 
 const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 const S = (sec: number) => Math.round(sec * FPS);
@@ -228,137 +228,75 @@ const Scene: React.FC<{range: readonly [number, number]; children: React.ReactNo
   </Sequence>
 );
 
-// ================================================================== 1 · HOOK (animated)
-const Stopwatch: React.FC<{x: number; y: number; r: number; minutes: number}> = ({x, y, r, minutes}) => {
+// ================================================================== 1 · HOOK (OmniFlash Pixar-style clip)
+/** Drop the generated clip here; until then the hook shows a labelled placeholder. Prompt: GLUED_HOOK_OMNIFLASH.md */
+const HOOK_FILE = 'footage/glued/hook_pixar.mp4';
+const HOOK_IN = 0; // seconds into the generated clip where the 3 s hook starts
+const HOOK_RATE = 1;
+
+const TimerPill: React.FC = () => {
   const frame = useCurrentFrame();
-  const ang = (minutes / 60) * 360 * 6; // sweep hand spins fast
-  const shake = Math.sin(frame * 2.2) * 2.5;
+  const minutes = interpolate(frame, [0, 82], [0, 20], clamp);
   const mm = String(Math.floor(minutes)).padStart(2, '0');
   const ss = String(Math.floor((minutes % 1) * 60)).padStart(2, '0');
   return (
-    <g transform={`translate(${x + shake} ${y}) rotate(${shake})`}>
-      <rect x={-22} y={-r - 46} width={44} height={34} rx={8} fill={YELLOW} />
-      <rect x={-10} y={-r - 16} width={20} height={20} fill={YELLOW} />
-      <rect x={r * 0.62} y={-r * 0.92} width={30} height={22} rx={6} fill={YELLOW} transform={`rotate(40 ${r * 0.62} ${-r * 0.92})`} />
-      <circle r={r + 14} fill={NAVY_DEEP} stroke={YELLOW} strokeWidth={10} />
-      <circle r={r} fill="#fff" />
-      {new Array(12).fill(0).map((_, i) => (
-        <rect key={i} x={-3} y={-r + 8} width={6} height={i % 3 === 0 ? 22 : 12} fill={NAVY} transform={`rotate(${i * 30})`} />
-      ))}
-      <path d={`M0 0 L0 ${-r * 0.82}`} stroke={RED} strokeWidth={8} strokeLinecap="round" transform={`rotate(${ang})`} />
-      <circle r={12} fill={RED} />
-      <g transform={`translate(0 ${r + 74})`}>
-        <rect x={-122} y={-46} width={244} height={74} rx={16} fill={RED} />
-        <text x={0} y={14} textAnchor="middle" fontFamily="Oswald" fontWeight={700} fontSize={56} fill="#fff" letterSpacing={2}>
-          {mm}:{ss}
-        </text>
-      </g>
-    </g>
+    <div style={{position: 'absolute', left: 0, right: 0, top: 690, display: 'flex', justifyContent: 'center'}}>
+      <div
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 16,
+          background: RED,
+          color: '#fff',
+          fontFamily: HEAD,
+          fontWeight: 700,
+          fontSize: 64,
+          letterSpacing: 2,
+          padding: '6px 30px 10px 22px',
+          borderRadius: 18,
+          boxShadow: '0 12px 30px rgba(0,0,0,0.35)',
+        }}
+      >
+        <svg width={58} height={64} viewBox="-30 -36 60 66">
+          <rect x={-7} y={-34} width={14} height={9} rx={3} fill="#fff" />
+          <circle r={24} fill="none" stroke="#fff" strokeWidth={6} />
+          <path d="M0 0 L0 -16" stroke="#fff" strokeWidth={5} strokeLinecap="round" transform={`rotate(${frame * 26})`} />
+        </svg>
+        {mm}:{ss}
+      </div>
+    </div>
   );
 };
 
-const GlueBottle: React.FC<{x: number; y: number; s: number; squeeze: number}> = ({x, y, s, squeeze}) => (
-  <g transform={`translate(${x} ${y}) scale(${s}) rotate(-24)`}>
-    <path d="M-8 -150 L8 -150 L14 -110 L-14 -110 Z" fill={YELLOW} />
-    <rect x={-28} y={-112} width={56} height={26} rx={8} fill={YELLOW} />
-    <rect x={-58} y={-88} width={116} height={160} rx={30} fill="#fff" transform={`scale(${1 + squeeze * 0.06} ${1 - squeeze * 0.08})`} />
-    <rect x={-58} y={-40} width={116} height={64} fill={RED} />
-    <text x={0} y={6} textAnchor="middle" fontFamily="Oswald" fontWeight={700} fontSize={44} fill="#fff" letterSpacing={3}>
-      GLUE
-    </text>
-  </g>
+const HookPlaceholder: React.FC = () => (
+  <AbsoluteFill style={{background: `repeating-linear-gradient(135deg, #141a3d 0 26px, #10153300 26px 52px), linear-gradient(180deg, #1b2150, #0c1030)`}}>
+    <div style={{position: 'absolute', inset: 28, border: '4px dashed rgba(255,255,255,0.28)', borderRadius: 26}} />
+    <div style={{position: 'absolute', top: 1020, left: 60, right: 60, textAlign: 'center'}}>
+      <div style={{fontFamily: BODY, fontWeight: 800, fontSize: 28, letterSpacing: 4, color: YELLOW}}>PLACEHOLDER · PIXAR-STYLE HOOK (OMNIFLASH)</div>
+      <div style={{fontFamily: BODY, fontWeight: 600, fontSize: 36, color: 'rgba(255,255,255,0.82)', marginTop: 12, lineHeight: 1.25}}>
+        Kid wrapped around a parent's leg at the edge of the field
+      </div>
+      <div style={{fontFamily: BODY, fontWeight: 500, fontSize: 26, color: 'rgba(255,255,255,0.5)', marginTop: 10}}>public/{HOOK_FILE}</div>
+    </div>
+  </AbsoluteFill>
 );
 
 const Hook: React.FC = () => {
-  const frame = useCurrentFrame();
-  // two attempts to step forward; the kid comes along, glued to the leg
-  const lift = (a: number, b: number) => {
-    const u = interpolate(frame, [a, a + 8, b - 6, b], [0, 1, 1, 0], {...clamp, easing: (t) => t * t * (3 - 2 * t)});
-    return u;
-  };
-  const k = Math.max(lift(14, 40), lift(52, 78));
-  const ms = 1.15;
-  const mx = 640;
-  const floor = 1660;
-  // mom's left leg (viewer's left) is the one the kid is glued to
-  const footL: [number, number] = [-50 + 70 * k, -120 * k];
-  const kidDX = 60 * k * 0.55;
-  const kidDY = -120 * k * ms * 0.5;
-  const squash = 1 - 0.08 * Math.sin(Math.min(1, k) * Math.PI);
-  const minutes = interpolate(frame, [0, 82], [0, 20], clamp);
-  const glueK = interpolate(frame, [4, 12], [0, 1], clamp);
-  const push = interpolate(frame, [0, 90], [1, 1.07], clamp);
+  const has = getStaticFiles().some((f) => f.name === HOOK_FILE);
   return (
-    <AbsoluteFill>
-      <NavyBg />
-      {/* spotlight */}
-      <AbsoluteFill style={{background: 'radial-gradient(ellipse 60% 22% at 56% 86%, rgba(255,215,0,0.32) 0%, rgba(255,215,0,0) 70%)'}} />
-      <AbsoluteFill style={{transform: `scale(${push})`, transformOrigin: '55% 75%'}}>
-        <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', inset: 0, overflow: 'visible'}}>
-          <defs>
-            <filter id="sticker" x="-20%" y="-20%" width="140%" height="140%">
-              <feMorphology operator="dilate" radius="9" in="SourceAlpha" result="d" />
-              <feFlood floodColor="#ffffff" />
-              <feComposite in2="d" operator="in" result="o" />
-              <feGaussianBlur in="d" stdDeviation="14" result="b" />
-              <feOffset in="b" dy="18" result="sh" />
-              <feFlood floodColor="rgba(0,0,0,0.45)" />
-              <feComposite in2="sh" operator="in" result="shadow" />
-              <feMerge>
-                <feMergeNode in="shadow" />
-                <feMergeNode in="o" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-          <ellipse cx={600} cy={floor + 6} rx={300} ry={34} fill="rgba(0,0,0,0.35)" />
-          <Stopwatch x={235} y={930} r={118} minutes={minutes} />
-          <g filter="url(#sticker)">
-            <Parent
-              kind="mom"
-              x={mx}
-              y={floor}
-              scale={ms}
-              footL={footL}
-              footR={[50, 0]}
-              handL={[-170, 120 - 60 * k]}
-              handR={[190, 40 - 30 * k]}
-              lean={-4 * k}
-              mouth={k > 0.3 ? 'o' : 'open'}
-              look={-1}
-              headTilt={-6 * k}
-              shadow={false}
-            />
-            <g transform={`translate(${kidDX} ${kidDY})`}>
-              <Toddler
-                x={520}
-                y={floor}
-                scale={1.05}
-                handL={[70, 12]}
-                handR={[78, 34]}
-                footL={[-10, 92 - 30 * k]}
-                footR={[22, 92 - 40 * k]}
-                lean={9}
-                headTilt={14}
-                squash={squash}
-                blink={1}
-                mouth="flat"
-                shadow={false}
-              />
-            </g>
-            {/* glue globs where the kid holds on */}
-            <g transform={`translate(${590 + kidDX} ${1450 + kidDY}) scale(${glueK})`}>
-              <ellipse cx={0} cy={0} rx={30} ry={18} fill={YELLOW} />
-              <path d={`M-14 8 Q-16 ${36 + 20 * k} -8 ${46 + 30 * k} Q0 ${36 + 20 * k} -2 8 Z`} fill={YELLOW} />
-              <path d={`M10 10 Q8 ${28 + 12 * k} 14 ${36 + 18 * k} Q22 ${28 + 12 * k} 18 8 Z`} fill={YELLOW} />
-              <ellipse cx={-8} cy={-4} rx={8} ry={4} fill="#fff" opacity={0.6} />
-            </g>
-          </g>
-          <g filter="url(#sticker)" opacity={glueK}>
-            <GlueBottle x={300} y={1450} s={0.9 * (0.6 + 0.4 * glueK)} squeeze={frame < 14 ? Math.sin(frame / 2) : 0} />
-          </g>
-        </svg>
-      </AbsoluteFill>
+    <AbsoluteFill style={{background: NAVY_DEEP}}>
+      {has ? (
+        <OffthreadVideo
+          src={staticFile(HOOK_FILE)}
+          startFrom={Math.round(HOOK_IN * FPS)}
+          playbackRate={HOOK_RATE}
+          muted
+          style={{width: '100%', height: '100%', objectFit: 'cover', filter: WARM}}
+        />
+      ) : (
+        <HookPlaceholder />
+      )}
+      <Scrim top={0.62} bottom={0.2} />
       <Block top={330} gap={14}>
         <Head at={0} size={100}>
           Every new thing,
@@ -370,6 +308,7 @@ const Hook: React.FC = () => {
           look like this.
         </Head>
       </Block>
+      <TimerPill />
     </AbsoluteFill>
   );
 };
@@ -935,15 +874,10 @@ const musicVolume = (f: number) => interpolate(f, [0, 3, GLUED_TOTAL - 24, GLUED
 
 const SoundDesign: React.FC = () => (
   <>
-    {/* the audio hook: stopwatch racing + the sticky tug of war */}
+    {/* the audio hook: the 20:00 timer racing (step/squeak hits get re-timed to the OmniFlash clip) */}
     {new Array(14).fill(0).map((_, i) => (
       <Sfx key={i} at={i * 6} name="tick" v={0.55} />
     ))}
-    <Sfx at={6} name="bloop" v={0.5} />
-    <Sfx at={18} name="squeak" v={0.6} />
-    <Sfx at={36} name="boing" v={0.5} />
-    <Sfx at={56} name="squeak" v={0.6} />
-    <Sfx at={74} name="boing" v={0.5} />
     {/* again */}
     <Sfx at={T.again[0]} name="whoosh" v={0.35} />
     <Sfx at={T.again[0] + 22} name="click" v={0.4} />

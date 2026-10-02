@@ -8,7 +8,7 @@
 ## Timeline
 | Time | Picture | On screen |
 |---|---|---|
-| 0–3 s | **Animated hook:** a kid glued to a parent's leg (glue bottle, glue drips). The parent tries to step twice, and the kid comes along. A stopwatch races 00:00 → 20:00 | EVERY NEW THING, / THE FIRST **20 MINUTES** / LOOK LIKE THIS. (on screen from frame 0) |
+| 0–3 s | **Hook: OmniFlash Pixar-style clip** of a kid wrapped around a parent's leg like a koala (prompt: `GLUED_HOOK_OMNIFLASH.md`, file `public/footage/glued/hook_pixar.mp4`). The earlier motion-graphics hook was removed | EVERY NEW THING, / THE FIRST **20 MINUTES** / LOOK LIKE THIS. (on screen from frame 0) + red timer chip racing 00:00 → 20:00 |
 | 3–5.5 s | Real footage, muted grade: coach + new kids, then a kid alone on the ladder that **rewinds** | New coach. New kids. / Start over. **Again.** |
 | 5.5–9.5 s | White flash, full colour, music lifts. A girl hops onto the field **ahead of the parents**, then a run with the ball | A FEW WEEKS LATER: / THEY RUN / **AHEAD** OF YOU. |
 | 9.5–13.5 s | Coach sitting with the group (card) + 8 identical "WEEK 1–8" tiles ticking on | What changed? / THE SAME COACH. / **EVERY WEEK.** |
