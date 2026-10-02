@@ -3,6 +3,7 @@
 **Goal:** book the full fall season tonight (first class is tomorrow morning), not a drop-in, for **every age from 12 months to 12 years**.
 **File:** `out/esu-fall-season-vo.mp4` (1080×1920, 30 fps, 40.2 s, H.264 + AAC, −14 LUFS). `out/esu-fall-season-vo-IG.mp4` is the upload copy.
 **Cover:** `out/cover-esu-fall-season-vo.jpg` (frame 96: the poll with all three ages ticked).
+**Audio stem:** `out/esu-fall-season-vo_VO+SFX.wav` (the reel's full soundtrack: voiceover + SFX, mastered, 48 kHz). Drop it on the timeline with your music underneath.
 **Composition:** `ESU-GluedToYourLeg` (`src/compositions/ESU_GluedToYourLeg.tsx`; the ID stayed the same, only the hook changed).
 
 **What changed in this version**
