@@ -1,70 +1,88 @@
-# "Glued to your leg": fall season reel (final)
+# Fall season reel: "How old is your kid?" (all ages, with voiceover)
 
-**Goal:** book the full fall season tonight (first class is tomorrow morning), not a drop-in.
-**File:** `out/esu-glued-to-your-leg.mp4` (1080×1920, 30 fps, 32 s, H.264 + AAC, −14 LUFS)
-**Composition:** `ESU-GluedToYourLeg` (`src/compositions/ESU_GluedToYourLeg.tsx`)
-**Changes from the brief:** FALL15 removed (so parents who already paid for the season don't ask for refunds). EARLYBIRD25 now runs 4.5 s instead of 2 s.
+**Goal:** book the full fall season tonight (first class is tomorrow morning), not a drop-in, for **every age from 12 months to 12 years**.
+**File:** `out/esu-fall-season-vo.mp4` (1080×1920, 30 fps, 40.2 s, H.264 + AAC, −14 LUFS). `out/esu-fall-season-vo-IG.mp4` is the upload copy.
+**Cover:** `out/cover-esu-fall-season-vo.jpg` (frame 96: the poll with all three ages ticked).
+**Composition:** `ESU-GluedToYourLeg` (`src/compositions/ESU_GluedToYourLeg.tsx`; the ID stayed the same, only the hook changed).
+
+**What changed in this version**
+- The "glued to your leg" hook only spoke to toddler parents, so it's gone (the Pixar OmniFlash prompt in `GLUED_HOOK_OMNIFLASH.md` is no longer needed). The new hook asks every parent their kid's age and answers "all of them".
+- **Voiceover added.** It runs the whole reel, and every cut and text reveal is timed to the spoken words.
+- **No music.** The music bed and the clips' field audio are removed, so a custom track can go on top. The audio is the VO plus sound effects only, mastered to −14 LUFS. Keep the music around −20 to −24 LUFS under the voice.
+- The body (again → turn → same coach → split → price → CTA → EARLYBIRD25 → end) is the same, just re-timed to the narration. FALL15 is still out, and EARLYBIRD25 now runs 7.3 s.
+- Since the reel now speaks to toddler parents too, the price card adds the toddler prices, and the end card carries "AGES 12 MONTHS – 12 YEARS".
 
 ## Timeline
-| Time | Picture | On screen |
-|---|---|---|
-| 0–3 s | **Hook: OmniFlash Pixar-style clip** of a kid wrapped around a parent's leg like a koala (prompt: `GLUED_HOOK_OMNIFLASH.md`, file `public/footage/glued/hook_pixar.mp4`). The earlier motion-graphics hook was removed | EVERY NEW THING, / THE FIRST **20 MINUTES** / LOOK LIKE THIS. (on screen from frame 0) + red timer chip racing 00:00 → 20:00 |
-| 3–5.5 s | Real footage, muted grade: coach + new kids, then a kid alone on the ladder that **rewinds** | New coach. New kids. / Start over. **Again.** |
-| 5.5–9.5 s | White flash, full colour, music lifts. A girl hops onto the field **ahead of the parents**, then a run with the ball | A FEW WEEKS LATER: / THEY RUN / **AHEAD** OF YOU. |
-| 9.5–13.5 s | Coach sitting with the group (card) + 8 identical "WEEK 1–8" tiles ticking on | What changed? / THE SAME COACH. / **EVERY WEEK.** |
-| 13.5–18 s | Split: kid alone (DROP-IN, greys out) vs the group (SEASON, yellow frame) | Drop-in: a new start each time. / Season: same coach, same group, 8 weeks. |
-| 18–22 s | Navy price card | SEASON: $32 A CLASS. / DROP-IN: $37.50, AND $39 FROM MONDAY. / **SAVE $56** (8 weeks: $256 season vs. $312 in drop-ins) |
-| 22–26 s | Boy hugging the ball, smiling + red CTA bar | 8 WEEKS · SAME COACH · SAME GROUP / FIRST CLASS IS TOMORROW MORNING. / **BOOK TONIGHT.** / LINK IN BIO. |
-| 26–30.5 s | Navy card with floating photo prints of the real footage | ALSO ENDING SUNDAY: / **25% OFF** / Thanksgiving and Winter Camps. / **EARLYBIRD25** (typed into a coupon) / ENDS SUNDAY / Expires Sunday, October 4, 2026 at 11:59 PM PT. |
-| 30.5–32 s | Logo lockup | ESU crest · BOOK TONIGHT · LINK IN BIO · Proudly sponsored by Wateria |
+| Time | Picture | On screen | Voiceover |
+|---|---|---|---|
+| 0–4.9 s | **Hook.** Referee whistle on frame 0. Real footage cuts youngest → oldest (group, toddler, 5-year-old on the ladder, older kid on the ball, then the whole group with the coach). An Instagram-style poll card: a finger taps **1–3 YRS**, **4–7 YRS**, **8–12 YRS** on each spoken age, then all three light up yellow with ticks, a red **ALL OF THEM** stamp slams in (screen shake), and **12 MONTHS TO 12 YEARS** appears | HOW OLD IS YOUR **KID?** (from frame 0) · TAP YOUR KID'S AGE · ALL OF THEM · 12 MONTHS TO 12 YEARS · Here's what holds them **all** back. ↓ | "How old is your kid? One? Five? Twelve? Here's what holds them all back." |
+| 4.9–7.6 s | Muted grade: coach + new kids, then a kid alone on the ladder that **rewinds** | New coach. New kids. / Start over. **Again.** | "New coach. New kids. Start over… again." |
+| 7.6–10.9 s | White flash, full colour. A toddler hops onto the field **ahead of her parents**, then a run with the ball | A FEW WEEKS LATER: / THEY RUN / **AHEAD** OF YOU. | "But a few weeks later? They run ahead of you!" |
+| 10.9–14.6 s | Coach sitting with the group (card) + 8 identical WEEK 1–8 tiles | What changed? / THE SAME COACH. / **EVERY WEEK.** | "What changed? The same coach. Every single week." |
+| 14.6–19.6 s | Split: kid alone (DROP-IN, greys out) vs the group (SEASON, yellow frame) | Drop-in: a new start each time. / Season: same coach, same group, 8 weeks. | (same words) |
+| 19.6–25.1 s | Navy price card | SEASON: $32 A CLASS. / DROP-IN: $37.50, AND $39 FROM MONDAY. / **SAVE $56** / *Prices shown for ages 4–12. Toddlers (12–24 mo): $29 a class vs. $36 drop-in from Monday.* | "Per class, the season costs less. Drop-ins go up Monday. Save fifty-six dollars." |
+| 25.1–28.9 s | Boy hugging the ball + red CTA bar | 8 WEEKS · SAME COACH · SAME GROUP / FIRST CLASS IS TOMORROW MORNING. / **BOOK TONIGHT.** / LINK IN BIO. | "First class is tomorrow morning. Book tonight. Link in bio." |
+| 28.9–36.2 s | Navy card with floating photo prints | ALSO ENDING SUNDAY: / **25% OFF** / Thanksgiving and Winter Camps. / **EARLYBIRD25** (typed as it's spoken) / ENDS SUNDAY / Expires Sunday, October 4, 2026 at 11:59 PM PT. | "Also ending Sunday: twenty-five percent off Thanksgiving and Winter Camps with code early bird twenty-five." |
+| 36.2–40.2 s | Logo lockup | ESU crest · BOOK TONIGHT · LINK IN BIO · **AGES 12 MONTHS – 12 YEARS** · Proudly sponsored by Wateria | "Euro Soccer USA. Twelve months to twelve years." |
 
-ESU crest and Wateria "Official Sponsor" in the top corners throughout.
-**Sound:** a light procedural track (`scripts/make_music_glued.py`) that's hesitant under the stopwatch and lifts on the 5.5 s turn, with the clips' field audio underneath. The audio hook is the racing stopwatch ticks plus a squeak/boing each time the parent tries to step.
+ESU crest and the Wateria "Official Sponsor" badge sit in the top corners throughout.
+
+**Sound effects:** whistle (frame 0), a pop + click on each age tap, a rising xylophone when all ages light up, boom + kick on ALL OF THEM, whoosh out of the hook, clicks and a tape-stop rewind on "again", a whoosh into the turn, ticks for the 8 weeks, a ding when SEASON is picked, a ta-da on SAVE $56, typing for the coupon, and a boom on the logo.
+
+## Voiceover
+Generated locally with Kokoro TTS (voice `af_heart`, 1.12× speed). It's a synthetic voice, so treat it as a guide track if you'd rather record a real one.
+- Script: `scripts/script_glued.json` (`text` is what shows in the timing file; `say` is how it's pronounced).
+- Rebuild: `SCRIPT=scripts/script_glued.json OUT_WAV=public/audio/vo_glued.wav OUT_JSON=src/timeline_glued.json KOKORO_DIR=<kokoro model dir> python3 scripts/make_vo.py`. The video re-times itself from `src/timeline_glued.json`.
+- **To record a human VO instead:** read the script at the same pace and replace `public/audio/vo_glued.wav`. If the timing shifts, update the line `start`/`end` and word times in `src/timeline_glued.json` (or regenerate them) and re-render.
 
 ## Footage (all real Weekend Academy, from the ESU Google Drive)
 Clips are kept out of git (`public/footage/glued/`). To re-render on another machine, download these from Drive and run the transcode step below.
 
 | Used as | Drive file | Notes |
 |---|---|---|
+| `group_play.mp4` (hook opener, SEASON) | IMG_2321.MOV | group play, vertical |
+| `run_ahead.mp4` (hook "1–3", the payoff) | IMG_3609.MOV | toddler hops onto the field ahead of her parents |
+| `alone_ladder.mp4` (hook "4–7", start over, DROP-IN) | IMG_3588.MOV | one kid on the agility ladder |
+| `run_ball.mp4` (hook "8–12", turn) | IMG_3635.MOV | older kid running with the ball |
+| `coach_circle.mp4` (hook "all of them", same coach) | 1000034229.MP4 | coach sitting with the group |
 | `kids_meet.mp4` (new coach / new kids) | IMG_3620.MOV | coach (Wateria shirt) + two kids meeting |
-| `alone_ladder.mp4` (start over / DROP-IN) | IMG_3588.MOV | one kid on the agility ladder |
-| `run_ahead.mp4` (the payoff) | IMG_3609.MOV | girl hops onto the field ahead of the parents |
-| `run_ball.mp4` | IMG_3635.MOV | run with the ball |
-| `coach_circle.mp4` (same coach) | 1000034229.MP4 | coach sitting with the group |
-| `group_play.mp4` (SEASON) | IMG_2321.MOV | group play, vertical |
 | `ball_smile.mp4` (CTA) | IMG_3633.MOV | boy hugging the ball; only 0.5–2.3 s is used (the camera pans to a coach after that) |
 
 Transcode: `ffmpeg -i SRC -map 0:v:0 -map 0:a:0? -vf "fps=30,format=yuv420p" -c:v libx264 -crf 16 -c:a aac OUT.mp4`. Stills for the photo prints come from the same clips (`public/footage/glued/stills/`).
 
 **Opt-out screening.** Every clip was checked against the DO-NOT-USE note in `ESU_Footage_Content_Planner_Sep23.md` ("pink pinnie over black tee, chain-link fence"). Three were left out because they came close: IMG_3655, IMG_3660, and the end of aaa48657. Also not used: the captioned school-program photos and the non-Academy venue clips (brief: Weekend Academy only), plus the League clips (IMG_029x/032x).
-**Before boosting:** confirm a release is on file for the identifiable kids in IMG_3609, IMG_3620, IMG_3633 and IMG_3588.
+**Before boosting:** confirm a release is on file for the identifiable kids in IMG_3609, IMG_3620, IMG_3633, IMG_3588 and IMG_3635.
 
-Render: `COMP=ESU-GluedToYourLeg NAME=esu-glued-to-your-leg COVER=45 bash scripts/render.sh`
+Render: `COMP=ESU-GluedToYourLeg NAME=esu-fall-season-vo COVER=96 bash scripts/render.sh`
 
 ## Caption (paste as-is)
-> Every new thing, the first 20 minutes look like this. 🫶
-> A few weeks later? They run ahead of you. ⚽
+> How old is your kid? 1? 5? 12? ⚽
+> The same thing holds them all back: a new coach and new kids every time.
 >
-> What changed: the same coach and the same group, every single week. That's why the Weekend Academy is a season, not a string of drop-ins.
+> A few weeks into a season with the same coach and the same group, they run ahead of you. That's why the Weekend Academy is a season, not a string of drop-ins.
 >
-> 🗓️ Fall season: 8 weeks, ages 4–12, first class TOMORROW morning
+> 🗓️ Fall season: 8 weeks, ages 12 months to 12 years, first class TOMORROW morning
 > 📍 The Sports Park, Playa Vista
-> 💲 Season $32 a class vs. $37.50 per drop-in ($39 from Monday). That's $56 less than 8 drop-ins at Monday's price.
+> 💲 Ages 4–12: $32 a class vs. $37.50 per drop-in ($39 from Monday)
+> 👶 Toddlers (12–24 months): $29 a class vs. $36 per drop-in from Monday
+> Either way, the season is $56 less than 8 drop-ins at Monday's price.
 >
 > Book tonight. Link in bio 👆
 >
 > 🦃❄️ Also ending Sunday: code **EARLYBIRD25** = 25% off Thanksgiving & Winter Camps. Expires Sunday, Oct 4, 2026 at 11:59 PM PT.
 >
-> #EuroSoccerUSA #WeekendAcademy #KidsSoccer #YouthSoccer #ShyKids #LAmoms #PlayaVista #WestLA #LAParents #FallSeason
+> #EuroSoccerUSA #WeekendAcademy #KidsSoccer #YouthSoccer #ToddlerSoccer #LAmoms #PlayaVista #WestLA #LAParents #FallSeason
 
-**Pinned comment (for toddler parents):** "Little one aged 12–24 months? The toddler season is $29 a class vs. a $36 drop-in from Monday. 👶⚽"
+**Pinned comment:** "How old is yours? Drop their age 👇 and we'll tell you which group they'd join tomorrow." Every reply is a lead you can DM.
 
 ## Numbers check
 | | Total | Per class |
 |---|---|---|
-| Season, full price | $256 | $32.00 |
+| Season, ages 4–12 | $256 | $32.00 |
 | 8 drop-ins today | $300 | $37.50 |
 | 8 drop-ins from Monday | $312 | $39.00 |
+| Season, toddlers | $232 | $29.00 |
+| 8 toddler drop-ins from Monday | $288 | $36.00 |
 
-Season vs. 8 Monday drop-ins: $312 − $256 = **$56**. Toddlers: $232 ÷ 8 = $29 a class, vs. $36 from Monday.
+Season vs. 8 Monday drop-ins: $312 − $256 = **$56**, and for toddlers $288 − $232 = **$56**, so "Save $56" holds for every age.
 "First class is tomorrow morning" is true for a post that goes out **Friday, Oct 2**. October 4, 2026 is a Sunday.

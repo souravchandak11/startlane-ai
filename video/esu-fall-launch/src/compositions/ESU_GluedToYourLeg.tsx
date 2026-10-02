@@ -1,16 +1,18 @@
 /**
- * Euro Soccer USA — "Glued to your leg" (Fall season, 32 s, text-carried, no voiceover).
+ * Euro Soccer USA — fall season reel (≈40 s, voiceover + SFX, no music bed: custom music is added later).
  *
  * Goal: book the full fall season tonight (class is tomorrow morning), not a drop-in.
- *  0–3     HOOK: OmniFlash Pixar-style clip of a kid wrapped around a parent's leg + 20:00 timer
- *  3–5.5   New coach. New kids. Start over. Again. (real footage, muted, rewinds on "Again.")
- *  5.5–9.5 TURN: colour + music lift, "A few weeks later: they run ahead of you."
- *  9.5–13.5 What changed? The same coach. Every week. (coach circle + 8 identical weeks)
- *  13.5–18 DROP-IN vs SEASON split
- *  18–22   Price card: $32 a class vs $37.50 ($39 from Monday) → save $56
- *  22–26   Hard CTA: first class is tomorrow morning. Book tonight. Link in bio.
- *  26–30.5 EARLYBIRD25: 25% off Thanksgiving and Winter Camps (ends Sunday)
- *  30.5–32 Logo lockup
+ *  HOOK    whistle + "How old is your kid?" poll (1–3 / 4–7 / 8–12) over a youngest→oldest montage,
+ *          every option fills, ALL OF THEM stamp, 12 MONTHS TO 12 YEARS. Every scene below is cut to the VO.
+ *  AGAIN   New coach. New kids. Start over… again. (real footage, muted, rewinds on "again")
+ *  TURN    colour back: "A few weeks later: they run ahead of you."
+ *  COACH   What changed? The same coach. Every week. (coach circle + 8 identical weeks)
+ *  SPLIT   DROP-IN vs SEASON
+ *  PRICE   $32 a class vs $37.50 ($39 from Monday) → save $56 (+ toddler prices)
+ *  CTA     First class is tomorrow morning. Book tonight. Link in bio.
+ *  EARLY   EARLYBIRD25: 25% off Thanksgiving and Winter Camps (ends Sunday)
+ *  END     Logo lockup + 12 MONTHS – 12 YEARS
+ * Narration: scripts/script_glued.json → public/audio/vo_glued.wav + src/timeline_glued.json (scripts/make_vo.py).
  *
  * Footage: real Weekend Academy clips (public/footage/glued/*.mp4, gitignored; pulled from the
  * ESU Drive and screened against the opt-out list). No AI people. FALL15 intentionally removed.
@@ -22,7 +24,6 @@ import {
   continueRender,
   delayRender,
   Freeze,
-  getStaticFiles,
   Img,
   interpolate,
   OffthreadVideo,
@@ -37,12 +38,10 @@ import {ESU, FPS} from '../presets/brand';
 import {loadAllFonts} from '../presets/fonts';
 import {CornerLogos} from '../components/ESU_Footage';
 import {Grain} from '../components/ESU_Fx';
+import tl from '../timeline_glued.json';
 import {LOGO_ASPECT, LOGO_SRC} from '../components/ESU_Logo';
 
 const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
-const S = (sec: number) => Math.round(sec * FPS);
-
-export const GLUED_TOTAL = S(32);
 
 const NAVY = ESU.navy;
 const NAVY_DEEP = ESU.navyDeep;
@@ -54,17 +53,43 @@ const SHADOW = '0 4px 26px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.5)';
 const MUTED = 'saturate(0.35) contrast(1.05) brightness(0.9)';
 const WARM = 'saturate(1.15) contrast(1.06) brightness(1.02)';
 
+// ------------------------------------------------------------------ timeline (driven by the voiceover)
+type LineId = (typeof tl.lines)[number]['id'];
+const ln = (id: LineId) => tl.lines.find((l) => l.id === id)!;
+const Ls = (id: LineId) => Math.round(ln(id).start * FPS);
+const Le = (id: LineId) => Math.round(ln(id).end * FPS);
+const Wd = (id: LineId, n: number) => Math.round(ln(id).words[Math.min(n, ln(id).words.length - 1)].start * FPS);
+const PRE = 6; // picture cuts land just before each narration line
+
+export const GLUED_TOTAL = Math.round(tl.total * FPS);
+
 const T = {
-  hook: [0, S(3)],
-  again: [S(3), S(5.5)],
-  turn: [S(5.5), S(9.5)],
-  coach: [S(9.5), S(13.5)],
-  split: [S(13.5), S(18)],
-  price: [S(18), S(22)],
-  cta: [S(22), S(26)],
-  early: [S(26), S(30.5)],
-  end: [S(30.5), S(32)],
+  hook: [0, Ls('again') - PRE],
+  again: [Ls('again') - PRE, Ls('turn') - PRE],
+  turn: [Ls('turn') - PRE, Ls('coach') - PRE],
+  coach: [Ls('coach') - PRE, Ls('split') - PRE],
+  split: [Ls('split') - PRE, Ls('price') - PRE],
+  price: [Ls('price') - PRE, Ls('cta') - PRE],
+  cta: [Ls('cta') - PRE, Ls('early') - PRE],
+  early: [Ls('early') - PRE, Ls('end') - PRE],
+  end: [Ls('end') - PRE, GLUED_TOTAL],
 } as const;
+type Seg = keyof typeof T;
+const loc = (seg: Seg, abs: number) => abs - T[seg][0];
+const LEN = (seg: Seg) => T[seg][1] - T[seg][0];
+
+/** reveal frames, local to each scene, keyed to spoken words */
+const V = {
+  hook: {o1: Ls('h1'), o2: Ls('h5'), o3: Ls('h12'), stamp: Ls('hookb'), holds: Wd('hookb', 2), end: Le('hookb')},
+  again: {coach: loc('again', Wd('again', 0)), kids: loc('again', Wd('again', 2)), start: loc('again', Wd('again', 4)), again: loc('again', Wd('again', 6))},
+  turn: {later: loc('turn', Wd('turn', 1)), run: loc('turn', Wd('turn', 5)), ahead: loc('turn', Wd('turn', 7))},
+  coach: {what: loc('coach', Wd('coach', 0)), same: loc('coach', Wd('coach', 2)), every: loc('coach', Wd('coach', 5))},
+  split: {drop: loc('split', Wd('split', 0)), season: loc('split', Wd('split', 6)), pick: loc('split', Wd('split', 11))},
+  price: {drop: loc('price', Wd('price', 6)), monday: loc('price', Wd('price', 9)), save: loc('price', Wd('price', 10))},
+  cta: {first: loc('cta', Wd('cta', 0)), book: loc('cta', Wd('cta', 5)), link: loc('cta', Wd('cta', 7))},
+  early: {head: loc('early', Wd('early', 0)), off: loc('early', Wd('early', 3)), camps: loc('early', Wd('early', 5)), code: loc('early', Wd('early', 10))},
+  end: {tag: loc('end', Wd('end', 3))},
+};
 
 const F = (name: string) => staticFile(`footage/glued/${name}.mp4`);
 const STILL = (name: string) => staticFile(`footage/glued/stills/${name}.jpg`);
@@ -77,7 +102,7 @@ const DUR: Record<string, number> = {
   group_play: 1.98,
   ball_smile: 3.0,
 };
-const FIELD_VOL = 0.3;
+const FIELD_VOL = 0; // clean bed: no field audio under the VO (custom music goes on top)
 
 // ------------------------------------------------------------------ helpers
 const useIn = (at: number, cfg: {stiffness: number; damping: number} = ESU.spring.headline) => {
@@ -228,87 +253,199 @@ const Scene: React.FC<{range: readonly [number, number]; children: React.ReactNo
   </Sequence>
 );
 
-// ================================================================== 1 · HOOK (OmniFlash Pixar-style clip)
-/** Drop the generated clip here; until then the hook shows a labelled placeholder. Prompt: GLUED_HOOK_OMNIFLASH.md */
-const HOOK_FILE = 'footage/glued/hook_pixar.mp4';
-const HOOK_IN = 0; // seconds into the generated clip where the 3 s hook starts
-const HOOK_RATE = 1;
+// ================================================================== 1 · HOOK: "How old is your kid?" (12 months to 12 years)
+const AGES = ['1–3 YRS', '4–7 YRS', '8–12 YRS'];
+const HOOK = {
+  taps: [V.hook.o1 - 2, V.hook.o2 - 2, V.hook.o3 - 2], // a tap per spoken age: "One?" "Five?" "Twelve?"
+  fill: V.hook.o3 + 7, // every option lights up
+  stamp: V.hook.stamp - 2, // ALL OF THEM
+  kicker: V.hook.holds - 2,
+  out: T.hook[1] - 10,
+};
+const CARD_X = 110; // poll card left edge (and right margin)
+const CARD_PAD = 34;
+const TAP_X = [600, 470, 650]; // where the finger lands on each row (frame x)
+/** youngest → oldest under the poll, then the whole group on "all of them" */
+const HOOK_SHOTS = [
+  {name: 'group_play', from: 0, focus: '50% 40%', to: HOOK.taps[0]},
+  {name: 'run_ahead', from: 0.6, focus: '68% 50%', to: HOOK.taps[1]},
+  {name: 'alone_ladder', from: 0.5, focus: '62% 50%', to: HOOK.taps[2]},
+  {name: 'run_ball', from: 0.2, focus: '88% 50%', to: HOOK.stamp},
+  {name: 'coach_circle', from: 1.5, focus: '45% 40%', to: T.hook[1]},
+];
 
-const TimerPill: React.FC = () => {
+const PollRow: React.FC<{i: number}> = ({i}) => {
   const frame = useCurrentFrame();
-  const minutes = interpolate(frame, [0, 82], [0, 20], clamp);
-  const mm = String(Math.floor(minutes)).padStart(2, '0');
-  const ss = String(Math.floor((minutes % 1) * 60)).padStart(2, '0');
+  const tap = HOOK.taps[i];
+  const ease = (t: number) => 1 - (1 - t) ** 3;
+  const sel = interpolate(frame, [tap, tap + 7], [0, 100], {...clamp, easing: ease});
+  const all = interpolate(frame, [HOOK.fill + i * 2, HOOK.fill + i * 2 + 6], [0, 100], {...clamp, easing: ease});
+  const check = useIn(HOOK.fill + i * 2 + 2, {stiffness: 260, damping: 13});
+  const bump = frame >= tap ? 1 + 0.05 * Math.sin(Math.min(1, (frame - tap) / 8) * Math.PI) : 1;
+  const ripple = (frame - tap) / 14;
+  const finger = interpolate(frame, [tap - 5, tap - 1, tap, tap + 2, tap + 9], [0, 1, 0.8, 1, 0], clamp);
+  const rx = TAP_X[i] - CARD_X - CARD_PAD;
+  const labelColor = all > 12 ? NAVY : sel > 12 ? '#fff' : NAVY;
   return (
-    <div style={{position: 'absolute', left: 0, right: 0, top: 690, display: 'flex', justifyContent: 'center'}}>
-      <div
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 16,
-          background: RED,
-          color: '#fff',
-          fontFamily: HEAD,
-          fontWeight: 700,
-          fontSize: 64,
-          letterSpacing: 2,
-          padding: '6px 30px 10px 22px',
-          borderRadius: 18,
-          boxShadow: '0 12px 30px rgba(0,0,0,0.35)',
-        }}
-      >
-        <svg width={58} height={64} viewBox="-30 -36 60 66">
-          <rect x={-7} y={-34} width={14} height={9} rx={3} fill="#fff" />
-          <circle r={24} fill="none" stroke="#fff" strokeWidth={6} />
-          <path d="M0 0 L0 -16" stroke="#fff" strokeWidth={5} strokeLinecap="round" transform={`rotate(${frame * 26})`} />
-        </svg>
-        {mm}:{ss}
+    <div style={{position: 'relative', height: 108, transform: `scale(${bump})`}}>
+      <div style={{position: 'absolute', inset: 0, borderRadius: 54, background: '#EEF0F7', overflow: 'hidden'}}>
+        <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, width: `${sel}%`, background: NAVY}} />
+        <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, width: `${all}%`, background: YELLOW}} />
+        {frame >= tap && ripple < 1 && (
+          <div
+            style={{
+              position: 'absolute',
+              left: rx - (40 + 520 * ripple) / 2,
+              top: 54 - (40 + 520 * ripple) / 2,
+              width: 40 + 520 * ripple,
+              height: 40 + 520 * ripple,
+              borderRadius: '50%',
+              background: `rgba(255,255,255,${0.5 * (1 - ripple)})`,
+            }}
+          />
+        )}
+        <div style={{position: 'absolute', left: 44, top: 0, bottom: 0, display: 'flex', alignItems: 'center', fontFamily: HEAD, fontWeight: 700, fontSize: 60, letterSpacing: 2, color: labelColor}}>
+          {AGES[i]}
+        </div>
+        <div style={{position: 'absolute', right: 20, top: 19, width: 70, height: 70, borderRadius: '50%', background: NAVY, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${check})`}}>
+          <svg width={40} height={40} viewBox="-20 -20 40 40">
+            <path d="M-11 0 L-3 8 L12 -9" stroke={YELLOW} strokeWidth={6} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
       </div>
+      {finger > 0 && (
+        <div
+          style={{
+            position: 'absolute',
+            left: rx - 38,
+            top: 54 - 38 + (1 - Math.min(1, finger)) * 40,
+            width: 76,
+            height: 76,
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.92)',
+            border: '5px solid rgba(24,17,69,0.25)',
+            boxShadow: '0 10px 24px rgba(0,0,0,0.35)',
+            transform: `scale(${finger})`,
+            opacity: Math.min(1, finger * 1.5),
+          }}
+        />
+      )}
     </div>
   );
 };
 
-const HookPlaceholder: React.FC = () => (
-  <AbsoluteFill style={{background: `repeating-linear-gradient(135deg, #141a3d 0 26px, #10153300 26px 52px), linear-gradient(180deg, #1b2150, #0c1030)`}}>
-    <div style={{position: 'absolute', inset: 28, border: '4px dashed rgba(255,255,255,0.28)', borderRadius: 26}} />
-    <div style={{position: 'absolute', top: 1020, left: 60, right: 60, textAlign: 'center'}}>
-      <div style={{fontFamily: BODY, fontWeight: 800, fontSize: 28, letterSpacing: 4, color: YELLOW}}>PLACEHOLDER · PIXAR-STYLE HOOK (OMNIFLASH)</div>
-      <div style={{fontFamily: BODY, fontWeight: 600, fontSize: 36, color: 'rgba(255,255,255,0.82)', marginTop: 12, lineHeight: 1.25}}>
-        Kid wrapped around a parent's leg at the edge of the field
-      </div>
-      <div style={{fontFamily: BODY, fontWeight: 500, fontSize: 26, color: 'rgba(255,255,255,0.5)', marginTop: 10}}>public/{HOOK_FILE}</div>
-    </div>
-  </AbsoluteFill>
-);
-
 const Hook: React.FC = () => {
-  const has = getStaticFiles().some((f) => f.name === HOOK_FILE);
+  const frame = useCurrentFrame();
+  const cuts = [0, ...HOOK.taps, HOOK.stamp];
+  const last = cuts.filter((c) => c <= frame).pop() ?? 0;
+  const punch = interpolate(frame - last, [0, 6], [1.08, 1], clamp);
+  const sat = interpolate(frame, [HOOK.out - 16, T.hook[1]], [1, 0.45], clamp);
+  const out = interpolate(frame, [HOOK.out, T.hook[1]], [0, 1], {...clamp, easing: (t) => t * t});
+  const slam = interpolate(frame, [0, 5], [1.22, 1], {...clamp, easing: (t) => 1 - (1 - t) ** 3});
+  const card = spring({frame: frame + 9, fps: FPS, config: ESU.spring.photo}); // nearly landed on frame 0
+  const st = frame < HOOK.stamp ? 0 : spring({frame: frame - HOOK.stamp, fps: FPS, config: {stiffness: 320, damping: 18}});
+  const shake = frame >= HOOK.stamp ? Math.max(0, 1 - (frame - HOOK.stamp) / 10) : 0;
+  const sx = (random(`hx${frame}`) - 0.5) * 36 * shake;
+  const sy = (random(`hy${frame}`) - 0.5) * 36 * shake;
+  const label = useIn(HOOK.stamp + 7, ESU.spring.stat);
+  const glow = interpolate(frame, [HOOK.fill, HOOK.fill + 6, HOOK.fill + 16], [0, 1, 0.35], clamp);
   return (
     <AbsoluteFill style={{background: NAVY_DEEP}}>
-      {has ? (
-        <OffthreadVideo
-          src={staticFile(HOOK_FILE)}
-          startFrom={Math.round(HOOK_IN * FPS)}
-          playbackRate={HOOK_RATE}
-          muted
-          style={{width: '100%', height: '100%', objectFit: 'cover', filter: WARM}}
-        />
-      ) : (
-        <HookPlaceholder />
-      )}
-      <Scrim top={0.62} bottom={0.2} />
-      <Block top={330} gap={14}>
-        <Head at={0} size={100}>
-          Every new thing,
-        </Head>
-        <Head at={0} size={86}>
-          the first <Hi>20 minutes</Hi>
-        </Head>
-        <Head at={0} size={100}>
-          look like this.
-        </Head>
-      </Block>
-      <TimerPill />
+      <AbsoluteFill style={{transform: `scale(${1.32 * punch})`, transformOrigin: '50% 0%', filter: `saturate(${sat})`}}>
+        {HOOK_SHOTS.map((shot, i) => {
+          const start = i === 0 ? 0 : HOOK_SHOTS[i - 1].to;
+          return (
+            <Sequence key={shot.name} from={start} durationInFrames={shot.to - start} layout="none">
+              <Clip name={shot.name} frames={shot.to - start} from={shot.from} focus={shot.focus} push={0.1} audio={false} />
+            </Sequence>
+          );
+        })}
+      </AbsoluteFill>
+      <Scrim top={0.66} bottom={0.6} />
+      {cuts.slice(1).map((c) => (
+        <Flash key={c} at={c} len={4} />
+      ))}
+      <AbsoluteFill style={{transform: `translate(${sx}px, ${sy}px) translateY(${-out * 260}px) scale(${1 - out * 0.15})`, opacity: 1 - out}}>
+        {/* the question, on screen from frame 0 */}
+        <div style={{position: 'absolute', left: 0, right: 0, top: 270, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, transform: `scale(${slam})`, fontFamily: HEAD, fontWeight: 700, textTransform: 'uppercase', color: '#fff', textShadow: SHADOW, lineHeight: 1}}>
+          <div style={{fontSize: 112}}>How old is</div>
+          <div style={{fontSize: 150}}>
+            your{' '}
+            <span style={{display: 'inline-block', lineHeight: 1.1, background: YELLOW, color: NAVY, padding: '0 0.14em', borderRadius: 12, textShadow: 'none'}}>kid?</span>
+          </div>
+        </div>
+        {/* IG-style poll */}
+        <div
+          style={{
+            position: 'absolute',
+            left: CARD_X,
+            right: CARD_X,
+            top: 640,
+            padding: `28px ${CARD_PAD}px ${CARD_PAD}px`,
+            background: '#fff',
+            borderRadius: 40,
+            boxShadow: `0 26px 60px rgba(0,0,0,0.45), 0 0 0 ${10 * glow}px ${YELLOW}`,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 18,
+            opacity: Math.min(1, card * 1.6),
+            transform: `translateY(${(1 - card) * 220}px) rotate(${(1 - card) * 4}deg)`,
+          }}
+        >
+          <div style={{textAlign: 'center', fontFamily: BODY, fontWeight: 800, fontSize: 30, letterSpacing: 4, color: '#6E7290'}}>TAP YOUR KID'S AGE</div>
+          {AGES.map((_, i) => (
+            <PollRow key={i} i={i} />
+          ))}
+        </div>
+        {/* ALL OF THEM */}
+        {st > 0 && (
+          <div style={{position: 'absolute', left: 0, right: 0, top: 790, display: 'flex', justifyContent: 'center'}}>
+            <div
+              style={{
+                fontFamily: HEAD,
+                fontWeight: 700,
+                fontSize: 150,
+                lineHeight: 1,
+                letterSpacing: 4,
+                color: '#fff',
+                background: RED,
+                padding: '14px 46px 22px',
+                borderRadius: 22,
+                outline: '6px solid #fff',
+                outlineOffset: -18,
+                boxShadow: '0 24px 60px rgba(0,0,0,0.5)',
+                transform: `scale(${interpolate(st, [0, 1], [2.6, 1])}) rotate(-8deg)`,
+                opacity: Math.min(1, st * 3),
+              }}
+            >
+              ALL OF THEM
+            </div>
+          </div>
+        )}
+        <div style={{position: 'absolute', left: 0, right: 0, top: 1160, display: 'flex', justifyContent: 'center'}}>
+          <div
+            style={{
+              fontFamily: HEAD,
+              fontWeight: 700,
+              fontSize: 56,
+              letterSpacing: 3,
+              color: YELLOW,
+              background: 'rgba(24,17,69,0.92)',
+              border: `4px solid ${YELLOW}`,
+              padding: '6px 32px 10px',
+              borderRadius: 999,
+              transform: `scale(${label})`,
+            }}
+          >
+            12 MONTHS TO 12 YEARS
+          </div>
+        </div>
+        <Block top={1290}>
+          <Sub at={HOOK.kicker} size={50}>
+            Here's what holds them <Hi>all</Hi> back. ↓
+          </Sub>
+        </Block>
+      </AbsoluteFill>
     </AbsoluteFill>
   );
 };
@@ -316,9 +453,9 @@ const Hook: React.FC = () => {
 // ================================================================== 2 · NEW COACH. NEW KIDS. START OVER. AGAIN.
 const Again: React.FC = () => {
   const frame = useCurrentFrame();
-  const c1 = 22;
-  const c2 = 44;
-  const again = 60;
+  const c1 = V.again.kids - 2;
+  const c2 = V.again.start - 2;
+  const again = V.again.again + 2; // the rewind lands just after the word
   const spin = frame >= again ? (frame - again) * -24 : 0;
   const ring = frame >= again ? Math.min(1, (frame - again) / 6) : 0;
   return (
@@ -331,7 +468,7 @@ const Again: React.FC = () => {
       )}
       {frame >= c2 && (
         <Sequence from={c2} layout="none">
-          <Clip name="alone_ladder" frames={75 - c2} rate={0.6} focus="86% 50%" grade={MUTED} push={0.05} reverseAt={again - c2} />
+          <Clip name="alone_ladder" frames={LEN('again') - c2} rate={0.6} focus="86% 50%" grade={MUTED} push={0.05} reverseAt={again - c2} />
         </Sequence>
       )}
       <Scrim />
@@ -350,18 +487,18 @@ const Again: React.FC = () => {
       )}
       <Block top={360} gap={18}>
         <div style={{display: 'flex', gap: 22, justifyContent: 'center'}}>
-          <Sub at={2} size={80}>
+          <Sub at={V.again.coach - 2} size={80}>
             New coach.
           </Sub>
-          <Sub at={c1 + 2} size={80}>
+          <Sub at={c1} size={80}>
             New kids.
           </Sub>
         </div>
         <div style={{display: 'flex', gap: 22, alignItems: 'center', justifyContent: 'center'}}>
-          <Sub at={c2 + 2} size={80}>
+          <Sub at={c2} size={80}>
             Start over.
           </Sub>
-          <Sub at={again} size={80} style={{background: RED, padding: '0 0.3em 0.06em', borderRadius: 14, textShadow: 'none'}}>
+          <Sub at={V.again.again - 2} size={80} style={{background: RED, padding: '0 0.3em 0.06em', borderRadius: 14, textShadow: 'none'}}>
             Again.
           </Sub>
         </div>
@@ -373,7 +510,7 @@ const Again: React.FC = () => {
 // ================================================================== 3 · THE TURN
 const Turn: React.FC = () => {
   const frame = useCurrentFrame();
-  const cut = 85;
+  const cut = V.turn.ahead + 16; // stay on the run-ahead shot through the line
   const sweep = interpolate(frame, [4, 26], [0, 1], {...clamp, easing: (t) => 1 - (1 - t) ** 3});
   return (
     <AbsoluteFill>
@@ -381,7 +518,7 @@ const Turn: React.FC = () => {
         <Clip name="run_ahead" frames={cut} rate={0.6} focus="80% 50%" push={0.12} />
       ) : (
         <Sequence from={cut} layout="none">
-          <Clip name="run_ball" frames={120 - cut} from={0.25} rate={0.8} focus="92% 50%" push={0.08} />
+          <Clip name="run_ball" frames={LEN('turn') - cut} from={0.25} rate={0.8} focus="92% 50%" push={0.08} />
         </Sequence>
       )}
       <Scrim top={0.35} bottom={0.8} />
@@ -393,7 +530,7 @@ const Turn: React.FC = () => {
           return <div key={i} style={{position: 'absolute', left: x, top: y, width: 260 + random(`sw${i}`) * 200, height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.55)', opacity: 1 - frame / 40}} />;
         })}
       {/* yellow arrow swoosh behind the headline */}
-      <svg width={1080} height={420} style={{position: 'absolute', left: 0, top: 1170}}>
+      <svg width={1080} height={420} style={{position: 'absolute', left: 0, top: 1290}}>
         <path
           d="M90 300 C 300 330, 640 300, 940 180"
           stroke={YELLOW}
@@ -407,13 +544,13 @@ const Turn: React.FC = () => {
         {sweep > 0.95 && <path d="M900 140 L975 165 L925 225 Z" fill={YELLOW} />}
       </svg>
       <Block top={1120} gap={14}>
-        <Head at={6} size={64} color={YELLOW} style={{letterSpacing: 3}}>
+        <Head at={V.turn.later - 2} size={64} color={YELLOW} style={{letterSpacing: 3}}>
           A few weeks later:
         </Head>
-        <Head at={14} size={128}>
+        <Head at={V.turn.run - 2} size={128}>
           They run
         </Head>
-        <Head at={21} size={128}>
+        <Head at={V.turn.ahead - 2} size={128}>
           <Hi>ahead</Hi> of you.
         </Head>
       </Block>
@@ -426,11 +563,11 @@ const Turn: React.FC = () => {
 const Coach: React.FC = () => {
   const frame = useCurrentFrame();
   const card = useIn(6, ESU.spring.photo);
-  const tilesAt = 46;
+  const tilesAt = V.coach.every + 4;
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{filter: 'blur(22px) brightness(0.42) saturate(1.2)', transform: 'scale(1.15)'}}>
-        <Clip name="coach_circle" frames={120} from={1} audio={false} push={0} />
+        <Clip name="coach_circle" frames={LEN('coach')} from={1} audio={false} push={0} />
       </AbsoluteFill>
       <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(11,8,38,0.55), rgba(11,8,38,0.2) 40%, rgba(11,8,38,0.7))'}} />
       <div
@@ -448,12 +585,12 @@ const Coach: React.FC = () => {
           opacity: Math.min(1, card * 1.5),
         }}
       >
-        <Clip name="coach_circle" frames={120} from={1} focus="45% 40%" push={0.06} />
+        <Clip name="coach_circle" frames={LEN('coach')} from={1} focus="45% 40%" push={0.06} />
       </div>
       {/* 8 identical weeks: same coach, same group */}
       <div style={{position: 'absolute', left: 51, top: 1290, display: 'flex', gap: 14}}>
         {new Array(8).fill(0).map((_, i) => {
-          const at = tilesAt + i * 7;
+          const at = tilesAt + i * 5;
           const k = frame >= at ? spring({frame: frame - at, fps: FPS, config: ESU.spring.stat}) : 0;
           return (
             <div key={i} style={{width: 110, textAlign: 'center', opacity: Math.min(1, k * 1.5), transform: `translateY(${(1 - k) * 30}px)`}}>
@@ -471,13 +608,13 @@ const Coach: React.FC = () => {
         })}
       </div>
       <Block top={330} gap={14}>
-        <Sub at={2} size={68}>
+        <Sub at={V.coach.what - 2} size={68}>
           What changed?
         </Sub>
-        <Head at={16} size={118}>
+        <Head at={V.coach.same - 2} size={118}>
           The same coach.
         </Head>
-        <Head at={tilesAt - 6} size={118}>
+        <Head at={V.coach.every - 2} size={118}>
           <Hi bg={RED} color="#fff">
             Every week.
           </Hi>
@@ -507,7 +644,7 @@ const Half: React.FC<{side: 'l' | 'r'; frames: number; reveal: number; pick: num
       {left ? (
         <Clip name="alone_ladder" frames={frames} rate={0.5} focus="66% 50%" push={0.08} />
       ) : (
-        <Clip name="group_play" frames={frames} rate={0.6} focus="50% 30%" push={0.08} />
+        <Clip name="group_play" frames={frames} rate={0.5} focus="50% 30%" push={0.08} />
       )}
       <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(11,8,38,0.65) 0%, rgba(11,8,38,0) 30%, rgba(11,8,38,0) 55%, rgba(11,8,38,0.88) 100%)'}} />
       <div style={{position: 'absolute', top: 340, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
@@ -538,19 +675,19 @@ const Split: React.FC = () => {
   const frames = T.split[1] - T.split[0];
   const l = interpolate(frame, [0, 10], [0, 100], {...clamp, easing: (t) => 1 - (1 - t) ** 3});
   const r = interpolate(frame, [8, 18], [0, 100], {...clamp, easing: (t) => 1 - (1 - t) ** 3});
-  const pick = interpolate(frame, [92, 102], [0, 1], clamp);
+  const pick = interpolate(frame, [V.split.pick, V.split.pick + 10], [0, 1], clamp);
   return (
     <AbsoluteFill style={{background: NAVY_DEEP}}>
       <Half side="l" frames={frames} reveal={l} pick={pick} />
       <Half side="r" frames={frames} reveal={r} pick={pick} />
       <div style={{position: 'absolute', left: 535, top: 0, bottom: 0, width: 10, background: '#fff', opacity: Math.min(l, r) / 100}} />
       <div style={{position: 'absolute', left: 50, width: 450, top: 1150}}>
-        <Sub at={34} size={48}>
+        <Sub at={V.split.drop + 2} size={48}>
           <span style={{color: '#FF8A8F'}}>Drop-in:</span> a new start each time.
         </Sub>
       </div>
       <div style={{position: 'absolute', left: 590, width: 450, top: 1150}}>
-        <Sub at={56} size={48}>
+        <Sub at={V.split.season} size={48}>
           <span style={{color: YELLOW}}>Season:</span> same coach, same group, 8 weeks.
         </Sub>
       </div>
@@ -567,9 +704,9 @@ const Count: React.FC<{at: number; from: number; to: number; decimals?: number}>
 const Price: React.FC = () => {
   const frame = useCurrentFrame();
   const a = useIn(4, ESU.spring.photo);
-  const b = useIn(26, ESU.spring.photo);
-  const monday = useIn(50, ESU.spring.stat);
-  const save = useIn(72, {stiffness: 160, damping: 11});
+  const b = useIn(V.price.drop - 4, ESU.spring.photo);
+  const monday = useIn(V.price.monday - 2, ESU.spring.stat);
+  const save = useIn(V.price.save - 2, {stiffness: 160, damping: 11});
   const tile = (k: number, border: string): React.CSSProperties => ({
     position: 'absolute',
     left: 80,
@@ -594,7 +731,7 @@ const Price: React.FC = () => {
       <div style={{...tile(b, 'rgba(255,255,255,0.55)'), top: 760}}>
         <div style={{fontFamily: HEAD, fontWeight: 700, fontSize: 64, color: 'rgba(255,255,255,0.8)', letterSpacing: 2}}>DROP-IN:</div>
         <div style={{fontFamily: HEAD, fontWeight: 700, fontSize: 160, color: '#fff', lineHeight: 1}}>
-          $<Count at={28} from={32} to={37.5} decimals={2} />,
+          $<Count at={V.price.drop} from={32} to={37.5} decimals={2} />,
         </div>
         <div
           style={{
@@ -633,6 +770,12 @@ const Price: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* the reel now speaks to every age, so the toddler price is on screen too ($232 vs 8 × $36 = $288: also $56) */}
+      <div style={{position: 'absolute', left: 90, right: 90, top: 1440, textAlign: 'center', fontFamily: BODY, fontWeight: 600, fontSize: 30, lineHeight: 1.35, color: 'rgba(255,255,255,0.8)', opacity: Math.min(1, b * 1.2)}}>
+        Prices shown for ages 4–12. Toddlers (12–24 mo):
+        <br />
+        $29 a class vs. $36 drop-in from Monday.
+      </div>
     </NavyBg>
   );
 };
@@ -642,11 +785,11 @@ const Cta: React.FC = () => {
   const frame = useCurrentFrame();
   const bar = useIn(4, ESU.spring.photo);
   const pill = useIn(10, ESU.spring.stat);
-  const pulse = frame > 34 ? 1 + Math.sin((frame - 34) / 4) * 0.035 : 1;
-  const arrowIn = useIn(26);
+  const pulse = frame > V.cta.book + 8 ? 1 + Math.sin((frame - V.cta.book - 8) / 4) * 0.035 : 1;
+  const arrowIn = useIn(V.cta.link);
   return (
     <AbsoluteFill>
-      <Clip name="ball_smile" frames={120} from={0.5} rate={0.45} focus="100% 45%" push={0.07} />
+      <Clip name="ball_smile" frames={LEN('cta')} from={0.5} rate={0.45} focus="100% 45%" push={0.07} />
       <Scrim top={0.5} bottom={0.25} />
       <div style={{position: 'absolute', left: 0, right: 0, top: 350, display: 'flex', justifyContent: 'center'}}>
         <div style={{fontFamily: HEAD, fontWeight: 700, fontSize: 46, letterSpacing: 3, color: '#fff', background: 'rgba(24,17,69,0.88)', border: `3px solid ${YELLOW}`, padding: '8px 28px 10px', borderRadius: 999, transform: `scale(${pill})`}}>
@@ -669,16 +812,16 @@ const Cta: React.FC = () => {
           alignItems: 'center',
         }}
       >
-        <Head at={10} size={58} style={{textShadow: 'none'}}>
+        <Head at={V.cta.first} size={58} style={{textShadow: 'none'}}>
           First class is tomorrow morning.
         </Head>
         <div style={{transform: `scale(${pulse})`}}>
-          <Head at={18} size={156} color={YELLOW} style={{textShadow: '0 6px 0 rgba(0,0,0,0.18)'}}>
+          <Head at={V.cta.book - 2} size={156} color={YELLOW} style={{textShadow: '0 6px 0 rgba(0,0,0,0.18)'}}>
             Book tonight.
           </Head>
         </div>
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16}}>
-          <Head at={26} size={62} style={{textShadow: 'none'}}>
+          <Head at={V.cta.link - 2} size={62} style={{textShadow: 'none'}}>
             Link in bio.
           </Head>
           <svg width={46} height={52} viewBox="0 0 44 50" style={{transform: `translateY(${-Math.sin(frame / 4) * 8}px)`, opacity: Math.min(1, arrowIn * 1.4)}}>
@@ -749,23 +892,23 @@ const Snowflake: React.FC<{size: number}> = ({size}) => (
 
 const Early: React.FC = () => {
   const frame = useCurrentFrame();
-  const big = useIn(8, {stiffness: 170, damping: 12});
-  const ticket = useIn(26, ESU.spring.photo);
-  const draw = interpolate(frame, [28, 50], [0, 1], {...clamp, easing: (t) => 1 - (1 - t) ** 2});
+  const big = useIn(V.early.off - 2, {stiffness: 170, damping: 12});
+  const ticket = useIn(V.early.code - 4, ESU.spring.photo);
+  const draw = interpolate(frame, [V.early.code - 2, V.early.code + 20], [0, 1], {...clamp, easing: (t) => 1 - (1 - t) ** 2});
   const code = 'EARLYBIRD25';
-  const typed = Math.floor(interpolate(frame, [34, 58], [0, code.length], clamp));
-  const ends = useIn(66, ESU.spring.stat);
+  const typed = Math.floor(interpolate(frame, [V.early.code + 8, V.early.code + 40], [0, code.length], clamp)); // typed as it is spoken
+  const ends = useIn(V.early.code + 44, ESU.spring.stat);
   const W = 900;
   const H = 230;
-  const tick = frame > 70 ? 1 + Math.sin((frame - 70) / 3.5) * 0.04 : 1;
-  const leafIn = useIn(16, ESU.spring.stat);
-  const snowIn = useIn(20, ESU.spring.stat);
+  const tick = frame > V.early.code + 48 ? 1 + Math.sin((frame - V.early.code - 48) / 3.5) * 0.04 : 1;
+  const leafIn = useIn(V.early.camps - 2, ESU.spring.stat);
+  const snowIn = useIn(V.early.camps + 2, ESU.spring.stat);
   return (
     <NavyBg>
       <Polaroids dim={0.55} />
       <AbsoluteFill style={{background: 'radial-gradient(ellipse 70% 45% at 50% 48%, rgba(11,8,38,0.92) 0%, rgba(11,8,38,0.55) 60%, rgba(11,8,38,0.15) 100%)'}} />
       <Block top={330} gap={6}>
-        <Head at={2} size={62} color={YELLOW} style={{letterSpacing: 4}}>
+        <Head at={V.early.head - 2} size={62} color={YELLOW} style={{letterSpacing: 4}}>
           Also ending Sunday:
         </Head>
       </Block>
@@ -778,8 +921,10 @@ const Early: React.FC = () => {
         <div style={{transform: `scale(${leafIn}) rotate(${Math.sin(frame / 8) * 8}deg)`}}>
           <Leaf size={84} />
         </div>
-        <Sub at={14} size={50}>
-          Thanksgiving and Winter Camps.
+        <Sub at={V.early.camps - 2} size={52} style={{textAlign: 'center'}}>
+          Thanksgiving and
+          <br />
+          Winter Camps.
         </Sub>
         <div style={{transform: `scale(${snowIn}) rotate(${frame * 2}deg)`}}>
           <Snowflake size={80} />
@@ -828,7 +973,7 @@ const Early: React.FC = () => {
         </div>
       </div>
       <Block top={1250} gap={4}>
-        <Sub at={72} size={38} color="rgba(255,255,255,0.9)" style={{fontWeight: 600}}>
+        <Sub at={V.early.code + 50} size={38} color="rgba(255,255,255,0.9)" style={{fontWeight: 600}}>
           Expires Sunday, October 4, 2026
           <br />
           at 11:59 PM PT.
@@ -843,6 +988,7 @@ const End: React.FC = () => {
   const frame = useCurrentFrame();
   const k = useIn(0, {stiffness: 200, damping: 16});
   const t = useIn(8, ESU.spring.headline);
+  const tag = useIn(V.end.tag - 2, ESU.spring.stat);
   return (
     <NavyBg>
       <Polaroids dim={0.35} />
@@ -852,6 +998,9 @@ const End: React.FC = () => {
         <div style={{opacity: Math.min(1, t * 1.4), transform: `translateY(${(1 - t) * 40}px)`, textAlign: 'center'}}>
           <div style={{fontFamily: HEAD, fontWeight: 700, fontSize: 92, color: '#fff', lineHeight: 1.05}}>BOOK TONIGHT</div>
           <div style={{fontFamily: HEAD, fontWeight: 700, fontSize: 56, color: YELLOW, letterSpacing: 3, marginTop: 6}}>LINK IN BIO ↑</div>
+        </div>
+        <div style={{fontFamily: HEAD, fontWeight: 700, fontSize: 50, letterSpacing: 3, color: NAVY, background: YELLOW, padding: '4px 28px 8px', borderRadius: 14, transform: `scale(${tag})`}}>
+          AGES 12 MONTHS – 12 YEARS
         </div>
         <div style={{display: 'flex', alignItems: 'center', gap: 16, marginTop: 30, opacity: Math.min(1, t)}}>
           <div style={{fontFamily: BODY, fontWeight: 600, fontSize: 26, letterSpacing: 4, color: 'rgba(255,255,255,0.75)'}}>PROUDLY SPONSORED BY</div>
@@ -870,43 +1019,54 @@ const Sfx: React.FC<{at: number; name: string; v?: number}> = ({at, name, v = 0.
   </Sequence>
 );
 
-const musicVolume = (f: number) => interpolate(f, [0, 3, GLUED_TOTAL - 24, GLUED_TOTAL], [0, 0.5, 0.5, 0], clamp);
+/** absolute frame of a scene-local reveal */
+const at = (seg: Seg, f: number) => T[seg][0] + f;
 
 const SoundDesign: React.FC = () => (
   <>
-    {/* the audio hook: the 20:00 timer racing (step/squeak hits get re-timed to the OmniFlash clip) */}
-    {new Array(14).fill(0).map((_, i) => (
-      <Sfx key={i} at={i * 6} name="tick" v={0.55} />
+    {/* audio hook: referee whistle on frame 0, then a tap per age, everything lights up, ALL OF THEM slams */}
+    <Sfx at={0} name="whistle" v={0.8} />
+    {HOOK.taps.map((f) => (
+      <React.Fragment key={f}>
+        <Sfx at={f} name="pop" v={0.5} />
+        <Sfx at={f} name="click" v={0.3} />
+      </React.Fragment>
     ))}
+    <Sfx at={HOOK.fill} name="xylo_up" v={0.45} />
+    <Sfx at={HOOK.stamp} name="boom" v={0.5} />
+    <Sfx at={HOOK.stamp} name="kick" v={0.4} />
+    <Sfx at={HOOK.stamp + 7} name="swipe" v={0.25} />
+    <Sfx at={HOOK.out} name="whoosh" v={0.4} />
     {/* again */}
-    <Sfx at={T.again[0]} name="whoosh" v={0.35} />
-    <Sfx at={T.again[0] + 22} name="click" v={0.4} />
-    <Sfx at={T.again[0] + 44} name="click" v={0.4} />
-    <Sfx at={T.again[0] + 60} name="scratch" v={0.6} />
+    <Sfx at={at('again', V.again.kids - 2)} name="click" v={0.4} />
+    <Sfx at={at('again', V.again.start - 2)} name="click" v={0.4} />
+    <Sfx at={at('again', V.again.again + 2)} name="tape_stop" v={0.4} />
     {/* turn */}
     <Sfx at={T.turn[0]} name="whoosh_long" v={0.5} />
-    <Sfx at={T.turn[0] + 21} name="xylo_up" v={0.4} />
+    <Sfx at={at('turn', V.turn.ahead)} name="xylo_up" v={0.35} />
+    <Sfx at={at('turn', V.turn.ahead + 16)} name="kick" v={0.45} />
     {/* coach */}
-    <Sfx at={T.coach[0] + 6} name="swipe" v={0.35} />
+    <Sfx at={at('coach', 6)} name="swipe" v={0.35} />
     {new Array(8).fill(0).map((_, i) => (
-      <Sfx key={`w${i}`} at={T.coach[0] + 46 + i * 7} name="tick" v={0.45} />
+      <Sfx key={`w${i}`} at={at('coach', V.coach.every + 4 + i * 5)} name="tick" v={0.4} />
     ))}
     {/* split */}
     <Sfx at={T.split[0]} name="swipe" v={0.4} />
-    <Sfx at={T.split[0] + 92} name="ding" v={0.35} />
+    <Sfx at={at('split', V.split.pick)} name="ding" v={0.35} />
     {/* price */}
-    <Sfx at={T.price[0] + 4} name="pop" v={0.35} />
-    <Sfx at={T.price[0] + 26} name="pop" v={0.35} />
-    <Sfx at={T.price[0] + 50} name="tick" v={0.45} />
-    <Sfx at={T.price[0] + 72} name="tada" v={0.4} />
+    <Sfx at={at('price', 4)} name="pop" v={0.35} />
+    <Sfx at={at('price', V.price.drop - 4)} name="pop" v={0.35} />
+    <Sfx at={at('price', V.price.monday - 2)} name="tick" v={0.45} />
+    <Sfx at={at('price', V.price.save - 2)} name="tada" v={0.4} />
     {/* cta */}
-    <Sfx at={T.cta[0] + 4} name="whoosh" v={0.35} />
-    <Sfx at={T.cta[0] + 18} name="click" v={0.5} />
+    <Sfx at={at('cta', 4)} name="whoosh" v={0.35} />
+    <Sfx at={at('cta', V.cta.book - 2)} name="click" v={0.5} />
     {/* earlybird */}
     <Sfx at={T.early[0]} name="whoosh_long" v={0.4} />
-    <Sfx at={T.early[0] + 8} name="boom" v={0.35} />
-    <Sfx at={T.early[0] + 34} name="typing" v={0.3} />
-    <Sfx at={T.early[0] + 66} name="ding" v={0.4} />
+    <Sfx at={at('early', V.early.off - 2)} name="boom" v={0.35} />
+    <Sfx at={at('early', V.early.camps - 2)} name="sparkle" v={0.3} />
+    <Sfx at={at('early', V.early.code + 8)} name="typing" v={0.3} />
+    <Sfx at={at('early', V.early.code + 44)} name="ding" v={0.4} />
     {/* end */}
     <Sfx at={T.end[0]} name="boom" v={0.45} />
   </>
@@ -949,7 +1109,8 @@ export const ESU_GluedToYourLeg: React.FC = () => {
       </Scene>
       <CornerLogos hideCrest={[[T.end[0], T.end[1] + 10]]} />
       <Grain opacity={0.05} />
-      <Audio src={staticFile('audio/music_glued.wav')} volume={musicVolume} />
+      {/* no music bed on purpose: custom music is laid in afterwards */}
+      <Audio src={staticFile('audio/vo_glued.wav')} />
       <SoundDesign />
     </AbsoluteFill>
   );

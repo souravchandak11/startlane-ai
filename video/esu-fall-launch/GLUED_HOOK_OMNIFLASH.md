@@ -1,5 +1,7 @@
 # "Glued to your leg": Pixar-style hook (OmniFlash)
 
+> **Superseded (Oct 2, 2026).** The "glued to your leg" hook only spoke to toddler parents, so the reel now opens with the all-ages "How old is your kid?" poll hook built from real footage (see `GLUED_TO_YOUR_LEG.md`). This prompt is kept only for reference; no OmniFlash clip is needed.
+
 This replaces the motion-graphics hook (0–3 s) of `ESU-GluedToYourLeg`. The animated characters, glue bottle
 and stopwatch drawing have been removed. The headline (EVERY NEW THING, THE FIRST 20 MINUTES LOOK LIKE THIS.)
 and a red 00:00 → 20:00 timer chip stay on top, added in the edit.

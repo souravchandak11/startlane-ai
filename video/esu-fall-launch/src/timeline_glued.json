@@ -1,0 +1,575 @@
+{
+ "voEnd": 39.5,
+ "total": 40.2,
+ "lines": [
+  {
+   "id": "hookq",
+   "text": "How old is your kid?",
+   "start": 0.45,
+   "end": 1.49,
+   "words": [
+    {
+     "w": "How",
+     "start": 0.45,
+     "end": 0.681
+    },
+    {
+     "w": "old",
+     "start": 0.681,
+     "end": 0.97
+    },
+    {
+     "w": "is",
+     "start": 0.97,
+     "end": 1.086
+    },
+    {
+     "w": "your",
+     "start": 1.086,
+     "end": 1.259
+    },
+    {
+     "w": "kid?",
+     "start": 1.259,
+     "end": 1.49
+    }
+   ]
+  },
+  {
+   "id": "h1",
+   "text": "One?",
+   "start": 1.61,
+   "end": 2.01,
+   "words": [
+    {
+     "w": "One?",
+     "start": 1.61,
+     "end": 2.01
+    }
+   ]
+  },
+  {
+   "id": "h5",
+   "text": "Five?",
+   "start": 2.09,
+   "end": 2.58,
+   "words": [
+    {
+     "w": "Five?",
+     "start": 2.09,
+     "end": 2.58
+    }
+   ]
+  },
+  {
+   "id": "h12",
+   "text": "Twelve?",
+   "start": 2.66,
+   "end": 3.16,
+   "words": [
+    {
+     "w": "Twelve?",
+     "start": 2.66,
+     "end": 3.16
+    }
+   ]
+  },
+  {
+   "id": "hookb",
+   "text": "Here's what holds them all back.",
+   "start": 3.36,
+   "end": 4.84,
+   "words": [
+    {
+     "w": "Here's",
+     "start": 3.36,
+     "end": 3.624
+    },
+    {
+     "w": "what",
+     "start": 3.624,
+     "end": 3.836
+    },
+    {
+     "w": "holds",
+     "start": 3.836,
+     "end": 4.206
+    },
+    {
+     "w": "them",
+     "start": 4.206,
+     "end": 4.417
+    },
+    {
+     "w": "all",
+     "start": 4.417,
+     "end": 4.629
+    },
+    {
+     "w": "back.",
+     "start": 4.629,
+     "end": 4.84
+    }
+   ]
+  },
+  {
+   "id": "again",
+   "text": "New coach. New kids. Start over\u2026 again.",
+   "start": 5.09,
+   "end": 7.57,
+   "words": [
+    {
+     "w": "New",
+     "start": 5.09,
+     "end": 5.366
+    },
+    {
+     "w": "coach.",
+     "start": 5.366,
+     "end": 5.779
+    },
+    {
+     "w": "New",
+     "start": 5.779,
+     "end": 6.054
+    },
+    {
+     "w": "kids.",
+     "start": 6.054,
+     "end": 6.399
+    },
+    {
+     "w": "Start",
+     "start": 6.399,
+     "end": 6.68
+    },
+    {
+     "w": "over\u2026",
+     "start": 6.68,
+     "end": 6.88
+    },
+    {
+     "w": "again.",
+     "start": 7.16,
+     "end": 7.57
+    }
+   ]
+  },
+  {
+   "id": "turn",
+   "text": "But a few weeks later? They run ahead of you.",
+   "start": 7.82,
+   "end": 9.81,
+   "words": [
+    {
+     "w": "But",
+     "start": 7.82,
+     "end": 7.977
+    },
+    {
+     "w": "a",
+     "start": 7.977,
+     "end": 8.094
+    },
+    {
+     "w": "few",
+     "start": 8.094,
+     "end": 8.29
+    },
+    {
+     "w": "weeks",
+     "start": 8.29,
+     "end": 8.525
+    },
+    {
+     "w": "later?",
+     "start": 8.525,
+     "end": 8.76
+    },
+    {
+     "w": "They",
+     "start": 9.0,
+     "end": 9.143
+    },
+    {
+     "w": "run",
+     "start": 9.143,
+     "end": 9.334
+    },
+    {
+     "w": "ahead",
+     "start": 9.334,
+     "end": 9.572
+    },
+    {
+     "w": "of",
+     "start": 9.572,
+     "end": 9.667
+    },
+    {
+     "w": "you.",
+     "start": 9.667,
+     "end": 9.81
+    }
+   ]
+  },
+  {
+   "id": "coach",
+   "text": "What changed? The same coach. Every week.",
+   "start": 11.12,
+   "end": 13.72,
+   "words": [
+    {
+     "w": "What",
+     "start": 11.12,
+     "end": 11.314
+    },
+    {
+     "w": "changed?",
+     "start": 11.314,
+     "end": 11.75
+    },
+    {
+     "w": "The",
+     "start": 11.94,
+     "end": 12.054
+    },
+    {
+     "w": "same",
+     "start": 12.054,
+     "end": 12.338
+    },
+    {
+     "w": "coach.",
+     "start": 12.338,
+     "end": 12.68
+    },
+    {
+     "w": "Every",
+     "start": 12.85,
+     "end": 13.285
+    },
+    {
+     "w": "week.",
+     "start": 13.285,
+     "end": 13.72
+    }
+   ]
+  },
+  {
+   "id": "split",
+   "text": "Drop-in: a new start each time. Season: same coach, same group, 8 weeks.",
+   "start": 14.82,
+   "end": 19.29,
+   "words": [
+    {
+     "w": "Drop-in:",
+     "start": 14.82,
+     "end": 15.379
+    },
+    {
+     "w": "a",
+     "start": 15.379,
+     "end": 15.496
+    },
+    {
+     "w": "new",
+     "start": 15.496,
+     "end": 15.653
+    },
+    {
+     "w": "start",
+     "start": 15.653,
+     "end": 15.928
+    },
+    {
+     "w": "each",
+     "start": 15.928,
+     "end": 16.124
+    },
+    {
+     "w": "time.",
+     "start": 16.124,
+     "end": 16.32
+    },
+    {
+     "w": "Season:",
+     "start": 16.67,
+     "end": 17.1
+    },
+    {
+     "w": "same",
+     "start": 17.4,
+     "end": 17.666
+    },
+    {
+     "w": "coach,",
+     "start": 17.666,
+     "end": 17.986
+    },
+    {
+     "w": "same",
+     "start": 17.986,
+     "end": 18.274
+    },
+    {
+     "w": "group,",
+     "start": 18.274,
+     "end": 18.62
+    },
+    {
+     "w": "8",
+     "start": 18.69,
+     "end": 18.93
+    },
+    {
+     "w": "weeks.",
+     "start": 18.93,
+     "end": 19.29
+    }
+   ]
+  },
+  {
+   "id": "price",
+   "text": "Per class, the season costs less. Drop-ins go up Monday. Save $56.",
+   "start": 19.79,
+   "end": 24.68,
+   "words": [
+    {
+     "w": "Per",
+     "start": 19.79,
+     "end": 19.991
+    },
+    {
+     "w": "class,",
+     "start": 19.991,
+     "end": 20.326
+    },
+    {
+     "w": "the",
+     "start": 20.326,
+     "end": 20.446
+    },
+    {
+     "w": "season",
+     "start": 20.446,
+     "end": 20.868
+    },
+    {
+     "w": "costs",
+     "start": 20.868,
+     "end": 21.229
+    },
+    {
+     "w": "less.",
+     "start": 21.229,
+     "end": 21.47
+    },
+    {
+     "w": "Drop-ins",
+     "start": 21.82,
+     "end": 22.303
+    },
+    {
+     "w": "go",
+     "start": 22.303,
+     "end": 22.497
+    },
+    {
+     "w": "up",
+     "start": 22.497,
+     "end": 22.642
+    },
+    {
+     "w": "Monday.",
+     "start": 22.642,
+     "end": 22.98
+    },
+    {
+     "w": "Save",
+     "start": 23.3,
+     "end": 23.614
+    },
+    {
+     "w": "$56.",
+     "start": 23.614,
+     "end": 24.68
+    }
+   ]
+  },
+  {
+   "id": "cta",
+   "text": "First class is tomorrow morning. Book tonight. Link in bio.",
+   "start": 25.28,
+   "end": 28.73,
+   "words": [
+    {
+     "w": "First",
+     "start": 25.28,
+     "end": 25.652
+    },
+    {
+     "w": "class",
+     "start": 25.652,
+     "end": 25.962
+    },
+    {
+     "w": "is",
+     "start": 25.962,
+     "end": 26.086
+    },
+    {
+     "w": "tomorrow",
+     "start": 26.086,
+     "end": 26.644
+    },
+    {
+     "w": "morning.",
+     "start": 26.644,
+     "end": 27.14
+    },
+    {
+     "w": "Book",
+     "start": 27.24,
+     "end": 27.364
+    },
+    {
+     "w": "tonight.",
+     "start": 27.364,
+     "end": 27.58
+    },
+    {
+     "w": "Link",
+     "start": 27.88,
+     "end": 28.184
+    },
+    {
+     "w": "in",
+     "start": 28.184,
+     "end": 28.366
+    },
+    {
+     "w": "bio.",
+     "start": 28.366,
+     "end": 28.73
+    }
+   ]
+  },
+  {
+   "id": "early",
+   "text": "Also ending Sunday: 25% off Thanksgiving and Winter Camps with code EARLYBIRD25.",
+   "start": 29.13,
+   "end": 35.12,
+   "words": [
+    {
+     "w": "Also",
+     "start": 29.13,
+     "end": 29.526
+    },
+    {
+     "w": "ending",
+     "start": 29.526,
+     "end": 29.865
+    },
+    {
+     "w": "Sunday:",
+     "start": 29.865,
+     "end": 30.26
+    },
+    {
+     "w": "25%",
+     "start": 30.64,
+     "end": 31.731
+    },
+    {
+     "w": "off",
+     "start": 31.731,
+     "end": 31.904
+    },
+    {
+     "w": "Thanksgiving",
+     "start": 31.904,
+     "end": 32.535
+    },
+    {
+     "w": "and",
+     "start": 32.535,
+     "end": 32.708
+    },
+    {
+     "w": "Winter",
+     "start": 32.708,
+     "end": 33.052
+    },
+    {
+     "w": "Camps",
+     "start": 33.052,
+     "end": 33.397
+    },
+    {
+     "w": "with",
+     "start": 33.397,
+     "end": 33.569
+    },
+    {
+     "w": "code",
+     "start": 33.569,
+     "end": 33.856
+    },
+    {
+     "w": "EARLYBIRD25.",
+     "start": 33.856,
+     "end": 35.12
+    }
+   ]
+  },
+  {
+   "id": "end",
+   "text": "Euro Soccer USA. Twelve months to twelve years.",
+   "start": 36.42,
+   "end": 39.4,
+   "words": [
+    {
+     "w": "Euro",
+     "start": 36.42,
+     "end": 36.849
+    },
+    {
+     "w": "Soccer",
+     "start": 36.849,
+     "end": 37.217
+    },
+    {
+     "w": "USA.",
+     "start": 37.217,
+     "end": 37.83
+    },
+    {
+     "w": "Twelve",
+     "start": 38.02,
+     "end": 38.338
+    },
+    {
+     "w": "months",
+     "start": 38.338,
+     "end": 38.657
+    },
+    {
+     "w": "to",
+     "start": 38.657,
+     "end": 38.816
+    },
+    {
+     "w": "twelve",
+     "start": 38.816,
+     "end": 39.135
+    },
+    {
+     "w": "years.",
+     "start": 39.135,
+     "end": 39.4
+    }
+   ]
+  }
+ ]
+}

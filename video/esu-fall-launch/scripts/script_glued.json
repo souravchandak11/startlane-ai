@@ -1,0 +1,82 @@
+{
+ "voice": "af_heart",
+ "speed": 1.12,
+ "leadIn": 0.45,
+ "gap": 0.25,
+ "tail": 0.7,
+ "lines": [
+  {
+   "id": "hookq",
+   "text": "How old is your kid?",
+   "pauseAfter": 0.12
+  },
+  {
+   "id": "h1",
+   "text": "One?",
+   "pauseAfter": 0.08
+  },
+  {
+   "id": "h5",
+   "text": "Five?",
+   "pauseAfter": 0.08
+  },
+  {
+   "id": "h12",
+   "text": "Twelve?",
+   "pauseAfter": 0.2
+  },
+  {
+   "id": "hookb",
+   "text": "Here's what holds them all back.",
+   "pauseAfter": 0.25
+  },
+  {
+   "id": "again",
+   "text": "New coach. New kids. Start over… again.",
+   "say": "New coach. New kids. Start over... again.",
+   "pauseAfter": 0.25
+  },
+  {
+   "id": "turn",
+   "text": "But a few weeks later? They run ahead of you.",
+   "say": "But a few weeks later? They run ahead of you!",
+   "pauseAfter": 1.31
+  },
+  {
+   "id": "coach",
+   "text": "What changed? The same coach. Every week.",
+   "say": "What changed? The same coach. Every single week.",
+   "pauseAfter": 1.1
+  },
+  {
+   "id": "split",
+   "text": "Drop-in: a new start each time. Season: same coach, same group, 8 weeks.",
+   "say": "Drop in? A new start each time. Season? Same coach, same group, eight weeks.",
+   "pauseAfter": 0.5
+  },
+  {
+   "id": "price",
+   "text": "Per class, the season costs less. Drop-ins go up Monday. Save $56.",
+   "say": "Per class, the season costs less. Drop ins go up Monday. Save fifty six dollars.",
+   "pauseAfter": 0.6
+  },
+  {
+   "id": "cta",
+   "text": "First class is tomorrow morning. Book tonight. Link in bio.",
+   "say": "First class is tomorrow morning. Book tonight. Link in bio.",
+   "pauseAfter": 0.4
+  },
+  {
+   "id": "early",
+   "text": "Also ending Sunday: 25% off Thanksgiving and Winter Camps with code EARLYBIRD25.",
+   "say": "Also ending Sunday: twenty five percent off Thanksgiving and Winter Camps, with code early bird twenty five.",
+   "pauseAfter": 1.3
+  },
+  {
+   "id": "end",
+   "text": "Euro Soccer USA. Twelve months to twelve years.",
+   "say": "Euro Soccer U.S.A. Twelve months, to twelve years.",
+   "pauseAfter": 0.1
+  }
+ ]
+}
