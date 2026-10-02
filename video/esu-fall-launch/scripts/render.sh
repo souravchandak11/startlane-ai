@@ -19,6 +19,7 @@ COVER=${COVER:-26}
 RAW=out/raw-$NAME.mp4
 
 node scripts/scan_media.mjs   # detect real clips in public/footage + photos in public/photos
+node scripts/scan_glued.mjs   # real Weekend Academy clips for ESU-GluedToYourLeg (public/footage/glued)
 npx remotion render src/index.ts "$COMP" "$RAW" "${BROWSER[@]}" --crf 18 --audio-bitrate 320k
 npx remotion still src/index.ts "$COMP" "out/cover-$NAME.jpg" --frame "$COVER" --image-format jpeg "${BROWSER[@]}"
 

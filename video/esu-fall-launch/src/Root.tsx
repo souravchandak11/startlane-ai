@@ -4,6 +4,7 @@ import {ESU_FallLaunch, TOTAL_FRAMES} from './compositions/ESU_FallLaunch';
 import {ESU_FallLaunchFootage, FOOTAGE_TOTAL} from './compositions/ESU_FallLaunchFootage';
 import {FPS, HEIGHT, WIDTH} from './presets/brand';
 import {MDM, MDM_TOTAL} from './mdm/MDM';
+import {ESU_GluedToYourLeg, GLUED_TOTAL} from './compositions/ESU_GluedToYourLeg';
 
 export const Root: React.FC = () => (
   <>
@@ -27,5 +28,7 @@ export const Root: React.FC = () => (
     />
     {/* Mommy, Daddy & Me (Parent-Assisted Toddler 12–24 mo): fully animated */}
     <Composition id="ESU-MommyDaddyMe" component={MDM} durationInFrames={MDM_TOTAL} fps={FPS} width={WIDTH} height={HEIGHT} />
+    {/* "Glued to your leg": fall season, real Weekend Academy footage, text-carried */}
+    <Composition id="ESU-GluedToYourLeg" component={ESU_GluedToYourLeg} durationInFrames={GLUED_TOTAL} fps={FPS} width={WIDTH} height={HEIGHT} />
   </>
 );

@@ -5,3 +5,4 @@ scripts/.kokoro/
 public/footage/*.mp4
 __pycache__/
 public/footage/mdm/
+public/footage/glued/
