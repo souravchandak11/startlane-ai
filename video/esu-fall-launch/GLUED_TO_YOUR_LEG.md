@@ -56,25 +56,8 @@ Transcode: `ffmpeg -i SRC -map 0:v:0 -map 0:a:0? -vf "fps=30,format=yuv420p" -c:
 
 Render: `COMP=ESU-GluedToYourLeg NAME=esu-fall-season-vo COVER=96 bash scripts/render.sh`
 
-## Caption (paste as-is)
-> How old is your kid? 1? 5? 12? ⚽
-> The same thing holds them all back: a new coach and new kids every time.
->
-> A few weeks into a season with the same coach and the same group, they run ahead of you. That's why the Weekend Academy is a season, not a string of drop-ins.
->
-> 🗓️ Fall season: 8 weeks, ages 12 months to 12 years, first class TOMORROW morning
-> 📍 The Sports Park, Playa Vista
-> 💲 Ages 4–12: $32 a class vs. $37.50 per drop-in ($39 from Monday)
-> 👶 Toddlers (12–24 months): $29 a class vs. $36 per drop-in from Monday
-> Either way, the season is $56 less than 8 drop-ins at Monday's price.
->
-> Book tonight. Link in bio 👆
->
-> 🦃❄️ Also ending Sunday: code **EARLYBIRD25** = 25% off Thanksgiving & Winter Camps. Expires Sunday, Oct 4, 2026 at 11:59 PM PT.
->
-> #EuroSoccerUSA #WeekendAcademy #KidsSoccer #YouthSoccer #ToddlerSoccer #LAmoms #PlayaVista #WestLA #LAParents #FallSeason
-
-**Pinned comment:** "How old is yours? Drop their age 👇 and we'll tell you which group they'd join tomorrow." Every reply is a lead you can DM.
+## Caption, hashtags and B-roll
+The final caption (with exactly 5 hashtags: Instagram's per-post cap), pinned comment, a short TikTok/Facebook version and the OmniFlash B-roll prompts are in `FALL_SEASON_BROLL_OMNIFLASH.md`.
 
 ## Numbers check
 | | Total | Per class |
