@@ -21,9 +21,9 @@ import soundfile as sf
 from kokoro_onnx import Kokoro
 
 ROOT = Path(__file__).resolve().parent.parent
-SCRIPT = ROOT / "scripts" / "script.json"
-OUT_WAV = ROOT / "public" / "audio" / "vo.wav"
-OUT_JSON = ROOT / "src" / "timeline.json"
+SCRIPT = Path(os.environ.get("SCRIPT", ROOT / "scripts" / "script.json"))
+OUT_WAV = Path(os.environ.get("OUT_WAV", ROOT / "public" / "audio" / "vo.wav"))
+OUT_JSON = Path(os.environ.get("OUT_JSON", ROOT / "src" / "timeline.json"))
 MODEL_DIR = Path(os.environ.get("KOKORO_DIR", ROOT / "scripts" / ".kokoro"))
 
 SR_OUT = 44100

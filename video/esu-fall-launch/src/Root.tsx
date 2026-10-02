@@ -3,6 +3,7 @@ import {Composition} from 'remotion';
 import {ESU_FallLaunch, TOTAL_FRAMES} from './compositions/ESU_FallLaunch';
 import {ESU_FallLaunchFootage, FOOTAGE_TOTAL} from './compositions/ESU_FallLaunchFootage';
 import {FPS, HEIGHT, WIDTH} from './presets/brand';
+import {MDM, MDM_TOTAL} from './mdm/MDM';
 
 export const Root: React.FC = () => (
   <>
@@ -24,5 +25,7 @@ export const Root: React.FC = () => (
       width={WIDTH}
       height={HEIGHT}
     />
+    {/* Mommy, Daddy & Me (Parent-Assisted Toddler 12–24 mo): fully animated */}
+    <Composition id="ESU-MommyDaddyMe" component={MDM} durationInFrames={MDM_TOTAL} fps={FPS} width={WIDTH} height={HEIGHT} />
   </>
 );

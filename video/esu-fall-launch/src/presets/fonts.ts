@@ -17,6 +17,7 @@ const faces: {family: string; file: string; weight?: string; style?: string}[] =
   {family: 'Poppins', file: 'Poppins-ExtraBold.ttf', weight: '800'},
   {family: 'Poppins', file: 'Poppins-Black.ttf', weight: '900'},
   {family: 'Inter', file: 'Inter-VF.ttf', weight: '100 900'},
+  {family: 'Fredoka', file: 'Fredoka-VF.ttf', weight: '300 700'},
 ];
 
 export const loadAllFonts = () =>
@@ -32,6 +33,7 @@ export const loadAllFonts = () =>
   );
 
 export const FONT = {
+  round: 'Fredoka, Poppins, sans-serif',
   display: '"Bebas Neue", Anton, sans-serif',
   heavy: 'Anton, "Bebas Neue", sans-serif',
   sans: 'Montserrat, Poppins, sans-serif',

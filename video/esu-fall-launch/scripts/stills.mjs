@@ -6,7 +6,7 @@ import path from 'node:path';
 const frames = process.argv.slice(2).map(Number);
 const browserExecutable = process.env.REMOTION_CHROME || null;
 const serveUrl = await bundle({entryPoint: path.resolve('src/index.ts')});
-const composition = await selectComposition({serveUrl, id: 'ESU-FallLaunch', browserExecutable});
+const composition = await selectComposition({serveUrl, id: process.env.COMP || 'ESU-FallLaunch', browserExecutable});
 for (const frame of frames) {
   await renderStill({
     composition, serveUrl, frame, browserExecutable,

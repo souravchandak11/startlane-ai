@@ -127,8 +127,28 @@ frames. A new read or a different voice therefore re-times the whole edit automa
   jersey and tactics-board shots (19–31 s) are the slots to replace with kids on the field at The Sports Park.
 - A real parent or coach voice (or a human VO) would further raise trust.
 
-## 5. Credits and licences
-- Fonts: Instrument Serif, Inter, Oswald, Bebas Neue, Montserrat, Anton, Poppins. All SIL OFL, vendored from google/fonts.
+## 5. Mommy, Daddy & Me (toddler class) video
+
+`ESU-MommyDaddyMe` is a second, fully animated video for the Parent Assisted Toddler class
+(12–24 months). It lives in `src/mdm/` and shares the brand presets, logos and fonts. The posting
+kit and the facts used are in `POSTING_MDM.md`.
+
+- `Characters.tsx`: rubber-hose SVG toddler, Mom and Dad. Every limb is a two-bone IK chain,
+  so a pose is just hand and foot targets. Also the tiny-hand-holds-finger close-up.
+- `World.tsx`: sky, grass, playground, toddler goal, calendar, energy meter, gauge, confetti, iris.
+- `Type.tsx`: die-cut stickers, bouncy letters, serif emotion lines, word-synced captions.
+- `Scenes1.tsx` / `Scenes2.tsx`: the 13 scenes. `MDM.tsx`: transitions, captions, logos, mix and SFX cues.
+
+```bash
+SCRIPT=scripts/script_mdm.json OUT_WAV=public/audio/vo_mdm.wav OUT_JSON=src/timeline_mdm.json \
+  python3 scripts/make_vo.py                 # VO + word timings
+python3 scripts/make_music_mdm.py            # ukulele/glock score, drop on "goal" → public/audio/music_mdm.wav
+python3 scripts/make_sfx_mdm.py              # boing, slide whistle, scratch, net, ta-da…
+COMP=ESU-MommyDaddyMe NAME=esu-mommy-daddy-me COVER=93 bash scripts/render.sh
+```
+
+## 6. Credits and licences
+- Fonts: Instrument Serif, Inter, Oswald, Bebas Neue, Montserrat, Anton, Poppins, Fredoka. All SIL OFL, vendored from google/fonts.
 - Icons: Twemoji by Twitter/jdecked, CC-BY 4.0.
 - Voice: Kokoro-82M (Apache-2.0), generated locally.
 - Music and every sound effect: synthesised from scratch in `scripts/` (no third-party audio).

@@ -1,0 +1,31 @@
+{
+  "voice": "af_heart",
+  "speed": 1.05,
+  "leadIn": 1.15,
+  "gap": 0.1,
+  "tail": 3.0,
+  "music": {
+    "hookEnd": "hook1",
+    "groove": "hook2",
+    "stopAfter": "pain3",
+    "dropAtWord": ["turn1", 8],
+    "ctaAt": "cta1"
+  },
+  "lines": [
+    {"id": "hook1", "text": "Wait… your 1-year-old can play soccer?", "say": "Wait... your one year old can play soccer?", "pauseAfter": 0.22},
+    {"id": "hook2", "text": "Yep. And you get to play too.", "pauseAfter": 0.3},
+    {"id": "pain1", "text": "Because let's be honest… same playground, same swings, same Saturday.", "say": "Because let's be honest... same playground. Same swings. Same Saturday.", "pauseAfter": 0.12},
+    {"id": "pain2", "text": "All that toddler energy… and nowhere to put it.", "pauseAfter": 0.25},
+    {"id": "pain3", "text": "And they're only this little once.", "speed": 0.96, "pauseAfter": 0.1},
+    {"id": "turn1", "text": "So this weekend… let's score their very first goal. Together.", "say": "So this weekend... let's score their very first goal. Together!", "pauseBefore": 0.35, "pauseAfter": 0.15},
+    {"id": "sol1", "text": "Meet Mommy, Daddy & Me Soccer at Euro Soccer USA.", "say": "Meet Mommy, Daddy and Me Soccer, at Euro Soccer U.S.A.", "pauseAfter": 0.12},
+    {"id": "sol2", "text": "30 playful minutes for 12 to 24 month olds, with you right by their side.", "say": "Thirty playful minutes for twelve to twenty four month olds, with you right by their side.", "pauseAfter": 0.12},
+    {"id": "sol3", "text": "Imaginative themed games that build balance, coordination and confidence.", "pauseAfter": 0.12},
+    {"id": "sol4", "text": "No pressure. Just play.", "pauseAfter": 0.12},
+    {"id": "sol5", "text": "And yes… one very good nap after.", "say": "And yes... one very good nap after.", "pauseAfter": 0.3},
+    {"id": "emo1", "text": "Their first kick. Their first goal. Their first high five.", "pauseAfter": 0.1},
+    {"id": "emo2", "text": "You'll be right there for all of it.", "pauseAfter": 0.3},
+    {"id": "cta1", "text": "Fall classes start this weekend at The Sports Park, Playa Vista.", "pauseAfter": 0.12},
+    {"id": "cta2", "text": "Tap the link and book their first class.", "pauseAfter": 0.1}
+  ]
+}

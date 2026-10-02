@@ -3,3 +3,4 @@ out/
 scripts/.kokoro/
 *.log
 public/footage/*.mp4
+__pycache__/

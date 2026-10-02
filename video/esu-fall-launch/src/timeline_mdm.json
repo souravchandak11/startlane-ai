@@ -1,0 +1,776 @@
+{
+ "voEnd": 44.16,
+ "total": 47.16,
+ "lines": [
+  {
+   "id": "hook1",
+   "text": "Wait\u2026 your 1-year-old can play soccer?",
+   "start": 1.15,
+   "end": 3.03,
+   "words": [
+    {
+     "w": "Wait\u2026",
+     "start": 1.15,
+     "end": 1.53
+    },
+    {
+     "w": "your",
+     "start": 1.65,
+     "end": 1.784
+    },
+    {
+     "w": "1-year-old",
+     "start": 1.784,
+     "end": 2.362
+    },
+    {
+     "w": "can",
+     "start": 2.362,
+     "end": 2.54
+    },
+    {
+     "w": "play",
+     "start": 2.54,
+     "end": 2.763
+    },
+    {
+     "w": "soccer?",
+     "start": 2.763,
+     "end": 3.03
+    }
+   ]
+  },
+  {
+   "id": "hook2",
+   "text": "Yep. And you get to play too.",
+   "start": 3.25,
+   "end": 4.67,
+   "words": [
+    {
+     "w": "Yep.",
+     "start": 3.25,
+     "end": 3.5
+    },
+    {
+     "w": "And",
+     "start": 3.58,
+     "end": 3.729
+    },
+    {
+     "w": "you",
+     "start": 3.729,
+     "end": 3.877
+    },
+    {
+     "w": "get",
+     "start": 3.877,
+     "end": 4.075
+    },
+    {
+     "w": "to",
+     "start": 4.075,
+     "end": 4.224
+    },
+    {
+     "w": "play",
+     "start": 4.224,
+     "end": 4.472
+    },
+    {
+     "w": "too.",
+     "start": 4.472,
+     "end": 4.67
+    }
+   ]
+  },
+  {
+   "id": "pain1",
+   "text": "Because let's be honest\u2026 same playground, same swings, same Saturday.",
+   "start": 4.97,
+   "end": 9.05,
+   "words": [
+    {
+     "w": "Because",
+     "start": 4.97,
+     "end": 5.251
+    },
+    {
+     "w": "let's",
+     "start": 5.251,
+     "end": 5.485
+    },
+    {
+     "w": "be",
+     "start": 5.485,
+     "end": 5.672
+    },
+    {
+     "w": "honest\u2026",
+     "start": 5.672,
+     "end": 6.0
+    },
+    {
+     "w": "same",
+     "start": 6.28,
+     "end": 6.514
+    },
+    {
+     "w": "playground,",
+     "start": 6.514,
+     "end": 7.03
+    },
+    {
+     "w": "same",
+     "start": 7.3,
+     "end": 7.65
+    },
+    {
+     "w": "swings,",
+     "start": 7.65,
+     "end": 8.07
+    },
+    {
+     "w": "same",
+     "start": 8.18,
+     "end": 8.491
+    },
+    {
+     "w": "Saturday.",
+     "start": 8.491,
+     "end": 9.05
+    }
+   ]
+  },
+  {
+   "id": "pain2",
+   "text": "All that toddler energy\u2026 and nowhere to put it.",
+   "start": 9.17,
+   "end": 11.62,
+   "words": [
+    {
+     "w": "All",
+     "start": 9.17,
+     "end": 9.394
+    },
+    {
+     "w": "that",
+     "start": 9.394,
+     "end": 9.617
+    },
+    {
+     "w": "toddler",
+     "start": 9.617,
+     "end": 10.009
+    },
+    {
+     "w": "energy\u2026",
+     "start": 10.009,
+     "end": 10.4
+    },
+    {
+     "w": "and",
+     "start": 10.64,
+     "end": 10.795
+    },
+    {
+     "w": "nowhere",
+     "start": 10.795,
+     "end": 11.156
+    },
+    {
+     "w": "to",
+     "start": 11.156,
+     "end": 11.311
+    },
+    {
+     "w": "put",
+     "start": 11.311,
+     "end": 11.517
+    },
+    {
+     "w": "it.",
+     "start": 11.517,
+     "end": 11.62
+    }
+   ]
+  },
+  {
+   "id": "pain3",
+   "text": "And they're only this little once.",
+   "start": 11.87,
+   "end": 13.42,
+   "words": [
+    {
+     "w": "And",
+     "start": 11.87,
+     "end": 12.036
+    },
+    {
+     "w": "they're",
+     "start": 12.036,
+     "end": 12.258
+    },
+    {
+     "w": "only",
+     "start": 12.258,
+     "end": 12.59
+    },
+    {
+     "w": "this",
+     "start": 12.59,
+     "end": 12.811
+    },
+    {
+     "w": "little",
+     "start": 12.811,
+     "end": 13.143
+    },
+    {
+     "w": "once.",
+     "start": 13.143,
+     "end": 13.42
+    }
+   ]
+  },
+  {
+   "id": "turn1",
+   "text": "So this weekend\u2026 let's score their very first goal. Together.",
+   "start": 13.87,
+   "end": 17.11,
+   "words": [
+    {
+     "w": "So",
+     "start": 13.87,
+     "end": 14.082
+    },
+    {
+     "w": "this",
+     "start": 14.082,
+     "end": 14.295
+    },
+    {
+     "w": "weekend\u2026",
+     "start": 14.295,
+     "end": 14.72
+    },
+    {
+     "w": "let's",
+     "start": 15.02,
+     "end": 15.255
+    },
+    {
+     "w": "score",
+     "start": 15.255,
+     "end": 15.537
+    },
+    {
+     "w": "their",
+     "start": 15.537,
+     "end": 15.678
+    },
+    {
+     "w": "very",
+     "start": 15.678,
+     "end": 15.913
+    },
+    {
+     "w": "first",
+     "start": 15.913,
+     "end": 16.195
+    },
+    {
+     "w": "goal.",
+     "start": 16.195,
+     "end": 16.43
+    },
+    {
+     "w": "Together.",
+     "start": 16.67,
+     "end": 17.11
+    }
+   ]
+  },
+  {
+   "id": "sol1",
+   "text": "Meet Mommy, Daddy & Me Soccer at Euro Soccer USA.",
+   "start": 17.26,
+   "end": 20.8,
+   "words": [
+    {
+     "w": "Meet",
+     "start": 17.26,
+     "end": 17.533
+    },
+    {
+     "w": "Mommy,",
+     "start": 17.533,
+     "end": 17.86
+    },
+    {
+     "w": "Daddy",
+     "start": 18.07,
+     "end": 18.38
+    },
+    {
+     "w": "&",
+     "start": 18.38,
+     "end": 18.628
+    },
+    {
+     "w": "Me",
+     "start": 18.628,
+     "end": 18.877
+    },
+    {
+     "w": "Soccer",
+     "start": 18.877,
+     "end": 19.249
+    },
+    {
+     "w": "at",
+     "start": 19.249,
+     "end": 19.373
+    },
+    {
+     "w": "Euro",
+     "start": 19.373,
+     "end": 19.807
+    },
+    {
+     "w": "Soccer",
+     "start": 19.807,
+     "end": 20.18
+    },
+    {
+     "w": "USA.",
+     "start": 20.18,
+     "end": 20.8
+    }
+   ]
+  },
+  {
+   "id": "sol2",
+   "text": "30 playful minutes for 12 to 24 month olds, with you right by their side.",
+   "start": 20.92,
+   "end": 25.48,
+   "words": [
+    {
+     "w": "30",
+     "start": 20.92,
+     "end": 21.214
+    },
+    {
+     "w": "playful",
+     "start": 21.214,
+     "end": 21.605
+    },
+    {
+     "w": "minutes",
+     "start": 21.605,
+     "end": 21.948
+    },
+    {
+     "w": "for",
+     "start": 21.948,
+     "end": 22.144
+    },
+    {
+     "w": "12",
+     "start": 22.144,
+     "end": 22.437
+    },
+    {
+     "w": "to",
+     "start": 22.437,
+     "end": 22.584
+    },
+    {
+     "w": "24",
+     "start": 22.584,
+     "end": 23.172
+    },
+    {
+     "w": "month",
+     "start": 23.172,
+     "end": 23.416
+    },
+    {
+     "w": "olds,",
+     "start": 23.416,
+     "end": 23.71
+    },
+    {
+     "w": "with",
+     "start": 24.07,
+     "end": 24.254
+    },
+    {
+     "w": "you",
+     "start": 24.254,
+     "end": 24.438
+    },
+    {
+     "w": "right",
+     "start": 24.438,
+     "end": 24.744
+    },
+    {
+     "w": "by",
+     "start": 24.744,
+     "end": 24.99
+    },
+    {
+     "w": "their",
+     "start": 24.99,
+     "end": 25.173
+    },
+    {
+     "w": "side.",
+     "start": 25.173,
+     "end": 25.48
+    }
+   ]
+  },
+  {
+   "id": "sol3",
+   "text": "Imaginative themed games that build balance, coordination and confidence.",
+   "start": 25.6,
+   "end": 29.97,
+   "words": [
+    {
+     "w": "Imaginative",
+     "start": 25.6,
+     "end": 26.329
+    },
+    {
+     "w": "themed",
+     "start": 26.329,
+     "end": 26.666
+    },
+    {
+     "w": "games",
+     "start": 26.666,
+     "end": 27.002
+    },
+    {
+     "w": "that",
+     "start": 27.002,
+     "end": 27.227
+    },
+    {
+     "w": "build",
+     "start": 27.227,
+     "end": 27.507
+    },
+    {
+     "w": "balance,",
+     "start": 27.507,
+     "end": 27.9
+    },
+    {
+     "w": "coordination",
+     "start": 28.24,
+     "end": 29.163
+    },
+    {
+     "w": "and",
+     "start": 29.163,
+     "end": 29.336
+    },
+    {
+     "w": "confidence.",
+     "start": 29.336,
+     "end": 29.97
+    }
+   ]
+  },
+  {
+   "id": "sol4",
+   "text": "No pressure. Just play.",
+   "start": 30.09,
+   "end": 31.53,
+   "words": [
+    {
+     "w": "No",
+     "start": 30.09,
+     "end": 30.386
+    },
+    {
+     "w": "pressure.",
+     "start": 30.386,
+     "end": 30.83
+    },
+    {
+     "w": "Just",
+     "start": 30.97,
+     "end": 31.275
+    },
+    {
+     "w": "play.",
+     "start": 31.275,
+     "end": 31.53
+    }
+   ]
+  },
+  {
+   "id": "sol5",
+   "text": "And yes\u2026 one very good nap after.",
+   "start": 31.65,
+   "end": 33.68,
+   "words": [
+    {
+     "w": "And",
+     "start": 31.65,
+     "end": 31.894
+    },
+    {
+     "w": "yes\u2026",
+     "start": 31.894,
+     "end": 32.22
+    },
+    {
+     "w": "one",
+     "start": 32.38,
+     "end": 32.616
+    },
+    {
+     "w": "very",
+     "start": 32.616,
+     "end": 32.912
+    },
+    {
+     "w": "good",
+     "start": 32.912,
+     "end": 33.148
+    },
+    {
+     "w": "nap",
+     "start": 33.148,
+     "end": 33.385
+    },
+    {
+     "w": "after.",
+     "start": 33.385,
+     "end": 33.68
+    }
+   ]
+  },
+  {
+   "id": "emo1",
+   "text": "Their first kick. Their first goal. Their first high five.",
+   "start": 33.98,
+   "end": 36.88,
+   "words": [
+    {
+     "w": "Their",
+     "start": 33.98,
+     "end": 34.153
+    },
+    {
+     "w": "first",
+     "start": 34.153,
+     "end": 34.499
+    },
+    {
+     "w": "kick.",
+     "start": 34.499,
+     "end": 34.73
+    },
+    {
+     "w": "Their",
+     "start": 34.98,
+     "end": 35.134
+    },
+    {
+     "w": "first",
+     "start": 35.134,
+     "end": 35.443
+    },
+    {
+     "w": "goal.",
+     "start": 35.443,
+     "end": 35.7
+    },
+    {
+     "w": "Their",
+     "start": 35.84,
+     "end": 36.013
+    },
+    {
+     "w": "first",
+     "start": 36.013,
+     "end": 36.36
+    },
+    {
+     "w": "high",
+     "start": 36.36,
+     "end": 36.591
+    },
+    {
+     "w": "five.",
+     "start": 36.591,
+     "end": 36.88
+    }
+   ]
+  },
+  {
+   "id": "emo2",
+   "text": "You'll be right there for all of it.",
+   "start": 36.98,
+   "end": 38.37,
+   "words": [
+    {
+     "w": "You'll",
+     "start": 36.98,
+     "end": 37.172
+    },
+    {
+     "w": "be",
+     "start": 37.172,
+     "end": 37.363
+    },
+    {
+     "w": "right",
+     "start": 37.363,
+     "end": 37.603
+    },
+    {
+     "w": "there",
+     "start": 37.603,
+     "end": 37.795
+    },
+    {
+     "w": "for",
+     "start": 37.795,
+     "end": 37.987
+    },
+    {
+     "w": "all",
+     "start": 37.987,
+     "end": 38.178
+    },
+    {
+     "w": "of",
+     "start": 38.178,
+     "end": 38.274
+    },
+    {
+     "w": "it.",
+     "start": 38.274,
+     "end": 38.37
+    }
+   ]
+  },
+  {
+   "id": "cta1",
+   "text": "Fall classes start this weekend at The Sports Park, Playa Vista.",
+   "start": 38.67,
+   "end": 41.99,
+   "words": [
+    {
+     "w": "Fall",
+     "start": 38.67,
+     "end": 38.907
+    },
+    {
+     "w": "classes",
+     "start": 38.907,
+     "end": 39.238
+    },
+    {
+     "w": "start",
+     "start": 39.238,
+     "end": 39.57
+    },
+    {
+     "w": "this",
+     "start": 39.57,
+     "end": 39.759
+    },
+    {
+     "w": "weekend",
+     "start": 39.759,
+     "end": 40.138
+    },
+    {
+     "w": "at",
+     "start": 40.138,
+     "end": 40.232
+    },
+    {
+     "w": "The",
+     "start": 40.232,
+     "end": 40.327
+    },
+    {
+     "w": "Sports",
+     "start": 40.327,
+     "end": 40.706
+    },
+    {
+     "w": "Park,",
+     "start": 40.706,
+     "end": 40.99
+    },
+    {
+     "w": "Playa",
+     "start": 41.28,
+     "end": 41.635
+    },
+    {
+     "w": "Vista.",
+     "start": 41.635,
+     "end": 41.99
+    }
+   ]
+  },
+  {
+   "id": "cta2",
+   "text": "Tap the link and book their first class.",
+   "start": 42.11,
+   "end": 44.06,
+   "words": [
+    {
+     "w": "Tap",
+     "start": 42.11,
+     "end": 42.354
+    },
+    {
+     "w": "the",
+     "start": 42.354,
+     "end": 42.476
+    },
+    {
+     "w": "link",
+     "start": 42.476,
+     "end": 42.78
+    },
+    {
+     "w": "and",
+     "start": 42.78,
+     "end": 42.963
+    },
+    {
+     "w": "book",
+     "start": 42.963,
+     "end": 43.207
+    },
+    {
+     "w": "their",
+     "start": 43.207,
+     "end": 43.39
+    },
+    {
+     "w": "first",
+     "start": 43.39,
+     "end": 43.755
+    },
+    {
+     "w": "class.",
+     "start": 43.755,
+     "end": 44.06
+    }
+   ]
+  }
+ ]
+}
