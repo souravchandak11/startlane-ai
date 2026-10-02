@@ -1,7 +1,7 @@
 # Mommy, Daddy & Me Soccer: launch video posting kit
 
-**File:** `out/esu-mommy-daddy-me.mp4` (1080×1920, 30 fps, about 47 s, H.264 + AAC, −14 LUFS)
-**Cover:** `out/cover-esu-mommy-daddy-me.jpg` (frame 93: "your 1-year-old can play SOCCER?" with the toddler and ball)
+**Files:** `out/esu-mommy-daddy-me.mp4` (master, 1080×1920, 30 fps, 47.3 s, H.264 + AAC, −14 LUFS / −1.5 dBTP, 36.5 MB) and `out/esu-mommy-daddy-me-IG.mp4` (27 MB upload copy)
+**Cover:** `out/cover-esu-mommy-daddy-me.jpg` (3.2 s: "your 1-year-old can play SOCCER?" with the toddler and ball)
 **Composition:** `ESU-MommyDaddyMe` (`src/mdm/`). The video is fully animated: no footage, no AI video and no watermark, so no AI label is needed.
 
 ## How the video is built to convert

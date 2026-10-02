@@ -144,7 +144,7 @@ SCRIPT=scripts/script_mdm.json OUT_WAV=public/audio/vo_mdm.wav OUT_JSON=src/time
   python3 scripts/make_vo.py                 # VO + word timings
 python3 scripts/make_music_mdm.py            # ukulele/glock score, drop on "goal" → public/audio/music_mdm.wav
 python3 scripts/make_sfx_mdm.py              # boing, slide whistle, scratch, net, ta-da…
-COMP=ESU-MommyDaddyMe NAME=esu-mommy-daddy-me COVER=93 bash scripts/render.sh
+COMP=ESU-MommyDaddyMe NAME=esu-mommy-daddy-me COVER=96 bash scripts/render.sh
 ```
 
 ## 6. Credits and licences
