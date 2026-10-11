@@ -8,6 +8,11 @@ Short-form video compositions for Euro Soccer USA, 1080x1920 @ 30fps.
 |---|---|---|
 | `ESU-Script01-TooLate` | Script 1, "He's 10. Never played. Too late?" | 23s |
 | `ESU-Script04-OutgrewRec` | Script 4, "5 signs your kid outgrew rec soccer" (narrated) | 37s |
+| `ESU-Metro-A-PriceOfABench` | Metro style: what club soccer costs vs. time on the ball | 28s |
+| `ESU-Metro-B-TechnicallyBehind` | Metro style: tryout feedback and what it really means | 36s |
+| `ESU-Metro-C-ScholarshipMath` | Metro style: NCAA odds and why ESU doesn't sell a pathway | 32s |
+| `ESU-Metro-D-Unrushed` | Metro style: weekends lost to travel soccer vs. one class | 29s |
+| `ESU-Metro-E-SeventyBy13` | Metro style: the AAP 70%-quit-by-13 finding and the early years | 29s |
 
 ## Render
 
@@ -32,6 +37,18 @@ python -m venv venv && ./venv/bin/pip install kokoro-onnx soundfile
 ```
 
 `vo_s04.json` holds per-word timings. The composition derives every scene cut, caption page and sound effect from it, so edit the script JSON and re-run to retime the whole video. Master the render with `loudnorm=I=-14:TP=-1.2`.
+
+## Metro style (`src/metro/`)
+
+Documentary-style reels modelled on the @metromedia.house breakdown in Drive (`ESU_MON04_Retro_Reel/NOTES.md`):
+
+- **Narrator drives every cut.** Every scene, slam and polaroid in `src/metro/videos.ts` is keyed to a narration word through `w(i)`, using the timings in `src/data/metro/*.out.json`.
+- **Two type tiers only.** Small Inter words tick on one per spoken word, spread left/centre/right; huge Barlow Condensed keywords slam in with no bounce, sometimes with a photo chip inside the line.
+- **Three canvases.** A CRT "screen" (blurred bed plus a crisp scanlined band of real footage), a navy halftone field, and off-white paper with pinned polaroids, red string, quote cards and clippings. Hard cuts use shutter clicks and white flash frames.
+- **Texture and sound.** Grain, light leaks, VHS overlay and CRT power-on, under an original Rhodes-style bed with mechanical SFX (`scripts_prep_metro_audio.py`), so there's no music licensing risk.
+- **Every on-screen stat or quote carries a source tag.** The sources are NCAA Research (2024–25), Anytime Soccer (2026), SoCal Pitch, the AAP (*Pediatrics*, 2024), Aspen Institute Project Play (2025), and Diane Schrader in The Blaze (2025).
+
+Footage and photos are clean crops from published @eurosoccerusa posts, positioned to avoid their burned-in graphics. There are no AI-generated people.
 
 ## Assets
 

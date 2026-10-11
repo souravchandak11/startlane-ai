@@ -7,6 +7,7 @@ import '@fontsource/jetbrains-mono/700.css';
 import {Composition} from 'remotion';
 import {ESU_Script01_TooLate, SCRIPT01_DURATION} from './compositions/ESU_Script01_TooLate';
 import {ESU_Script04_OutgrewRec, SCRIPT04_DURATION} from './compositions/ESU_Script04_OutgrewRec';
+import {MetroCompositions} from './metro/Compositions';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -26,5 +27,6 @@ export const RemotionRoot: React.FC = () => (
       width={1080}
       height={1920}
     />
+    <MetroCompositions />
   </>
 );
