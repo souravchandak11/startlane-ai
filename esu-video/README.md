@@ -7,6 +7,7 @@ Short-form video compositions for Euro Soccer USA, 1080x1920 @ 30fps.
 | ID | Script | Length |
 |---|---|---|
 | `ESU-Script01-TooLate` | Script 1, "He's 10. Never played. Too late?" | 23s |
+| `ESU-Script04-OutgrewRec` | Script 4, "5 signs your kid outgrew rec soccer" (narrated) | 37s |
 
 ## Render
 
@@ -19,6 +20,18 @@ ffmpeg -i out/raw.mp4 -c:v copy -af "alimiter=limit=0.891:level=false" -c:a aac 
 ```
 
 Preview with `npx remotion studio`. If Remotion can't download its own Chrome, pass `--browser-executable` pointing at a local Chromium headless shell.
+
+## Narration
+
+Script 4 is narrated by Kokoro TTS (`af_heart` voice, Apache-2.0), generated one sentence at a time so pauses are exact:
+
+```bash
+python -m venv venv && ./venv/bin/pip install kokoro-onnx soundfile
+# model files: kokoro-v1.0.onnx and voices-v1.0.bin from github.com/thewh1teagle/kokoro-onnx releases (model-files-v1.0)
+./venv/bin/python scripts/narration/narrate.py <model_dir> vo_s04.wav src/data/vo_s04.json af_heart 1.08 < scripts/narration/s04_script.json
+```
+
+`vo_s04.json` holds per-word timings. The composition derives every scene cut, caption page and sound effect from it, so edit the script JSON and re-run to retime the whole video. Master the render with `loudnorm=I=-14:TP=-1.2`.
 
 ## Assets
 
